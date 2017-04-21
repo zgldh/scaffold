@@ -1,0 +1,2 @@
+          <div class="radio"><label><input type="radio" id="field-$FIELD_NAME$-$ITEM_VALUE$" value="$ITEM_VALUE$"
+               v-model="item.$FIELD_NAME$">$ITEM_LABEL$</label></div>

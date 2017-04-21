@@ -1,0 +1,50 @@
+{
+  "name": "zgldh/scaffold",
+  "description": "Scaffold for Laravel.",
+  "keywords": [
+    "laravel",
+    "scaffold"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": ">=5.6.4",
+    "laravel/framework": ">=5.3",
+
+    "zgldh/laravel-upload-manager": "^0.4.3",
+
+    "spatie/laravel-permission": "^1.5",
+    "laracasts/generators": "^1.1",
+    "barryvdh/laravel-ide-helper": "^2.2",
+    "infyomlabs/laravel-generator": "5.3.x-dev",
+    "doctrine/dbal": "~2.3",
+    "yajra/laravel-datatables-oracle": "^6.0",
+    "itsgoingd/clockwork": "^1.12"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "classmap": [
+    ],
+    "psr-4": {
+      "zgldh\\Scaffold\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+    ]
+  },
+  "scripts": {
+    "post-root-package-install": [
+    ],
+    "post-create-project-cmd": [
+    ],
+    "post-install-cmd": [
+    ],
+    "post-update-cmd": [
+    ]
+  },
+  "config": {
+    "preferred-install": "dist"
+  }
+}
