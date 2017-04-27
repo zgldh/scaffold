@@ -110,6 +110,7 @@
           this.saving = false;
           if (err.status == 422) {
             this.item.$errors.setAll(err.body);
+            this.item.$errors.focusFirstErrorField();
           }
           else {
             alert(err.data.message);

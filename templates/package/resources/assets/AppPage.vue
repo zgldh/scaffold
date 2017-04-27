@@ -50,7 +50,8 @@
   </div>
 </template>
 
-<!-- <script type="javascript">
+<script type="javascript">
+  import {Vue} from 'resources/assets/js/commons/vuejs.js';
   import datatablesHelper from 'resources/assets/js/commons/datatables-helper.js';
   import vueHelper from 'resources/assets/js/commons/vuejs.js';
   import columns from './TableColumns';
@@ -68,7 +69,7 @@
   };
 
   export default vueConfig;
-</script> -->
+</script>
 
 <style lang="scss">
 
