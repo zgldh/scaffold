@@ -4,6 +4,7 @@ Scaffold for laravel
 
 # 编码规范
 
+0. 遵循 PSR-4 开发规范。
 1. PHP，JavaScript 类名和定义该类的文件名要一模一样，都要用首字母*大*写驼峰式。
 1. PHP，JavaScript 函数名都要用首字母小写驼峰式。
 2. PHP，JavaScript 变量名都要用首字母小写驼峰式。
