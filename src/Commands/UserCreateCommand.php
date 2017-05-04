@@ -73,13 +73,19 @@ class UserCreateCommand extends Command
         $user->password = bcrypt('123456');
         $user->save();
 
-        $role = Role::firstOrCreate(['name' => 'admin']);
-        if(!$user->hasRole($role)) {
+        $role = Role::firstOrNew(['name' => 'admin']);
+        $role->label = $role->label ?: '管理员';
+        $role->save();
+        if (!$user->hasRole($role)) {
             $user->assignRole($role);
         }
 
-        $permission = Permission::firstOrCreate(['name' => 'can-manage-user']);
-        $role->givePermissionTo($permission);
+        $permission = Permission::firstOrNew(['name' => 'can-manage-user']);
+        $permission->label = $permission->label ?: '管理用户';
+        $permission->save();
+        if (!$role->hasPermissionTo($permission)) {
+            $role->givePermissionTo($permission);
+        }
 
         $this->info("Admin created");
     }
