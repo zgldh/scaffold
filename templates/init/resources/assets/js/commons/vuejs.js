@@ -93,10 +93,10 @@ const vueHelper = {
           });
         },
         setPageAndLength: function (page, length) {
-          page = parseInt(page);
-          length = parseInt(length);
+          page = Math.max(0, parseInt(page));
+          length = Math.max(10, parseInt(length));
           var info = this.appPageTable.page.info();
-          if ((info.page + 1 ) != page || info.length != length) {
+          if (info.page != page || info.length != length) {
             this.appPageTable.page(page);
             this.appPageTable.page.len(length).draw();
           }
@@ -104,7 +104,7 @@ const vueHelper = {
       }, // end: methods
       watch: {
         '$route.query': function (query) {
-          this.setPageAndLength(query.page, query.pageSize);
+          this.setPageAndLength(query.page - 1, query.pageSize);
         }
       },
       mounted: function () {
