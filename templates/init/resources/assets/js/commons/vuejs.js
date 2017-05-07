@@ -23,7 +23,6 @@ Vue.component('router-treeview', RouterTreeview);
 
 import { confirm, alert } from '../components/SweetAlertDialogs';
 
-let appPageTable = null;
 
 const vueHelper = {
   /**
@@ -32,6 +31,8 @@ const vueHelper = {
    * @returns {{props: {}, components: {BaseFormDialog}, computed: {}, methods: {onDelete: defaultVueConfig.methods.onDelete, onCreate: defaultVueConfig.methods.onCreate, onEdit: defaultVueConfig.methods.onEdit}, watch: {}}}
    */
   buildVueConfig: function (datatablesConfig) {
+    let appPageTable = null;
+	  
     let config = {
       props: {},
       components: {},
@@ -90,14 +91,33 @@ const vueHelper = {
             alert(err.data.message);
             throw err;
           });
+        },
+        setPageAndLength: function (page, length) {
+          page = parseInt(page);
+          length = parseInt(length);
+          var info = this.appPageTable.page.info();
+          if ((info.page + 1 ) != page || info.length != length) {
+            this.appPageTable.page(page);
+            this.appPageTable.page.len(length).draw();
+          }
         }
       }, // end: methods
-      watch: {},
+      watch: {
+        '$route.query': function (query) {
+          this.setPageAndLength(query.page, query.pageSize);
+        }
+      },
       mounted: function () {
-        appPageTable = $('#app-page-table');
-        appPageTable = appPageTable.DataTable(datatablesConfig);
+        if (this.$route.query.hasOwnProperty('pageSize')) {
+          datatablesConfig.pageLength = parseInt(this.$route.query.pageSize);
+        }
+        if (this.$route.query.hasOwnProperty('page')) {
+          datatablesConfig.displayStart = (this.$route.query.page - 1) * datatablesConfig.pageLength;
+        }
+
+        this.appPageTable = $('#app-page-table').DataTable(datatablesConfig);
         let me = this;
-        appPageTable.on('click', 'button', function (e) {
+        this.appPageTable.on('click', 'button', function (e) {
           var button = $(this);
           if (button.is('.edit-item-btn')) {
             let itemId = $(this).data('item-id');
@@ -121,13 +141,23 @@ const vueHelper = {
             }
           }
         });
-        appPageTable.on('select', function (e, dt, type, indexes) {
+        this.appPageTable.on('select', function (e, dt, type, indexes) {
           let items = dt.rows('.selected').data().toArray();
           me.$store.commit('setSelectedItems', items);
         });
-        appPageTable.on('deselect', function (e, dt, type, indexes) {
-          let items = dt.rows('.selected').data().toArray();
-          me.$store.commit('setSelectedItems', items);
+        this.appPageTable.on('length', function (e, settings, len) {
+          var info = me.appPageTable.page.info();
+          me.$router.push({
+            path: me.$router.currentRoute.path,
+            query: {page: info.page + 1, pageSize: info.length}
+          });
+        });
+        this.appPageTable.on('page', function (e, settings) {
+          var info = me.appPageTable.page.info();
+          me.$router.push({
+            path: me.$router.currentRoute.path,
+            query: {page: info.page + 1, pageSize: info.length}
+          });
         });
       }
     };
