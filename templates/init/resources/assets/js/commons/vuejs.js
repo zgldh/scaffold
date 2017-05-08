@@ -115,7 +115,7 @@ const vueHelper = {
           datatablesConfig.displayStart = (this.$route.query.page - 1) * datatablesConfig.pageLength;
         }
 
-        this.appPageTable = $('#app-page-table').DataTable(datatablesConfig);
+        appPageTable = $('#app-page-table').DataTable(datatablesConfig);
         let me = this;
         this.appPageTable.on('click', 'button', function (e) {
           var button = $(this);
