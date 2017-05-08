@@ -9,9 +9,13 @@ const datatablesHelper = {
     var resourceURL = '';
     if (inputResourceURL.constructor == Object) {
       resourceURL = inputResourceURL.resource;
-      resourceURL += inputResourceURL.with ? "?_with=" + encodeURIComponent(inputResourceURL.with) : '';
+      if (inputResourceURL.with) {
+        resourceURL += (resourceURL.indexOf('?') === -1 ) ? '?' : '&';
+        resourceURL += "_with=" + encodeURIComponent(inputResourceURL.with);
+      }
     }
     columns = setupColumns(columns, inputResourceURL);
+    var searchCols = setupSearchCols(columns);
     let config = {
       processing: true,
       serverSide: true,
@@ -22,6 +26,7 @@ const datatablesHelper = {
         style: 'multi',
         selector: 'td.select-checkbox'
       },
+      searchCols: searchCols,
       pageLength: 25,
       order: [],
       initComplete: function (settings, json) {
@@ -44,6 +49,18 @@ const datatablesHelper = {
   }
 };
 
+function setupSearchCols (columns) {
+  var searchCols = [];
+  columns.map(function (column) {
+    if (column.hasOwnProperty("initSearch")) {
+      searchCols.push(column.initSearch);
+    }
+    else {
+      searchCols.push(null);
+    }
+    return searchCols;
+  });
+}
 function setupColumns (columns, inputResourceURL) {
 
   // setup checkbox
