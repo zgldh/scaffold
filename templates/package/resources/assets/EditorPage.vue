@@ -35,7 +35,7 @@
         <!-- /.box-body -->
 
         <div class="box-footer">
-          <router-link to="/$MODEL_NAME_LOWER$" class="btn btn-lg btn-flat btn-default pull-left">返回</router-link>
+          <router-link-back class="btn btn-lg btn-flat btn-default pull-left">返回</router-link-back>
           <button type="submit" form="editing-form" class="btn btn-lg btn-flat btn-primary" @click="onSave"
                   :disabled="saving">
             {{saving?"保存中...":"保存"}}

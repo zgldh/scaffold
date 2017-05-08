@@ -19,10 +19,10 @@ import FullScreenButton from '../components/FullScreenButton.vue';
 Vue.component('full-screen-button', FullScreenButton);
 import RouterTreeview from '../components/RouterTreeview.vue';
 Vue.component('router-treeview', RouterTreeview);
-
+import RouterLinkBack from '../components/RouterLinkBack.vue';
+Vue.component('router-link-back', RouterLinkBack);
 
 import { confirm, alert } from '../components/SweetAlertDialogs';
-
 
 const vueHelper = {
   /**
