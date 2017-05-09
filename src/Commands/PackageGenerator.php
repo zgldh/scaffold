@@ -49,7 +49,7 @@ class PackageGenerator extends Command
         } elseif (file_exists($fieldFile)) {
             $this->fromFieldFile($fieldFile, $name);
         } else {
-            $this->error("Please use --fromTable --folder --name or --fieldFile --name.");
+            $this->error("Please use --fieldFile=Directory\To\Config\File.json");
             return false;
         }
     }
