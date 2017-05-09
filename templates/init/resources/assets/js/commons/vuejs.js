@@ -110,9 +110,11 @@ const vueHelper = {
       mounted: function () {
         if (this.$route.query.hasOwnProperty('pageSize')) {
           datatablesConfig.pageLength = parseInt(this.$route.query.pageSize);
+          datatablesConfig.iDisplayLength = datatablesConfig.pageLength;
         }
         if (this.$route.query.hasOwnProperty('page')) {
           datatablesConfig.displayStart = (this.$route.query.page - 1) * datatablesConfig.pageLength;
+          datatablesConfig.iDisplayStart = datatablesConfig.displayStart;
         }
 
         appPageTable = $('#app-page-table').DataTable(datatablesConfig);
