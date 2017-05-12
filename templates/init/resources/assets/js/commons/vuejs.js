@@ -32,6 +32,7 @@ const vueHelper = {
    */
   buildVueConfig: function (datatablesConfig) {
     let appPageTable = null;
+    let advanceColumnSearch = {};
 	  
     let config = {
       props: {},
@@ -47,9 +48,20 @@ const vueHelper = {
         }
       },
       methods: {
+        searchColumn: function (columnName, searchTerm, operator) {
+          operator = operator ? operator : '=';
+          advanceColumnSearch[columnName] = advanceColumnSearch[columnName] ? advanceColumnSearch[columnName] : {};
+          if (searchTerm == null || searchTerm == undefined) {
+            delete advanceColumnSearch[columnName][operator];
+          }
+          else {
+            advanceColumnSearch[columnName][operator] = searchTerm;
+          }
+          return this.appPageTable;
+        },
         onDelete: function (id) {
           confirm("真的要删除吗？").then(function (data) {
-			  return this.$http.delete(this.resourceURL + '/'+id);
+            return this.$http.delete(this.resourceURL + '/'+id);
           }.bind(this)).catch(function (err) {
             if (err !== "overlay") {
               alert(err.data.message);
@@ -142,6 +154,18 @@ const vueHelper = {
               }
             }
           }
+        });
+        this.appPageTable.on('preXhr', function (e, settings, json) {
+          for (var columnName in advanceColumnSearch) {
+            var searches = advanceColumnSearch[columnName];
+            var columnIndex = json.columns.findIndex((column) => {
+              return column.name == columnName;
+            });
+            if (columnIndex !== -1 && searches) {
+              json.columns[columnIndex].search.advance = advanceColumnSearch[columnName];
+            }
+          }
+          console.log(json, advanceColumnSearch);
         });
         this.appPageTable.on('select', function (e, dt, type, indexes) {
           let items = dt.rows('.selected').data().toArray();
