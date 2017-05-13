@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
-export {Vue, Vuex};
+export { Vue, Vuex };
 
 import './resource';
 import BaseFormDialog from '../components/BaseFormDialog.vue';
@@ -33,7 +33,7 @@ const vueHelper = {
   buildVueConfig: function (datatablesConfig) {
     let appPageTable = null;
     let advanceColumnSearch = {};
-	  
+
     let config = {
       props: {},
       components: {},
@@ -61,7 +61,7 @@ const vueHelper = {
         },
         onDelete: function (id) {
           confirm("真的要删除吗？").then(function (data) {
-            return this.$http.delete(this.resourceURL + '/'+id);
+            return this.$http.delete(this.resourceURL + '/' + id);
           }.bind(this)).catch(function (err) {
             if (err !== "overlay") {
               alert(err.data.message);
@@ -165,7 +165,6 @@ const vueHelper = {
               json.columns[columnIndex].search.advance = advanceColumnSearch[columnName];
             }
           }
-          console.log(json, advanceColumnSearch);
         });
         this.appPageTable.on('select', function (e, dt, type, indexes) {
           let items = dt.rows('.selected').data().toArray();
