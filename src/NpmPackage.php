@@ -28,7 +28,7 @@ class NpmPackage
         if ($path) {
             $savePath = $path;
         }
-        $data = json_encode($this->package, JSON_PRETTY_PRINT);
+        $data = json_encode($this->package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         return file_put_contents($savePath, $data);
     }
 

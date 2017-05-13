@@ -25,9 +25,13 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function index(IndexRequest $request)
     {
-          $with = $request->getWith();
-          $data = $this->repository->datatables(null, $with);
-          return $data;
+        if ($request->ajax()) {
+            $with = $request->getWith();
+            $data = $this->repository->datatables(null, $with);
+            return $data;
+        } else {
+            return view('$NAME_SPACE$::index');
+        }
     }
 
     /**

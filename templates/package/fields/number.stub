@@ -1,7 +1,7 @@
-    <div class="form-group" :class="{'has-error': item.$errors.has('$FIELD_NAME$')}">
+    <div class="form-group" :class="{'has-error': props.item.$errors.has('$FIELD_NAME$')}">
       <label for="field-$FIELD_NAME$" class="col-sm-2 control-label">$FIELD_LABEL$</label>
       <div class="col-sm-10">
-        <input type="number" class="form-control" id="field-$FIELD_NAME$" v-model.number="item.$FIELD_NAME$">
-        <span class="help-block" v-if="item.$errors.has('$FIELD_NAME$')">{{item.$errors.get('$FIELD_NAME$')}}</span>
+        <input type="number" class="form-control" id="field-$FIELD_NAME$" v-model="props.item.$FIELD_NAME$">
+        <span class="help-block" v-if="props.item.$errors.has('$FIELD_NAME$')">{{props.item.$errors.get('$FIELD_NAME$')}}</span>
       </div>
     </div>

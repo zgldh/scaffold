@@ -26,10 +26,6 @@ Vue.http.interceptors.push((request, next) => {
       request.method = 'POST';
     }
 
-    if (request.body && request.body.hasOwnProperty('$errors')) {
-      delete request.body.$errors;
-    }
-
     if (method == 'post' || method == 'put') {
       var formData = new FormData();
       var hasFile = false;
@@ -80,28 +76,7 @@ function getXsrfToken () {
   return getCookie('XSRF-TOKEN');
 }
 
-import {alert} from 'resources/assets/js/components/SweetAlertDialogs';
-
-function errorCallback (err) {
-  if (err.status == 422) {
-    var messages = [];
-    for (var key in err.data) {
-      if (err.data.hasOwnProperty(key)) {
-        var obj = err.data[key];
-        for (var prop in obj) {
-          // important check that this is objects own property
-          // not from prototype prop inherited
-          if (obj.hasOwnProperty(prop)) {
-            messages.push(obj[prop]);
-          }
-        }
-      }
-    }
-    alert(messages.join("<br>"));
-  }
-  else if (err.status >= 400 && err.status < 500) {
-    alert(err.data.message);
-  }
-}
-
-export {getXsrfToken, errorCallback};
+export default {
+  resource: VueResource,
+  getXsrfToken: getXsrfToken
+};

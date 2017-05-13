@@ -69,18 +69,8 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
             $query = call_user_func_array([$query, 'with'], $with);
         }
 
+
         $dt = Datatables::eloquent($query);
-
-        $columns = \Request::input('columns', []);
-        foreach ($columns as $column) {
-            $advanceSearches = array_get($column, 'search.advance');
-            if ($advanceSearches) {
-                foreach ($advanceSearches as $operator => $value) {
-                    $dt->where($column['name'], $operator, $value);
-                }
-            }
-        }
-
         if ($filter) {
             $dt->filter($filter);
         }

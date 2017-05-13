@@ -41,7 +41,6 @@ class Utils
         }
     }
 
-
     /**
      * Replace and Save
      * @param $filePath

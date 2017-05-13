@@ -1,22 +1,19 @@
 <template>
   <div class="upload-file">
     <div class="btn-group">
-      <a class="btn btn-flat btn-sm btn-default" title="查看当前文件" target="_blank"
-         v-if="uploadedFile" :href="uploadedFile.url">
-        <i class="fa fa-download" aria-hidden="true"></i> <span v-if="!iconOnly">查看当前文件</span>
+      <a class="btn btn-flat btn-sm btn-default" v-if="uploadedFile" :href="uploadedFile.url" target="_blank">
+        <i class="fa fa-download" aria-hidden="true"></i> 查看当前文件
       </a>
-      <button type="button" class="btn btn-flat btn-sm btn-default"
-              @click="selectFile()" v-if="isStateIdle()" :title="value?'更换文件':'选择文件'">
-        <i class="fa fa-upload" aria-hidden="true"></i> <span v-if="!iconOnly">{{value?'更换文件':'选择文件'}}</span>
+      <button type="button" class="btn btn-flat btn-sm btn-default" @click="selectFile()" v-if="isStateIdle()">
+        <i class="fa fa-upload" aria-hidden="true"></i> {{value?'更换文件':'选择文件'}}
       </button>
-      <button type="button" class="btn btn-flat btn-sm btn-default" title="上传中，点击取消"
-              @click="cancelUpload()" v-if="isUploading()">
-        {{ uploadingFile.name }} <span v-if="!iconOnly">上传中，点击取消 </span><i class="fa fa-times" aria-hidden="true"></i>
+      <button type="button" class="btn btn-flat btn-sm btn-default" @click="cancelUpload()" v-if="isUploading()">
+        {{ uploadingFile.name }} 上传中，点击取消 <i class="fa fa-times" aria-hidden="true"></i>
         <div class="progress progress-xxs active">
           <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
                :aria-valuenow="uploadingProgress"
                aria-valuemin="0" aria-valuemax="100" :style="'width: '+uploadingProgress+'%'">
-            <span class="sr-only" v-if="!iconOnly">{{uploadingProgress}}% Complete (warning)</span>
+            <span class="sr-only">{{uploadingProgress}}% Complete (warning)</span>
           </div>
         </div>
       </button>
@@ -35,19 +32,9 @@
       'value': '',
       'action': {
         type: String,
-        default: '/upload',
+        default: '/uploads',
         required: false
-      },
-      'iconOnly': {
-        type: Boolean,
-        default: false,
-        required: false
-      },
-      'onUploaded': {
-        type: Function,
-        default: null,
-        required: false
-      },
+      }
     },
     data: function () {
       return {
@@ -116,9 +103,6 @@
                   vm.$emit('input', response.body.data);
                   vm.uploadedFile = response.body.data;
                   vm.cancelUpload();
-                  if (vm.onUploaded) {
-                    vm.onUploaded(response.body.data);
-                  }
                 }, (response) => {
                   // error callback
                   console.log('upload error', response);

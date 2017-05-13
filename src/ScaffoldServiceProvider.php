@@ -1,11 +1,14 @@
 <?php namespace zgldh\Scaffold;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use InfyOm\Generator\InfyOmGeneratorServiceProvider;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
+use Spatie\Permission\PermissionServiceProvider;
 use Yajra\Datatables\DatatablesServiceProvider;
 use zgldh\Scaffold\Commands\PackageGenerator;
 use zgldh\Scaffold\Commands\ScaffoldInitCommand;
+use zgldh\Scaffold\Commands\ScaffoldPackagesCommand;
 use zgldh\Scaffold\Commands\UserCreateCommand;
 use zgldh\UploadManager\UploadManagerServiceProvider;
 
@@ -29,7 +32,7 @@ class ScaffoldServiceProvider extends ServiceProvider
         $this->app->singleton('zgldh.scaffold.init', function ($app) {
             return new ScaffoldInitCommand();
         });
-        $this->app->singleton('zgldh.scaffold.package', function ($app) {
+        $this->app->singleton('zgldh.package', function ($app) {
             return new PackageGenerator();
         });
         $this->app->singleton('zgldh.user.create', function ($app) {
@@ -38,14 +41,9 @@ class ScaffoldServiceProvider extends ServiceProvider
 
         $this->commands([
             'zgldh.scaffold.init',
-            'zgldh.scaffold.package',
-            'zgldh.user.create',
+            'zgldh.package',
+            'zgldh.user.create'
         ]);
-
-        $this->app->register($this->app->make(RepositoryServiceProvider::class, [$this->app]));
-        $this->app->register($this->app->make(InfyOmGeneratorServiceProvider::class, [$this->app]));
-        $this->app->register($this->app->make(DatatablesServiceProvider::class, [$this->app]));
-        $this->app->register($this->app->make(UploadManagerServiceProvider::class, [$this->app]));
 
         if ($this->app->environment() == 'local') {
             $this->app->register(\Laracasts\Generators\GeneratorsServiceProvider::class);

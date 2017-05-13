@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.adminlte')
 
-@section('title','控制台 - 网站名字')
+@section('title','控制台 - Cosmota')
 
 @section('content')
 <div class="container">

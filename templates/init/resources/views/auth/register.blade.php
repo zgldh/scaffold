@@ -1,12 +1,12 @@
 @extends('layouts.static')
 
-@section('title','注册 - 网站名字')
+@section('title','注册 - Cosmota 建筑监测数据平台')
 
 @section('content')
     <body class="hold-transition register-page">
     <div class="register-box">
         <div class="register-logo">
-            <a href="{{ url('/') }}"><b>网站名字 </b><br>建筑监测数据平台</a>
+            <a href="{{ url('/') }}"><b>Cosmota </b><br>建筑监测数据平台</a>
         </div>
 
         <div class="register-box-body">

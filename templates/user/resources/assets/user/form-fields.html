@@ -1,0 +1,89 @@
+<base-form-dialog creatingTitle="新建用户" editingTitle="编辑用户">
+    <template scope="props" slot="fields">
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('name')}">
+            <label for="name" class="col-sm-2 control-label">用户名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" v-model="props.item.name">
+                <span class="help-block"
+                      v-if="props.item.$errors.has('name')">{{props.item.$errors.get('name')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('email')}">
+            <label for="email" class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="email" v-model="props.item.email">
+                <span class="help-block"
+                      v-if="props.item.$errors.has('email')">{{props.item.$errors.get('email')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('gender')}">
+            <label for="field-gender" class="col-sm-2 control-label">性别</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" id="field-gender-Male" value="Male"
+                           v-model="props.item.gender">男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" id="field-gender-Female" value="Female"
+                           v-model="props.item.gender">女
+                </label>
+                <span class="help-block"
+                      v-if="props.item.$errors.has('gender')">{{props.item.$errors.get('gender')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('mobile')}">
+            <label for="mobile" class="col-sm-2 control-label">手机</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="mobile" v-model="props.item.mobile">
+                <span class="help-block"
+                      v-if="props.item.$errors.has('mobile')">{{props.item.$errors.get('mobile')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('is_active')}">
+            <label for="field-is_active" class="col-sm-2 control-label">激活</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" id="field-is_active-1" value="1"
+                           v-model="props.item.is_active">激活
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" id="field-is_active-2" value="2"
+                           v-model="props.item.is_active">禁用
+                </label>
+                <span class="help-block" v-if="props.item.$errors.has('is_active')">{{props.item.$errors.get('is_active')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('roles')}">
+            <label for="roles" class="col-sm-2 control-label">角色</label>
+            <div class="col-sm-10">
+                <select2 class="form-control select2" id="roles" multiple="multiple"
+                         data-tags="true" data-placeholder="选择角色" style="width: 100%;"
+                         v-model="props.item.roles" :options="roles">
+                </select2>
+                <span class="help-block"
+                      v-if="props.item.$errors.has('roles')">{{props.item.$errors.get('roles')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('permissions')}">
+            <label for="permissions" class="col-sm-2 control-label">额外权限</label>
+            <div class="col-sm-10">
+                <select2 class="form-control select2" id="permissions" multiple="multiple"
+                         data-tags="true" data-placeholder="选择权限" style="width: 100%;"
+                         v-model="props.item.permissions" :options="permissions">
+                </select2>
+                <span class="help-block"
+                      v-if="props.item.$errors.has('permissions')">{{props.item.$errors.get('permissions')}}</span>
+            </div>
+        </div>
+        <div class="form-group" :class="{'has-error': props.item.$errors.has('password')}">
+            <label for="password" class="col-sm-2 control-label">密码</label>
+
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" :placeholder="props.creating?'':'不变则留空'"
+                       v-model="props.item.password">
+                <span class="help-block"
+                      v-if="props.item.$errors.has('password')">{{props.item.$errors.get('password')}}</span>
+            </div>
+        </div>
+    </template>
+</base-form-dialog>

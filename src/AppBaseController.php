@@ -10,7 +10,7 @@ use Yajra\Datatables\Facades\Datatables;
 /**
  * Class AppBaseController
  */
-class  AppBaseController extends Controller
+class AppBaseController extends Controller
 {
     protected $repository;
 

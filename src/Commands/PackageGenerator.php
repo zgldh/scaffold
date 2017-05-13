@@ -6,6 +6,7 @@ use InfyOm\Generator\Utils\FileUtil;
 use zgldh\Scaffold\ConfigParser;
 use zgldh\Scaffold\NpmPackage;
 use zgldh\Scaffold\Utils;
+use zgldh\User\UserCreateCommand;
 
 class PackageGenerator extends Command
 {
@@ -49,7 +50,7 @@ class PackageGenerator extends Command
         } elseif (file_exists($fieldFile)) {
             $this->fromFieldFile($fieldFile, $name);
         } else {
-            $this->error("Please use --fieldFile=Directory\To\Config\File.json");
+            $this->error("Please use --fromTable --folder --name or --fieldFile --name.");
             return false;
         }
     }
@@ -221,23 +222,21 @@ class PackageGenerator extends Command
         Utils::copy(Utils::template('package/resources'), $resourceFolder);
         $templateIndex = $resourceFolder . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'index.blade.php';
         $assetAppPage = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'AppPage.vue';
-        $assetEditorPage = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'EditorPage.vue';
-        $assetVueRoutes = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'routes.js';
+        $assetFormFields = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'FormFields.html';
         $assetTableColumns = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'TableColumns.js';
 
         // 2. Replace dynamic variables
         Utils::replaceFilePlaceholders($templateIndex, $this->dynamicVariables);
         Utils::replaceFilePlaceholders($assetAppPage, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetEditorPage, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetVueRoutes, $this->dynamicVariables);
+        Utils::replaceFilePlaceholders($assetFormFields, $this->dynamicVariables);
         Utils::replaceFilePlaceholders($assetTableColumns, $this->dynamicVariables);
 
-        // 3. Create admin Vue routes file
-        $adminEntryPath = resource_path('assets/js/entries/admin.js');
-        $adminVueRoutesPath = "require('" . $this->dynamicVariables['PACKAGE_FOLDER'] . "/resources/assets/routes.js').default";
-        Utils::replaceFilePlaceholders($adminEntryPath, [
-            '// Modules routes' =>  '  ' . $adminVueRoutesPath.",\n".'// Modules routes'
-        ], null, '');
+        // 3. Create entry file
+        $entryName = $this->dynamicVariables['MODEL_IDENTIFIER'] . '.js';
+        $template = file_get_contents(Utils::template('package/entry.js.stub'));
+        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
+        $routesFilePath = resource_path('assets/js/entries/' . $entryName);
+        file_put_contents($routesFilePath, $templateData);
 
         // 4. Add Menu to  resources\views\layouts\menu.blade.php
         $template = file_get_contents(Utils::template('package/menu_item.stub'));

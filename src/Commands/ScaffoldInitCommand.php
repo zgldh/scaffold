@@ -13,7 +13,7 @@ class ScaffoldInitCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zgldh:scaffold:init {--name=}';
+    protected $signature = 'zgldh:scaffold:init {name=Modules} {--setup}';
 
     /**
      * The console command description.
@@ -39,22 +39,27 @@ class ScaffoldInitCommand extends Command
      */
     public function handle()
     {
-        if (!$this->confirm("Existed files will be replaced. Continue?")) {
-            $this->info("Mission abort");
-            return false;
+        $setup = $this->option('setup');
+        if (!$setup) {
+            if (!$this->confirm("Existed files will be replaced. Continue?")) {
+                $this->info("Mission abort");
+                return false;
+            }
+            $name = $this->argument('name');
+            // Setup
+            $this->getInput($name);
+            $this->setupComposerJson();
+            $this->setupPackageJson();
+            $this->setupTemplates();
+            $this->setupRoute();
+            $this->setUserModule();
+            $this->info('Scaffold is initialized. Please run `php artisan zgldh:scaffold:init --setup`');
+        } else {
+            $this->publishAndMigrate();
+            $this->setupAdminAccount();
+            $this->info('Scaffold is ready. Please run `yarn run hot` to start.');
         }
-        $name = $this->option('name');
-        // Setup
-        $this->getInput($name);
-        $this->setupComposerJson();
-        $this->setupPackageJson();
-        $this->setupTemplates();
-        $this->setupRoute();
-        $this->publishAndMigrate();
-        $this->setupBasicAdmin();
 
-        $this->info('Scaffold is ready.');
-        $this->info('Please run `npm install`.');
     }
 
     private $dynamicVariables = [];
@@ -63,7 +68,7 @@ class ScaffoldInitCommand extends Command
     {
         $this->info('Preparing...');
 
-        $packageRoot = $this->ask("Packages root path:", 'packages');
+        $packageRoot = $this->ask("Packages root path:", $name);
         $namespace = trim($packageRoot, '/');
         $packageRoot = base_path($packageRoot);
         $this->dynamicVariables['NAME'] = $name;
@@ -78,10 +83,20 @@ class ScaffoldInitCommand extends Command
         $this->info('composer.json...');
 
         $package = new ComposerParser(base_path('composer.json'));
-        $package->setAutoloadPsr4($this->dynamicVariables['NAME_LOWER'] . "\\\\",
-            $this->dynamicVariables['NAME_LOWER'] . "/");
+        $package->setAutoloadPsr4($this->dynamicVariables['NAME'] . "\\",
+            $this->dynamicVariables['NAME'] . "/");
+
         $package->save();
         $this->info('composer.json saved.');
+
+        Utils::addServiceProvider($this->dynamicVariables['NAME'] . '\User\UserServiceProvider::class');
+        Utils::addServiceProvider('zgldh\UploadManager\UploadManagerServiceProvider::class');
+        Utils::addServiceProvider('GrahamCampbell\Exceptions\ExceptionsServiceProvider::class');
+        Utils::addServiceProvider('Prettus\Repository\Providers\RepositoryServiceProvider::class');
+        Utils::addServiceProvider('InfyOm\Generator\InfyOmGeneratorServiceProvider::class');
+        Utils::addServiceProvider('Yajra\Datatables\DatatablesServiceProvider::class');
+        Utils::addServiceProvider('Spatie\Permission\PermissionServiceProvider::class');
+        Utils::addServiceProvider('Laravel\Passport\PassportServiceProvider::class');
     }
 
     private function setupPackageJson()
@@ -89,106 +104,100 @@ class ScaffoldInitCommand extends Command
         $this->info('packages.json...');
 
         $package = new NpmPackage(base_path('package.json'));
-        $package->setScript('dev', 'node build/dev.js');
-        $package->setScript('build', 'node build/build.js');
 
-        $package->setDevDependencies("admin-lte", "^2.3.8");
-        $package->setDevDependencies("autoprefixer", "^6.5.0");
-        $package->setDevDependencies("babel-core", "^6.16.0");
-        $package->setDevDependencies("babel-loader", "^6.2.5");
-        $package->setDevDependencies("babel-preset-es2015", "^6.16.0");
-        $package->setDevDependencies("babel-preset-latest", "^6.24.0");
-        $package->setDevDependencies("bootstrap-datepicker", "^1.6.4");
-        $package->setDevDependencies("bootstrap-sass", "^3.3.7");
-        $package->setDevDependencies("bundle-loader", "^0.5.4");
-        $package->setDevDependencies("css-loader", "^0.25.0");
-        $package->setDevDependencies("datatables.net", "^1.10.13");
-        $package->setDevDependencies("datatables.net-bs", "^1.10.13");
-        $package->setDevDependencies("datatables.net-buttons", "^1.2.2");
-        $package->setDevDependencies("datatables.net-buttons-bs", "^1.2.2");
-        $package->setDevDependencies("datatables.net-select", "^1.2.1");
-        $package->setDevDependencies("datatables.net-select-dt", "^1.2.1");
-        $package->setDevDependencies("echarts", "^3.4.0");
-        $package->setDevDependencies("exports-loader", "^0.6.3");
-        $package->setDevDependencies("file-loader", "^0.9.0");
-        $package->setDevDependencies("font-awesome", "^4.7.0");
-        $package->setDevDependencies("glob", "^7.1.0");
-        $package->setDevDependencies("html-loader", "^0.4.4");
-        $package->setDevDependencies("i", "^0.3.5");
-        $package->setDevDependencies("icheck", "^1.0.2");
-        $package->setDevDependencies("imports-loader", "^0.6.5");
-        $package->setDevDependencies("ionicons", "^3.0.0");
-        $package->setDevDependencies("jquery", "^2.0.0");
-        $package->setDevDependencies("lodash", "^4.16.2");
-        $package->setDevDependencies("node-notifier", "^4.6.1");
-        $package->setDevDependencies("npm", "^3.10.9");
-        $package->setDevDependencies("node-sass", "^4.0.0");
         $package->setDevDependencies("nprogress", "^0.2.0");
+        $package->setDevDependencies("font-awesome", "^4.7.0");
+        $package->setDevDependencies("ionicons", "^3.0.0");
         $package->setDevDependencies("promise", "^7.1.1");
-        $package->setDevDependencies("sass-loader", "^4.0.2");
-        $package->setDevDependencies("select2", "^4.0.0");
-        $package->setDevDependencies("shelljs", "^0.7.4");
-        $package->setDevDependencies("style-loader", "^0.13.1");
-        $package->setDevDependencies("sweetalert2", "^6.1.1");
         $package->setDevDependencies("tinymce", "^4.4.3");
-        $package->setDevDependencies("toastr", "^2.1.2");
-        $package->setDevDependencies("url-loader", "^0.5.7");
-        $package->setDevDependencies("vue-loader", "^10.0.0");
-        $package->setDevDependencies("vue-resource", "^1.2.1");
-        $package->setDevDependencies("vue-router", "^2.1.1");
-        $package->setDevDependencies("vue-template-compiler", "^2.1.0");
-        $package->setDevDependencies("vuex", "^2.0.0");
-        $package->setDevDependencies("webpack", "^2.1.0-beta.28");
-        $package->setDevDependencies("webpack-dev-server", "^1.16.2");
+        $package->setDevDependencies("vue-router", "^2.3.0");
+        $package->setDevDependencies("vuex", "^2.2.0");
 
-        $package->setDependencies("babel-plugin-transform-runtime", "^6.23.0");
-        $package->setDependencies("babel-polyfill", "^6.16.0");
-        $package->setDependencies("babel-preset-es2015", "^6.24.0");
-        $package->setDependencies("babel-preset-stage-2", "^6.22.0");
-        $package->setDependencies("element-ui", "^1.2.8");
         $package->setDependencies("little-loader", "^0.1.1");
-        $package->setDependencies("vue", "^2.1.0");
-        $package->setDependencies("vue-select", "^2.2.0");
+        $package->setDependencies("element-ui", "^1.2.4");
 
         $package->save();
         $this->info('package.json saved.');
+
+        exec("yarn");
     }
 
     private function setupTemplates()
     {
         $this->info('Templates and facilities...');
 
+        Utils::copy(Utils::template('init/webpack.mix.js'), base_path('webpack.mix.js'));
         Utils::copy(Utils::template('init/app'), base_path('app'));
         Utils::copy(Utils::template('init/database'), base_path('database'));
-        Utils::copy(Utils::template('init/build'), base_path('build'));
         Utils::copy(Utils::template('init/resources'), base_path('resources'));
 
+        $originalAppJsPath = resource_path('assets/js/app.js');
+        $this->info($originalAppJsPath . ' is useless. You can remove that file.');
+//        unlink(resource_path('assets/js/app.js')); // The original app.js is useless
+
         // User package JS files
-        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.list.js'), $this->dynamicVariables);
-        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.role.js'), $this->dynamicVariables);
-        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.permission.js'),
-            $this->dynamicVariables);
+        Utils::replaceFilePlaceholders(base_path('webpack.mix.js'), $this->dynamicVariables);
+        Utils::replaceFilePlaceholders(app_path('Providers/AuthServiceProvider.php'), [
+            '$this->registerPolicies();' => '$this->registerPolicies();' . "\n" . '        \Laravel\Passport\Passport::routes();',
+            "'driver' => 'token'"        => "'driver' => 'passport'"
+        ], null, '');
+//        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.role.js'), $this->dynamicVariables);
+//        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.permission.js'),
+//            $this->dynamicVariables);
     }
 
     private function setupRoute()
     {
         $this->info('Routes...');
 
-        Utils::copy(Utils::template('init/routes/web.php'), base_path('routes/web.php'));
+        Utils::addRoute("Route::get('/admin', function () {return view('admin');});");
+
+//        Utils::copy(Utils::template('init/routes/web.php'), base_path('routes/web.php'));
         $this->comment("Routes added.");
+    }
+
+    private function setUserModule()
+    {
+        $this->info('user Module...');
+
+        Utils::copy(Utils::template('user'), $this->dynamicVariables['PACKAGE_USER_PATH']);
+        foreach (glob($this->dynamicVariables['PACKAGE_USER_PATH'] . '/*/*.php') as $file) {
+            Utils::replaceFilePlaceholders($file, $this->dynamicVariables);
+        }
+        Utils::replaceFilePlaceholders($this->dynamicVariables['PACKAGE_USER_PATH'] . '/UserServiceProvider.php',
+            $this->dynamicVariables);
+        Utils::replaceFilePlaceholders($this->dynamicVariables['PACKAGE_USER_PATH'] . '/routes.php',
+            $this->dynamicVariables);
+
+        $userModelClass = '\\' . $this->dynamicVariables['NAME'] . '\User\Models\User::class';
+        Utils::replaceFilePlaceholders(config_path('auth.php'),
+            ['App\User::class' => $userModelClass],
+            null, '');
+
+        config(['auth.providers.users.model' => $userModelClass]);
+
+        exec('composer dumpautoload');
+
+        $this->info('user Module set.');
     }
 
     private function publishAndMigrate()
     {
+        $this->comment("publishing...");
         Artisan::call('vendor:publish');
+        $this->comment('migrating...');
         Artisan::call('migrate');
+        Artisan::call('make:auth');
+        Artisan::call('passport:install');
+        Artisan::call('vendor:publish --tag=passport-components');
         $this->comment("Vendor published and migrated.");
     }
 
-    private function setupBasicAdmin()
+    private function setupAdminAccount()
     {
-        $command = new UserCreateCommand();
-        $command->createBasicAdmin();
-        $this->comment("Admin added.");
+        $this->comment("Preparing admin account...");
+        Artisan::call('zgldh:user:create', ['--base-admin' => true]);
+        $this->comment("Admin account is ready.");
+
     }
 }

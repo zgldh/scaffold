@@ -2,8 +2,9 @@ import swal from 'sweetalert2';
 
 function alert (text) {
   return swal({
-    type: "error",
-    html: text
+    title: "错误",
+    text: text,
+    type: "error"
   });
 }
 function confirm (text) {
