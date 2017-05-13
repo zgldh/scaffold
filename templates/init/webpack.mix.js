@@ -35,8 +35,8 @@ var webpackConfig = {
 
 mix.webpackConfig(webpackConfig);
 
-mix.extract(['vue', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios'])
-  .js('resources/assets/js/entries/app.js', 'public/js')
-  .js('resources/assets/js/entries/admin.js', 'public/js')
+mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress'])
   .sass('resources/assets/sass/app.scss', 'public/css')
-  .sass('resources/assets/sass/admin.scss', 'public/css');
+  .sass('resources/assets/sass/admin.scss', 'public/css')
+  .js('resources/assets/js/entries/app.js', 'public/js')
+  .js('resources/assets/js/entries/admin.js', 'public/js');
