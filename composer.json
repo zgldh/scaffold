@@ -6,19 +6,16 @@
     "scaffold"
   ],
   "license": "MIT",
-  "type": "project",
   "require": {
-    "php": ">=5.6.4",
+    "php": ">=7.0.0",
     "laravel/framework": "5.4.*",
-    "infyomlabs/laravel-generator": "5.3.x-dev",
     "laravel/passport": "^2.0",
     "laracasts/generators": "dev-master",
     "barryvdh/laravel-ide-helper": "^2.2",
     "graham-campbell/exceptions": "^9.0",
     "doctrine/dbal": "~2.3",
     "yajra/laravel-datatables-oracle": "^6.0",
-    "itsgoingd/clockwork": "^1.12",
-    "zgldh/laravel-upload-manager": "^0.4.3"
+    "itsgoingd/clockwork": "^1.12"
   },
   "require-dev": {
     "filp/whoops": "^2.1"

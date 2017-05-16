@@ -8,7 +8,7 @@ use zgldh\Scaffold\NpmPackage;
 use zgldh\Scaffold\Utils;
 use zgldh\User\UserCreateCommand;
 
-class PackageGenerator extends Command
+class ModuleInstallCommand extends Command
 {
     /**
      * The name and signature of the console command.
