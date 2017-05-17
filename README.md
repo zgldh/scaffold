@@ -35,8 +35,8 @@
     3. 自动设置好根目录的 `packages.json` 
     4. 自动设置好根目录的 `webpack.mix.js`
     5. 自动设置好 `/config/zgldh-scaffold.php` 里面会储存 Modules 目录名
-    6. 自动执行 `composer dumpautoload`
-    7. 自动设置好 `/resources`
+    6. 自动设置好 `/resources`
+    7. 自动执行 `composer dumpautoload`
 5. 执行 `npm install`
 6. 执行 `php artisan migrate`
 7. 执行 `gulp watch`
