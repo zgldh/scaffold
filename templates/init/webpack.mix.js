@@ -26,7 +26,7 @@ var webpackConfig = {
     quiet: false,
     proxy: {
       "/": {
-        target: "http://localhost",
+        target: "http://$HOST$",
         changeOrigin: true
       }
     }
@@ -35,7 +35,7 @@ var webpackConfig = {
 
 mix.webpackConfig(webpackConfig);
 
-mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress'])
+mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress', 'materialize-css'])
   .sass('resources/assets/sass/app.scss', 'public/css')
   .sass('resources/assets/sass/admin.scss', 'public/css')
   .js('resources/assets/js/entries/app.js', 'public/js')

@@ -1,9 +1,8 @@
-<?php namespace zgldh\Scaffold;
+<?php namespace zgldh\Scaffold\Installer;
 
 use Illuminate\Support\ServiceProvider;
-use zgldh\Scaffold\Commands\ScaffoldInitCommand;
 
-class NpmPackage
+class NpmPackageParser
 {
     private $package = null;
     private $path = null;

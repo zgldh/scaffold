@@ -2,9 +2,9 @@
 
 use Artisan;
 use Illuminate\Console\Command;
-use zgldh\Scaffold\ComposerParser;
-use zgldh\Scaffold\NpmPackage;
-use zgldh\Scaffold\Utils;
+use zgldh\Scaffold\Installer\ComposerParser;
+use zgldh\Scaffold\Installer\NpmPackageParser;
+use zgldh\Scaffold\Installer\Utils;
 
 class ScaffoldInitCommand extends Command
 {
@@ -44,6 +44,9 @@ class ScaffoldInitCommand extends Command
     {
         $this->moduleDirectoryName = $this->ask("What's the Module directory name? e.g. MyModules", 'Modules');
         $this->host = $this->ask("What's the local host name of this project? e.g. my-project.local", 'localhost');
+
+        $this->dynamicVariables['NAME'] = $this->moduleDirectoryName;
+        $this->dynamicVariables['HOST'] = $this->host;
 
         //    1. 创建 Modules 目录
         $this->createModulesDirectory();
@@ -91,8 +94,9 @@ class ScaffoldInitCommand extends Command
     {
         $this->line('Setting up packages.json...');
 
-        $package = new NpmPackage(base_path('package.json'));
+        $package = new NpmPackageParser(base_path('package.json'));
 
+        $package->setDevDependencies("materialize-css", "^0.98");
         $package->setDevDependencies("nprogress", "^0.2.0");
         $package->setDevDependencies("font-awesome", "^4.7.0");
         $package->setDevDependencies("ionicons", "^3.0.0");
@@ -108,10 +112,14 @@ class ScaffoldInitCommand extends Command
         $this->info('Complete!');
     }
 
+    /**
+     *4. 自动设置好根目录的 `webpack.mix.js`
+     */
     private function setupWebpackMixJs()
     {
         $this->line('Setting up webpack.mix.js...');
-        //TODO         //    4. 自动设置好根目录的 `webpack.mix.js`
+        Utils::replaceFilePlaceholders(Utils::template('init/webpack.mix.js'), $this->dynamicVariables,
+            base_path('webpack.mix.js'));
         $this->info('Complete!');
     }
 
@@ -119,7 +127,8 @@ class ScaffoldInitCommand extends Command
     {
         $this->line('Setting up configurations...');
 
-        // TODO     5. 自动设置好 `/config/zgldh-scaffold.php` 里面会储存 Modules 目录名
+        Utils::replaceFilePlaceholders(Utils::template('init/config/zgldh-scaffold.php'), $this->dynamicVariables,
+            base_path('config/zgldh-scaffold.php'));
 
         Utils::addServiceProvider('Laravel\Passport\PassportServiceProvider::class');
         Utils::addServiceProvider('GrahamCampbell\Exceptions\ExceptionsServiceProvider::class');

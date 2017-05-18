@@ -1,4 +1,4 @@
-<?php namespace zgldh\Scaffold;
+<?php namespace zgldh\Scaffold\Installer;
 
 class ConfigParser
 {

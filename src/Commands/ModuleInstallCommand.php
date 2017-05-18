@@ -3,9 +3,8 @@
 use Artisan;
 use Illuminate\Console\Command;
 use InfyOm\Generator\Utils\FileUtil;
-use zgldh\Scaffold\ConfigParser;
-use zgldh\Scaffold\NpmPackage;
-use zgldh\Scaffold\Utils;
+use zgldh\Scaffold\Installer\ConfigParser;
+use zgldh\Scaffold\Installer\Utils;
 use zgldh\User\UserCreateCommand;
 
 class ModuleInstallCommand extends Command
