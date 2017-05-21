@@ -11,7 +11,6 @@
     "laravel/framework": "5.4.*",
     "doctrine/dbal": "~2.3",
     "laravel/passport": "~2.0",
-//    "laracasts/generators": "dev-master as 1.1.4",
     "barryvdh/laravel-ide-helper": "~2.2",
     "graham-campbell/exceptions": "^9.0",
     "prettus/l5-repository": "~2.6",
