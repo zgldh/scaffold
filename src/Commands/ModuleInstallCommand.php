@@ -14,7 +14,7 @@ class ModuleInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zgldh:scaffold:package {--fieldFile=} {--fromTable=} {--name=} {--folder=}';
+    protected $signature = 'zgldh:module:install {moduleName}';
 
     /**
      * The console command description.
