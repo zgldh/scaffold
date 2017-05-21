@@ -15,53 +15,21 @@ require('../custom');
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ElementUI from 'element-ui';
+import store from '../commons/store';
 Vue.use(VueRouter);
 Vue.use(ElementUI);
 
-Vue.component(
-  'passport-clients',
-  require('../components/passport/Clients.vue')
+var routes = [].concat(
+  // require('Modules/Dashboard/resources/assets/routes.js').default,
+// Modules routes
 );
-
-Vue.component(
-  'passport-authorized-clients',
-  require('../components/passport/AuthorizedClients.vue')
-);
-
-Vue.component(
-  'passport-personal-access-tokens',
-  require('../components/passport/PersonalAccessTokens.vue')
-);
-
-import Layout from '../admin/Layout.vue';
-
-var routes = [
-  {path: '/login', component: () => System.import('Modules/User/resources/assets/user/LoginPage.vue')},
-  {
-    path: '/', component: Layout,
-    children: [].concat(
-      require('Modules/User/resources/assets/routes.js').default,
-    )
-  }
-];
 
 const router = new VueRouter({
-  routes // （缩写）相当于 routes: routes
+  routes, // （缩写）相当于 routes: routes,
+  linkActiveClass: 'active'
 });
 
 const app = new window.Vue({
   router: router,
-  components: {
-    Layout
-  },
-  created: function () {
-    axios.get('/api/user').then(function (result) {
-      console.log('result', result);
-    }, function (error) {
-      console.log('error', error);
-      if (error.response.status == 401) {
-        app.$router.push('login');
-      }
-    })
-  }
+  store: store
 }).$mount('#app');

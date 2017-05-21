@@ -13,9 +13,9 @@
     "laravel/passport": "~2.0",
     "laracasts/generators": "dev-master",
     "barryvdh/laravel-ide-helper": "~2.2",
-    "graham-campbell/exceptions": "~9.0",
+    "graham-campbell/exceptions": "^9.0",
     "prettus/l5-repository": "~2.6",
-    "yajra/laravel-datatables-oracle": "~6.0",
+    "yajra/laravel-datatables-oracle": "^7.0",
     "itsgoingd/clockwork": "~1.12"
   },
   "require-dev": {

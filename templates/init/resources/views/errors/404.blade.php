@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>服务器很忙，暂时没空理你。</title>
+    <title>您想要找的东西，并不存在。</title>
 
     <style>
         html, body {
@@ -38,7 +38,7 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">服务器很忙，暂时没空理你。</div>
+        <div class="title">您想要找的东西，并不存在。</div>
     </div>
 </div>
 </body>

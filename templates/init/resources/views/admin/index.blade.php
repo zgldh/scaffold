@@ -2,11 +2,12 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Admin in public</title>
+    <title>@yield('title','网站名字后台管理')</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-<div id="app"></div>
+
+<div class="app-mount" id="app"></div>
 
 <script>
   window.Laravel = {

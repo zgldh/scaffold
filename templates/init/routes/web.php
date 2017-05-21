@@ -15,8 +15,4 @@
     Route::get('/logout', 'Auth\LoginController@logout');
 
     Route::get('/', ['as' => 'dashboard.index', 'uses' => 'HomeController@index']);
-
-    require base_path('$NAME$/Dashboard/routes.php');
-    require base_path('$NAME$/User/routes.php');
-    require base_path('$NAME$/Upload/routes.php');
-    require base_path('$NAME$/ActionLog/routes.php');
+    Route::get('/admin', ['as' => 'admin.index', 'uses' => 'AdminController@index']);

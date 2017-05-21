@@ -3,6 +3,7 @@
 use Artisan;
 use Illuminate\Console\Command;
 use zgldh\Scaffold\Installer\ComposerParser;
+use zgldh\Scaffold\Installer\KernelEditor;
 use zgldh\Scaffold\Installer\NpmPackageParser;
 use zgldh\Scaffold\Installer\Utils;
 
@@ -58,13 +59,14 @@ class ScaffoldInitCommand extends Command
         $this->setupWebpackMixJs();
         //    5. 自动设置好 `/config/zgldh-scaffold.php` 里面会储存 Modules 目录名
         $this->setupConfiguration();
-        //    6. 自动设置好 `/resources`
-        $this->setupResources();
+        //    6. 自动设置好 `/app`, `/resources`, `/routes`
+        $this->setupFiles();
         //    7. 自动执行 `composer dumpautoload`
         $this->composerDumpAutoload();
 
         $this->info('Scaffold is ready. Please run following commands:');
         $this->line('npm install');
+        $this->line('php artisan vendor:publish');
         $this->line('php artisan migrate');
         $this->line('gulp watch');
         $this->line('Go to browser for: http://' . $this->host . ' to start development.');
@@ -96,17 +98,17 @@ class ScaffoldInitCommand extends Command
 
         $package = new NpmPackageParser(base_path('package.json'));
 
-        $package->setDevDependencies("materialize-css", "^0.98");
-        $package->setDevDependencies("nprogress", "^0.2.0");
-        $package->setDevDependencies("font-awesome", "^4.7.0");
-        $package->setDevDependencies("ionicons", "^3.0.0");
-        $package->setDevDependencies("promise", "^7.1.1");
-        $package->setDevDependencies("tinymce", "^4.4.3");
-        $package->setDevDependencies("vue-router", "^2.3.0");
-        $package->setDevDependencies("vuex", "^2.2.0");
+        $package->setDevDependencies("materialize-css", "~0.98");
+        $package->setDevDependencies("nprogress", "~0.2");
+        $package->setDevDependencies("font-awesome", "~4.7");
+        $package->setDevDependencies("ionicons", "~3.0");
+        $package->setDevDependencies("promise", "~7.1.1");
+        $package->setDevDependencies("tinymce", "~4.4.3");
+        $package->setDevDependencies("vue-router", "~2.3");
+        $package->setDevDependencies("vuex", "~2.2");
 
         $package->setDependencies("little-loader", "^0.1.1");
-        $package->setDependencies("element-ui", "^1.2.4");
+        $package->setDependencies("element-ui", "~1.3");
 
         $package->save();
         $this->info('Complete!');
@@ -136,16 +138,21 @@ class ScaffoldInitCommand extends Command
         Utils::addServiceProvider('Yajra\Datatables\DatatablesServiceProvider::class');
         Utils::addServiceProvider('Clockwork\Support\Laravel\ClockworkServiceProvider::class');
 
+        KernelEditor::addMiddleware('\Clockwork\Support\Laravel\ClockworkMiddleware::class');
+
         $this->info('Complete!');
     }
 
-    private function setupResources()
+    private function setupFiles()
     {
-        $this->line('Setting up resources...');
-        //TODO         //    6. 自动设置好 `/resources`
+        $this->line('Setting up files...');
+
+        Utils::copy(Utils::template('init/app'), base_path('app'));
+        Utils::copy(Utils::template('init/resources'), base_path('resources'));
+        Utils::copy(Utils::template('init/routes'), base_path('routes'));
+
         $this->info('Complete!');
     }
-
 
     private function composerDumpAutoload()
     {
