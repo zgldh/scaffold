@@ -41,3 +41,4 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
   .js('resources/assets/js/entries/admin.js', 'public/js');
 
 mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress', 'materialize-css'])
+mix.sourceMaps();
