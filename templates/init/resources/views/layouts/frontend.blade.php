@@ -16,6 +16,7 @@
 </head>
 <body class="">
 <div class="app-mount" id="app">
+    @yield('content')
 </div>
 
 <script>

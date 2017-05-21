@@ -12,12 +12,10 @@ require('../custom');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import ElementUI from 'element-ui';
-import store from '../commons/store';
+window.Vue = require('vue');
+window.VueRouter = require('vue-router');
 Vue.use(VueRouter);
-Vue.use(ElementUI);
+Vue.use(require('element-ui'));
 
 var routes = [].concat(
   // require('Modules/Dashboard/resources/assets/routes.js').default,
@@ -31,5 +29,5 @@ const router = new VueRouter({
 
 const app = new window.Vue({
   router: router,
-  store: store
+  store: require('../commons/store')
 }).$mount('#app');
