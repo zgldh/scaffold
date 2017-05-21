@@ -19,8 +19,9 @@
     6. 自动设置好 `/resources`
     7. 自动执行 `composer dumpautoload`
 5. 执行 `npm install`
+6. 执行 `php artisan vendor:publish`
 6. 执行 `php artisan migrate`
-7. 执行 `gulp watch`
+7. 执行 `npm run hot`
 8. 访问 `http://localhost:8080` 开始开发调试。
 
 ## 安装 Module 的方法
