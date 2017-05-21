@@ -1,0 +1,1 @@
+require base_path('$PACKAGE_FOLDER$/routes.php');

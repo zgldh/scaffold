@@ -1,0 +1,5 @@
+
+{{-- Model: $MODEL_NAME$ $MODEL_NAME_PRESENTATION$ --}}
+<li class="{{ Request::is('$MODEL_NAME_LOWER$*') ? 'active' : '' }}">
+    <a href="{!! route('$MODEL_NAME_LOWER$.index') !!}"><i class="fa fa-edit"></i><span>$MODEL_NAME_PRESENTATION$</span></a>
+</li>
