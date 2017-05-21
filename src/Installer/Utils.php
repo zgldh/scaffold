@@ -11,7 +11,7 @@ class Utils
 {
     public static function template($name)
     {
-        $path = __DIR__ . '/../templates/' . $name;
+        $path = __DIR__ . '/../../templates/' . $name;
         return $path;
     }
 
