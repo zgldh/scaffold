@@ -1,29 +1,10 @@
 ## zgldh/Scaffold
 
-1. Edit composer.json
- ```
-    "repositories": [
-        {
-            "type": "path",
-            "url": "zgldh/Scaffold"
-        }
-    ],
-    "require": {
-      "zgldh/scaffold": "^0.1",
-      "infyomlabs/laravel-generator": "5.3.x-dev",
-      "laracasts/generators": "dev-master"
-    }
- ```
-2. composer update zgldh/scaffold -vvv
-3. edit your `.env` to setup database configuration. 
-2. php artisan zgldh:scaffold:init
-2. php artisan zgldh:scaffold:init --setup
-4. All set.
-
+仍然处在开发阶段，不稳定。
 
 ## 开发路线：
 
-1. 使用 `omposer require zgldh/scaffold:dev-develop laracasts/generators:@dev` 后， 所需要的其他 composer
+1. 使用 `omposer require zgldh/scaffold:@dev laracasts/generators:@dev` 后， 所需要的其他 composer
  包自动引用完毕。
 2. 编辑 `/config/app.php` 加入 `ScaffoldServiceProvider`
 3. 使用 `zgldh:scaffold:init` 后：
