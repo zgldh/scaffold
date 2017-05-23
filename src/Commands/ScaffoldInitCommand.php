@@ -76,7 +76,7 @@ class ScaffoldInitCommand extends Command
     {
         $moduleDirectory = base_path($this->moduleDirectoryName);
         $this->line("Creating modules directory to " . $moduleDirectory);
-        if (!dir($moduleDirectory)) {
+        if (!is_dir($moduleDirectory)) {
             mkdir($moduleDirectory, 0755, true);
         }
         $this->info('Complete!');
