@@ -20,8 +20,6 @@ Vue.component('full-screen-button', FullScreenButton);
 
 import {confirm, alert} from '../components/SweetAlertDialogs';
 
-let resource = null;
-let appPageTable = null;
 
 const vueHelper = {
   /**
@@ -32,6 +30,8 @@ const vueHelper = {
    * @returns {{props: {}, components: {BaseFormDialog}, computed: {}, methods: {onDelete: defaultVueConfig.methods.onDelete, onCreate: defaultVueConfig.methods.onCreate, onEdit: defaultVueConfig.methods.onEdit}, watch: {}}}
    */
   buildVueConfig: function (resourceURL, datatablesConfig, inputDefaultItem, openDialog) {
+    var resource = null;
+    var appPageTable = null;
     if (resourceURL.constructor == Object) {
       var url = resourceURL.resource + '{/id}';
       url += resourceURL.with ? "?_with=" + encodeURIComponent(resourceURL.with) : '';
