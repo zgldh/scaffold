@@ -6,16 +6,19 @@
 
 require('../bootstrap');
 require('../custom');
+require('../../vendor/admin-lte/js/app');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-window.Vue = require('vue');
-window.VueRouter = require('vue-router');
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 Vue.use(require('element-ui'));
+
+Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
 
 var routes = [].concat(
   // require('Modules/Dashboard/resources/assets/routes.js').default,
@@ -27,7 +30,7 @@ const router = new VueRouter({
   linkActiveClass: 'active'
 });
 
-const app = new window.Vue({
+const app = new Vue({
   router: router,
   store: require('../commons/store')
 }).$mount('#app');

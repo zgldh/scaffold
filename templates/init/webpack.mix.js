@@ -23,13 +23,7 @@ var webpackConfig = {
   devServer: {
     contentBase: path.join(__dirname, "public"),
     noInfo: false,
-    quiet: false,
-    proxy: {
-      "/": {
-        target: "http://$HOST$",
-        changeOrigin: true
-      }
-    }
+    quiet: false
   }
 };
 
@@ -42,3 +36,4 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
 
 mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress', 'materialize-css'])
 mix.sourceMaps();
+mix.browserSync('$HOST$');

@@ -12,7 +12,7 @@ require('../custom');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-window.Vue = require('vue');
+import Vue from 'vue';
 
 const app = new Vue({
   el: '#app'

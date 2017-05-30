@@ -21,8 +21,7 @@
 5. 执行 `npm install`
 6. 执行 `php artisan vendor:publish`
 6. 执行 `php artisan migrate`
-7. 执行 `npm run hot`
-8. 访问 `http://localhost:8080` 开始开发调试。
+7. 执行 `npm run watch` 开始开发调试。
 
 ## 安装 Module 的方法
 

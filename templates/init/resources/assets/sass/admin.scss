@@ -4,6 +4,13 @@
 @import "variables";
 // Bootstrap
 @import url("https://unpkg.com/element-ui/lib/theme-default/index.css");
+// materializecss
+//@import "~materialize-css/sass/materialize.scss";
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "../vendor/admin-lte/css/AdminLTE.css";
+@import "../vendor/admin-lte/css/skins/skin-blue.css";
+@import "~font-awesome/scss/font-awesome.scss";
+@import "~ionicons/dist/scss/ionicons.scss";
 
 * {
   box-sizing: border-box;
@@ -14,4 +21,50 @@
 html, body {
   height: 100%;
   visibility: visible !important;
+}
+
+#app {
+  min-height: 100%;
+}
+
+.logo {
+  background-image: url('../images/default_logo_large.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  b {
+    display: none;
+  }
+}
+
+body.sidebar-collapse {
+  .logo {
+    background-image: url('../images/default_logo.png');
+    background-size: auto;
+    background-repeat: no-repeat;
+    width: 50px;
+    b {
+      display: none;
+    }
+  }
+  .main-header {
+    nav[role="navigation"] {
+      margin-left: 50px;
+    }
+  }
+}
+
+.main-header {
+  .sidebar-toggle {
+    height: 50px;
+  }
+  .sidebar-toggle:hover, .sidebar-toggle:focus {
+    text-decoration: none;
+  }
+}
+
+.sidebar-menu {
+  a:focus {
+    text-decoration: none;
+  }
 }

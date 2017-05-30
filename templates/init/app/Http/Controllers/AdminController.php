@@ -11,7 +11,7 @@ class AdminController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth'); // 当安装 module-user 以后，可使用中间件保护后台
     }
 
     /**
