@@ -4,7 +4,7 @@
 
 ## 开发路线：
 
-1. 使用 `composer require zgldh/scaffold:@dev` 后， 所需要的其他 composer
+1. 使用 `composer require zgldh/scaffold:dev-master` 后， 所需要的其他 composer
  包自动引用完毕。
 2. 编辑 `/config/app.php` 加入 `ScaffoldServiceProvider`
 3. 使用 `zgldh:scaffold:init` 后：
