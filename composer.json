@@ -34,8 +34,15 @@
   },
   "repositories": [
     {
-      "type": "vcs",
-      "url": "https://github.com/zgldh/Laravel-5-Generators-Extended"
+      "type": "package",
+      "package": {
+        "name": "laracasts/generators",
+        "version": "1.1.4",
+        "dist": {
+          "url": "https://github.com/zgldh/Laravel-5-Generators-Extended/archive/1.1.4.zip",
+          "type": "zip"
+        }
+      }
     }
   ],
   "scripts": {
