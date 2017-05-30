@@ -10,6 +10,7 @@
     "php": ">=7.0.0",
     "laravel/framework": "5.4.*",
     "doctrine/dbal": "~2.3",
+    "laracasts/generators": "^1.1.4",
     "laravel/passport": "~2.0",
     "barryvdh/laravel-ide-helper": "~2.2",
     "graham-campbell/exceptions": "^9.0",
@@ -31,6 +32,12 @@
     "classmap": [
     ]
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/zgldh/Laravel-5-Generators-Extended"
+    }
+  ],
   "scripts": {
     "post-root-package-install": [
     ],
