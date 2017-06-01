@@ -69,8 +69,18 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
             $query = call_user_func_array([$query, 'with'], $with);
         }
 
-
         $dt = Datatables::eloquent($query);
+
+        $columns = \Request::input('columns', []);
+        foreach ($columns as $column) {
+            $advanceSearches = array_get($column, 'search.advance');
+            if ($advanceSearches) {
+                foreach ($advanceSearches as $operator => $value) {
+                    $dt->where($column['name'], $operator, $value);
+                }
+            }
+        }
+
         if ($filter) {
             $dt->filter($filter);
         }
@@ -150,9 +160,11 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
                         if (count($new_values) > 0) {
                             $related = get_class($model->$key()->getRelated());
                             foreach ($new_values as $val) {
-                                $rel = $related::find($val);
-                                $rel->$model_key = $model->id;
-                                $rel->save();
+                                if (is_string($val) || is_numeric($val)) {
+                                    $rel = $related::find($val);
+                                    $rel->$model_key = $model->id;
+                                    $rel->save();
+                                }
                             }
                         }
                         break;
