@@ -1,3 +1,5 @@
+import {alert} from 'resources/assets/js/components/SweetAlertDialogs';
+
 let ErrorsBuilder = function () {
   return {
     $_errors: {},
@@ -15,6 +17,25 @@ let ErrorsBuilder = function () {
     set: function (key, error) {
       this.$_errors[key] = error;
     },
+    /**
+     * Set Laravel 422 errors
+     * @param errors
+     */
+    setAll: function (errors, noFocus) {
+      var unsettledErrors = [];
+      Object.keys(errors).map(function (key, index) {
+        if (document.getElementById('field-' + key)) {
+          this.set(key, errors[key]);
+        }
+        else {
+          unsettledErrors.push(errors[key]);
+        }
+      }.bind(this), 0);
+
+      if (unsettledErrors.length) {
+        alert(unsettledErrors.join("<br>"));
+      }
+    },
     remove: function (key) {
       unset(this.$_errors[key]);
     },
@@ -23,6 +44,18 @@ let ErrorsBuilder = function () {
     },
     removeAll: function () {
       this.$_errors = {};
+    },
+    focusFirstErrorField: function (className) {
+      setTimeout(function () {
+        className = className ? className : 'has-error';
+        var div = document.getElementsByClassName(className)[0];
+        if (div) {
+          var input = div.getElementsByTagName('input')[0];
+          if (input) {
+            input.focus();
+          }
+        }
+      }, 1);
     }
   };
 };

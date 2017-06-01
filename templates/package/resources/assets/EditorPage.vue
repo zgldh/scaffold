@@ -29,7 +29,21 @@
         <div class="box-body">
 
           <form class="form-horizontal" @submit="onSave">
+            <div class="form-group" v-if="item.id">
+              <label for="field-id" class="col-sm-2 control-label">ID</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="field-id" v-model="item.id" disabled>
+              </div>
+            </div>
+
             $FORM_FIELDS$
+
+            <div class="form-group" v-if="item.id">
+              <label for="field-created_at" class="col-sm-2 control-label">创建时间</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="field-created_at" v-model="item.created_at" disabled>
+              </div>
+            </div>
           </form>
         </div>
         <!-- /.box-body -->

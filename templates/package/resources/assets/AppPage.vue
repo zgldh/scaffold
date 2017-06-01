@@ -6,7 +6,9 @@
         <small>列表</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> 控制台</a></li>
+        <li>
+          <router-link to="/"><i class="fa fa-dashboard"></i> 控制台</router-link>
+        </li>
         <li><a href="#">$MODEL_NAME_PRESENTATION$</a></li>
         <li class="active">列表</li>
       </ol>
@@ -45,41 +47,22 @@
 
     </section>
     <!-- /.content -->
-
-    <form-dialog :defaultItem="defaultItem" ref="editorDialog"></form-dialog>
   </div>
 </template>
 
 <script type="javascript">
-  import Vue from 'vue';
   import datatablesHelper from 'resources/assets/js/commons/datatables-helper.js';
   import vueHelper from 'resources/assets/js/commons/vuejs.js';
   import columns from './TableColumns';
 
-  let defaultItem = $APP_PAGE_EMPTY_ITEMS$;
-  let appPageTable = null;
   let resourceURL = "/$MODEL_NAME_LOWER$";
-  let datatablesConfig = datatablesHelper.buildDatatablesConfig(resourceURL, columns);
-  let vueConfig = vueHelper.buildVueConfig(resourceURL, datatablesConfig, defaultItem);
+  let datatablesConfig = datatablesHelper.buildDatatablesConfig({
+    resource: resourceURL,
+    // with: ['roles', 'permissions'] // 载入额外的关联数据(relationship)
+  }, columns);
+  let vueConfig = vueHelper.buildVueConfig(resourceURL, datatablesConfig);
 
   export default vueConfig;
-
-  // Form Dialog definition
-  let formDialog = vueHelper.buildFormDialogConfig({
-    props: ['defaultItem'],
-    data: function () {
-      return {
-        // 可以返回一些前端立即要用的数据。来自 index.blade.php 输出的数据。
-        // 如：
-        // permissions: window.PROMISSIONS,
-        // roles: window.ROLES
-      };
-    },
-    template: require('./FormFields.html')
-  });
-  Vue.component('form-dialog', formDialog);
-
-
 </script>
 
 <style lang="scss">
