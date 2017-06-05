@@ -24,7 +24,7 @@ class Utils
         return $template;
     }
 
-    public static function copy($src, $dst)
+    public static function copy($src, $dst, $variables = null)
     {
         if (is_dir($src)) {
             if (!file_exists($dst)) {
@@ -33,11 +33,16 @@ class Utils
             $files = scandir($src);
             foreach ($files as $file) {
                 if ($file != "." && $file != "..") {
-                    self::copy("$src" . DIRECTORY_SEPARATOR . "$file", "$dst" . DIRECTORY_SEPARATOR . "$file");
+                    self::copy("$src" . DIRECTORY_SEPARATOR . "$file", "$dst" . DIRECTORY_SEPARATOR . "$file",
+                        $variables);
                 }
             }
         } elseif (file_exists($src)) {
-            copy($src, $dst);
+            if ($variables) {
+                self::replaceFilePlaceholders($src, $variables, $dst);
+            } else {
+                copy($src, $dst);
+            }
         }
     }
 
@@ -86,5 +91,18 @@ class Utils
             $routeFile .= "\n" . $route;
             file_put_contents($routeFilePath, $routeFile);
         }
+    }
+
+    /**
+     * Add vue route setting to admin JavaScript entry file.
+     * @param $adminVueRoutesPath
+     * @param string $adminJs
+     */
+    public static function addToVueRoute($adminVueRoutesPath, $adminJs = 'assets/js/entries/admin.js')
+    {
+        $adminEntryPath = resource_path($adminJs);
+        Utils::replaceFilePlaceholders($adminEntryPath, [
+            '// Modules routes' => '  ' . $adminVueRoutesPath . ",\n" . '// Modules routes'
+        ], null, '');
     }
 }

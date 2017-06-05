@@ -1,6 +1,7 @@
 <?php namespace zgldh\Scaffold\Commands;
 
 use Artisan;
+use Hamcrest\Util;
 use Illuminate\Console\Command;
 use zgldh\Scaffold\Installer\ComposerParser;
 use zgldh\Scaffold\Installer\KernelEditor;
@@ -61,7 +62,9 @@ class ScaffoldInitCommand extends Command
         $this->setupConfiguration();
         //    6. 自动设置好 `/app`, `/resources`, `/routes`
         $this->setupFiles();
-        //    7. 自动执行 `composer dumpautoload`
+        //    7. 初始的几个Modules： Dashboard 等
+        $this->setupModules();
+        //    8. 自动执行 `composer dumpautoload`
         $this->composerDumpAutoload();
 
         $this->info('Scaffold is ready. Please run following commands:');
@@ -152,6 +155,20 @@ class ScaffoldInitCommand extends Command
         Utils::copy(Utils::template('init/app'), base_path('app'));
         Utils::copy(Utils::template('init/resources'), base_path('resources'));
         Utils::copy(Utils::template('init/routes'), base_path('routes'));
+
+        $this->info('Complete!');
+    }
+
+    private function setupModules()
+    {
+        $this->line('Setting up initialize Modules...');
+
+        // Dashboard
+        Utils::copy(Utils::template('modules/Dashboard'), base_path($this->moduleDirectoryName . '/Dashboard'),
+            $this->dynamicVariables);
+        Utils::addServiceProvider($this->moduleDirectoryName . '\Dashboard\DashboardServiceProvider::class');
+        Utils::addRoute("require base_path('{$this->moduleDirectoryName}/Dashboard/routes.php');");
+        Utils::addToVueRoute("require('{$this->moduleDirectoryName}/Dashboard/resources/assets/routes.js').default;");
 
         $this->info('Complete!');
     }

@@ -1,4 +1,4 @@
-@extends('layouts.adminlte')
+@extends('admin.index')
 
 @section('title','$MODEL_NAME_PRESENTATION$')
 
