@@ -63,7 +63,7 @@ const vueHelper = {
         searchColumn: function (columnName, searchTerm, operator) {
           operator = operator ? operator : '=';
           advanceColumnSearch[columnName] = advanceColumnSearch[columnName] ? advanceColumnSearch[columnName] : {};
-          if (searchTerm == null || searchTerm == undefined) {
+          if (searchTerm == "" || searchTerm == null || searchTerm == undefined) {
             delete advanceColumnSearch[columnName][operator];
           }
           else {
