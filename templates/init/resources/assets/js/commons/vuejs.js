@@ -1,3 +1,4 @@
+import NProgress from 'nprogress'
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router'
@@ -177,7 +178,10 @@ const vueHelper = {
               json.columns[columnIndex].search.advance = advanceColumnSearch[columnName];
             }
           }
-          console.log(json, advanceColumnSearch);
+          NProgress.start();
+        });
+        this.appPageTable.on('xhr', function (e, settings, json, xhr) {
+          NProgress.done();
         });
         this.appPageTable.on('select', function (e, dt, type, indexes) {
           let items = dt.rows('.selected').data().toArray();
