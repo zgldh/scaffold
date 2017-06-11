@@ -1,12 +1,12 @@
 @extends('layouts.static')
 
-@section('title','登录 - Cosmota 建筑监测数据平台')
+@section('title','登录 - 网站名字后台管理')
 
 @section('content')
     <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url('/') }}"><b>Cosmota </b><br>建筑监测数据平台</a>
+            <a href="{{ url('/') }}">网站名字后台管理</a>
         </div>
 
         <!-- /.login-logo -->

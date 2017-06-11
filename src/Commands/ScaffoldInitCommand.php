@@ -27,6 +27,8 @@ class ScaffoldInitCommand extends Command
     private $moduleDirectoryName = 'Modules';
     private $host = 'localhost';
 
+    private $dynamicVariables = [];
+
     /**
      * Create a new command instance.
      *
@@ -156,6 +158,8 @@ class ScaffoldInitCommand extends Command
         Utils::copy(Utils::template('init/resources'), base_path('resources'));
         Utils::copy(Utils::template('init/routes'), base_path('routes'));
 
+        Utils::replaceFilePlaceholders(resource_path('assets/js/entries/admin.js'), $this->dynamicVariables);
+
         $this->info('Complete!');
     }
 
@@ -178,102 +182,6 @@ class ScaffoldInitCommand extends Command
         $this->line('Composer dumpautoload');
         exec('composer dumpautoload');
         $this->info('Complete!');
-    }
-
-    private $dynamicVariables = [];
-
-    private function getInput($name)
-    {
-        $this->info('Preparing...');
-
-        $packageRoot = $this->ask("Packages root path:", $name);
-        $namespace = trim($packageRoot, '/');
-        $packageRoot = base_path($packageRoot);
-        $this->dynamicVariables['NAME'] = $name;
-        $this->dynamicVariables['NAME_LOWER'] = strtolower($this->dynamicVariables['NAME']);
-        $this->dynamicVariables['PACKAGES_PATH'] = $packageRoot;
-        $this->dynamicVariables['PACKAGE_USER_PATH'] = $namespace . '/User';
-        $this->dynamicVariables['NAME_SPACE_USER'] = $namespace . '\User';
-    }
-
-
-    private function setupTemplates()
-    {
-        $this->info('Templates and facilities...');
-
-        Utils::copy(Utils::template('init/webpack.mix.js'), base_path('webpack.mix.js'));
-        Utils::copy(Utils::template('init/app'), base_path('app'));
-        Utils::copy(Utils::template('init/database'), base_path('database'));
-        Utils::copy(Utils::template('init/resources'), base_path('resources'));
-
-        $originalAppJsPath = resource_path('assets/js/app.js');
-        $this->info($originalAppJsPath . ' is useless. You can remove that file.');
-//        unlink(resource_path('assets/js/app.js')); // The original app.js is useless
-
-        // User package JS files
-        Utils::replaceFilePlaceholders(base_path('webpack.mix.js'), $this->dynamicVariables);
-        Utils::replaceFilePlaceholders(app_path('Providers/AuthServiceProvider.php'), [
-            '$this->registerPolicies();' => '$this->registerPolicies();' . "\n" . '        \Laravel\Passport\Passport::routes();',
-            "'driver' => 'token'"        => "'driver' => 'passport'"
-        ], null, '');
-//        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.role.js'), $this->dynamicVariables);
-//        Utils::replaceFilePlaceholders(base_path('resources/assets/js/entries/user.permission.js'),
-//            $this->dynamicVariables);
-    }
-
-    private function setupRoute()
-    {
-        $this->info('Routes...');
-
-        Utils::addRoute("Route::get('/admin', function () {return view('admin');});");
-
-//        Utils::copy(Utils::template('init/routes/web.php'), base_path('routes/web.php'));
-        $this->comment("Routes added.");
-    }
-
-    private function setUserModule()
-    {
-        $this->info('user Module...');
-
-        Utils::copy(Utils::template('user'), $this->dynamicVariables['PACKAGE_USER_PATH']);
-        foreach (glob($this->dynamicVariables['PACKAGE_USER_PATH'] . '/*/*.php') as $file) {
-            Utils::replaceFilePlaceholders($file, $this->dynamicVariables);
-        }
-        Utils::replaceFilePlaceholders($this->dynamicVariables['PACKAGE_USER_PATH'] . '/UserServiceProvider.php',
-            $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($this->dynamicVariables['PACKAGE_USER_PATH'] . '/routes.php',
-            $this->dynamicVariables);
-
-        $userModelClass = '\\' . $this->dynamicVariables['NAME'] . '\User\Models\User::class';
-        Utils::replaceFilePlaceholders(config_path('auth.php'),
-            ['App\User::class' => $userModelClass],
-            null, '');
-
-        config(['auth.providers.users.model' => $userModelClass]);
-
-        exec('composer dumpautoload');
-
-        $this->info('user Module set.');
-    }
-
-    private function publishAndMigrate()
-    {
-        $this->comment("publishing...");
-        Artisan::call('vendor:publish');
-        $this->comment('migrating...');
-        Artisan::call('migrate');
-        Artisan::call('make:auth');
-        Artisan::call('passport:install');
-        Artisan::call('vendor:publish --tag=passport-components');
-        $this->comment("Vendor published and migrated.");
-    }
-
-    private function setupAdminAccount()
-    {
-        $this->comment("Preparing admin account...");
-        Artisan::call('zgldh:user:create', ['--base-admin' => true]);
-        $this->comment("Admin account is ready.");
-
     }
 
 }

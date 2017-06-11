@@ -1,4 +1,0 @@
-import callback from '../commons/list';
-callback(function () {
-  return require('../../../../$PACKAGE_FOLDER$/resources/assets/config.js');
-});

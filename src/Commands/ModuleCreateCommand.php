@@ -235,11 +235,7 @@ class ModuleCreateCommand extends Command
         // 4. Add Menu to  resources\views\layouts\menu.blade.php
         $template = file_get_contents(Utils::template('package/menu_item.stub'));
         $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $menuPath = resource_path('views/layouts/menu.blade.php');
-        $menus = file_get_contents($menuPath);
-        if (!str_contains($menuPath, $templateData)) {
-            file_put_contents($menuPath, $menus . $templateData);
-        }
+        Utils::addAdminMenuItem($templateData);
     }
 
     private function generateController($controllerFolder)

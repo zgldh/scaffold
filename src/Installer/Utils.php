@@ -54,12 +54,23 @@ class Utils
      */
     public static function replaceFilePlaceholders($filePath, $variables, $destPath = null, $pending = '$')
     {
-        $template = file_get_contents($filePath);
-        $templateData = Utils::fillTemplate($variables, $template, $pending);
         if (!$destPath) {
             $destPath = $filePath;
         }
-        file_put_contents($destPath, $templateData);
+        if (is_dir($filePath)) {
+            $files = scandir($filePath);
+            foreach ($files as $file) {
+                if ($file != "." && $file != "..") {
+                    Utils::replaceFilePlaceholders("$filePath" . DIRECTORY_SEPARATOR . "$file", $variables, $destPath,
+                        $pending);
+                }
+            }
+        } elseif (file_exists($filePath)) {
+            $template = file_get_contents($filePath);
+            $templateData = Utils::fillTemplate($variables, $template, $pending);
+            file_put_contents($destPath, $templateData);
+        }
+
     }
 
     /**
@@ -101,8 +112,24 @@ class Utils
     public static function addToVueRoute($adminVueRoutesPath, $adminJs = 'assets/js/entries/admin.js')
     {
         $adminEntryPath = resource_path($adminJs);
-        Utils::replaceFilePlaceholders($adminEntryPath, [
-            '// Modules routes' => '  ' . $adminVueRoutesPath . ",\n" . '// Modules routes'
-        ], null, '');
+        $adminEntryFile = file_get_contents($adminEntryPath);
+        if (!str_contains($adminEntryFile, $adminVueRoutesPath)) {
+            Utils::replaceFilePlaceholders($adminEntryPath, [
+                '// Modules routes' => '  ' . $adminVueRoutesPath . ",\n" . '// Modules routes'
+            ], null, '');
+        }
+    }
+
+    /**
+     * Add menu item to admin blade template file.
+     * @param $menuContent
+     */
+    public static function addAdminMenuItem($menuContent)
+    {
+        $menuPath = resource_path('views/layouts/menu.blade.php');
+        $menus = file_get_contents($menuPath);
+        if (!str_contains($menuPath, $menuContent)) {
+            file_put_contents($menuPath, "\n" . $menus . $menuContent . "\n");
+        }
     }
 }
