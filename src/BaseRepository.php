@@ -72,13 +72,18 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
         $dt = Datatables::eloquent($query);
 
         $columns = \Request::input('columns', []);
-        foreach ($columns as $column) {
-            $advanceSearches = array_get($column, 'search.advance');
-            if ($advanceSearches) {
-                foreach ($advanceSearches as $operator => $value) {
-                    $dt->where($column['name'], $operator, $value);
+        if (sizeof($columns) > 0) {
+            $dt->filter(function ($query) use ($columns) {
+                foreach ($columns as $column) {
+                    $advanceSearches = array_get($column, 'search.advance');
+                    if ($advanceSearches) {
+                        foreach ($advanceSearches as $operator => $value) {
+                            $columnNames = explode('.', $column['name']);
+                            $this->advanceSearch($query, $columnNames, $operator, $value);
+                        }
+                    }
                 }
-            }
+            });
         }
 
         if ($filter) {
@@ -87,6 +92,19 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
         $result = $dt->make(true);
         $this->resetModel();
         return $result;
+    }
+
+    private function advanceSearch($query, $columnNames, $operator, $value)
+    {
+        if (sizeof($columnNames) == 1) {
+            $columnName = $columnNames[0];
+            $query->where($columnName, $operator, $value);
+        } else {
+            $columnName = array_shift($columnNames);
+            $query->whereHas($columnName, function ($q) use ($columnNames, $operator, $value) {
+                $this->advanceSearch($q, $columnNames, $operator, $value);
+            });
+        }
     }
 
     public function create(array $attributes)
