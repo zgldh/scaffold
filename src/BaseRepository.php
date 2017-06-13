@@ -77,10 +77,12 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
                 foreach ($columns as $column) {
                     $advanceSearches = array_get($column, 'search.advance');
                     if ($advanceSearches) {
-                        foreach ($advanceSearches as $operator => $value) {
-                            $columnNames = explode('.', $column['name']);
-                            $this->advanceSearch($query, $columnNames, $operator, $value);
-                        }
+                        $query->where(function ($q) use ($advanceSearches, $column) {
+                            foreach ($advanceSearches as $operator => $value) {
+                                $columnNames = explode('.', $column['name']);
+                                $this->advanceSearch($q, $columnNames, $operator, $value);
+                            }
+                        });
                     }
                 }
             });
@@ -98,7 +100,13 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
     {
         if (sizeof($columnNames) == 1) {
             $columnName = $columnNames[0];
-            $query->where($columnName, $operator, $value);
+            if (is_array($value)) {
+                foreach ($value as $valueItem) {
+                    $query->orWhere($columnName, $operator, $valueItem);
+                }
+            } else {
+                $query->where($columnName, $operator, $value);
+            }
         } else {
             $columnName = array_shift($columnNames);
             $query->whereHas($columnName, function ($q) use ($columnNames, $operator, $value) {
