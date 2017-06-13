@@ -181,6 +181,11 @@ const vueHelper = {
           NProgress.start();
         });
         this.appPageTable.on('xhr', function (e, settings, json, xhr) {
+          if (xhr.status == 401) {
+            alert('登录超时，现在重新登录').then(function () {
+              window.location.reload();
+            });
+          }
           NProgress.done();
         });
         this.appPageTable.on('select', function (e, dt, type, indexes) {
