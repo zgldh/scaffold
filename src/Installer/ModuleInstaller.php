@@ -45,7 +45,7 @@ abstract class ModuleInstaller
      * 将本 Module 的 template/module 文件夹下内容复制到位。
      * @param $targetModuleName
      */
-    protected function copyModuleFiles($targetModuleName)
+    protected function copyModuleFilesTo($targetModuleName)
     {
         $src = $this->getModuleTemplatePath('module');
         $dst = base_path($this->moduleDirectoryName . '/' . $targetModuleName);
