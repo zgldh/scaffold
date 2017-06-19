@@ -76,7 +76,7 @@ const vueHelper = {
           confirm("真的要删除吗？").then(function (data) {
             return resource.delete({id: id});
           }).catch(function (err) {
-            if (err !== "overlay") {
+            if (err !== "overlay" && err !== "cancel") {
               alert(err.data.message);
             }
           }).then(response => {
