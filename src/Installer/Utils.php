@@ -126,10 +126,10 @@ class Utils
      */
     public static function addAdminMenuItem($menuContent)
     {
-        $menuPath = resource_path('views/layouts/menu.blade.php');
+        $menuPath = resource_path('views/admin/menu.blade.php');
         $menus = file_get_contents($menuPath);
-        if (!str_contains($menuPath, $menuContent)) {
-            file_put_contents($menuPath, "\n" . $menus . $menuContent . "\n");
+        if (!str_contains($menus, $menuContent)) {
+            file_put_contents($menuPath, $menus . "\n" . $menuContent . "\n");
         }
     }
 }
