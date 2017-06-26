@@ -85,11 +85,11 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
                         });
                     }
                 }
-            });
+            }, true);
         }
 
         if ($filter) {
-            $dt->filter($filter);
+            $dt->filter($filter, true);
         }
         $result = $dt->make(true);
         $this->resetModel();
