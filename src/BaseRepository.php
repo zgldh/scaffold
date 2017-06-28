@@ -73,7 +73,11 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
 
         $columns = \Request::input('columns', []);
         if (sizeof($columns) > 0) {
-            $dt->filter(function ($query) use ($columns) {
+            $dt->filter(function ($query) use ($columns, $filter) {
+                if (is_callable($filter)) {
+                    $filter($query);
+                }
+
                 foreach ($columns as $column) {
                     $advanceSearches = array_get($column, 'search.advance');
                     if ($advanceSearches) {
@@ -86,9 +90,7 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
                     }
                 }
             }, true);
-        }
-
-        if ($filter) {
+        } elseif ($filter) {
             $dt->filter($filter, true);
         }
         $result = $dt->make(true);
