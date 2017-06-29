@@ -1,5 +1,6 @@
 <?php namespace zgldh\Scaffold;
 
+use Exception;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -11,7 +12,7 @@ use Yajra\Datatables\Facades\Datatables;
  * Date: 2016/12/30
  * Time: 0:08
  */
-abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
+abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepository
 {
     public function __construct(Application $app)
     {
@@ -117,12 +118,47 @@ abstract class BaseRepository extends \InfyOm\Generator\Common\BaseRepository
         }
     }
 
+    // Inherit from InfyOm\Generator\Common\BaseRepository
+
+    public function findWithoutFail($id, $columns = ['*'])
+    {
+        try {
+            return $this->find($id, $columns);
+        } catch (Exception $e) {
+            return;
+        }
+    }
+
     public function create(array $attributes)
     {
+        // Have to skip presenter to get a model not some data
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
         $model = parent::create($attributes);
+        $this->skipPresenter($temporarySkipPresenter);
+
+        $model = $this->updateRelations($model, $attributes);
+        $model->save();
+
+        $result = $this->parserResult($model);
         $model = forward_static_call_array([$this->model(), 'find'], [$model->getKey()]);
         return $model;
     }
+
+    public function update(array $attributes, $id)
+    {
+        // Have to skip presenter to get a model not some data
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+        $model = parent::update($attributes, $id);
+        $this->skipPresenter($temporarySkipPresenter);
+
+        $model = $this->updateRelations($model, $attributes);
+        $model->save();
+
+        return $this->parserResult($model);
+    }
+
 
     public function updateRelations($model, $attributes)
     {
