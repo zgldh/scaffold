@@ -57,7 +57,7 @@ abstract class ModuleInstaller
 
     /**
      * 添加 ServiceProvider
-     * @param $targetModuleName string
+     * @param $targetModuleName     string
      * @param $serviceProviderClass string
      */
     protected function addServiceProvider($targetModuleName, $serviceProviderClass)
@@ -84,5 +84,16 @@ abstract class ModuleInstaller
     {
         $routeLine = "require('{$this->moduleDirectoryName}/{$targetModuleName}/resources/assets/routes.js').default";
         Utils::addToVueRoute($routeLine);
+    }
+
+    protected function publishMigration($className, $filePath)
+    {
+        if (!class_exists($className)) {
+            // Publish the migration
+            sleep(1);
+            $timestamp = date('Y_m_d_His', time());
+            $destPath = database_path('/migrations/' . $timestamp . '_' . basename($filePath) . '.php');
+            Utils::copy($filePath, $destPath);
+        }
     }
 }
