@@ -13,6 +13,9 @@ abstract class ModuleInstaller
     public function __construct()
     {
         $this->moduleDirectoryName = config('zgldh-scaffold.modules', 'Modules');
+        $this->dynamicVariables = [
+            'NAME' => $this->moduleDirectoryName
+        ];
     }
 
 
@@ -49,10 +52,7 @@ abstract class ModuleInstaller
     {
         $src = $this->getModuleTemplatePath('module');
         $dst = base_path($this->moduleDirectoryName . '/' . $targetModuleName);
-        $dynamicVariables = [
-            'NAME' => $this->moduleDirectoryName
-        ];
-        Utils::copy($src, $dst, $dynamicVariables);
+        Utils::copy($src, $dst, $this->dynamicVariables);
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class ModuleInstaller
             sleep(1);
             $timestamp = date('Y_m_d_His', time());
             $destPath = database_path('/migrations/' . $timestamp . '_' . basename($filePath) . '.php');
-            Utils::copy($filePath, $destPath);
+            Utils::copy($filePath, $destPath, $this->dynamicVariables);
         }
     }
 }
