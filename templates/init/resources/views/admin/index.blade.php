@@ -31,7 +31,7 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- User Account Menu -->
-                        <li class="dropdown user user-menu">
+                        <li class="dropdown">
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
@@ -41,7 +41,7 @@
                             <ul class="dropdown-menu">
                                 <!-- Menu Footer-->
                                 <li>
-                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">退出</a>
+                                    <a href="{{ url('/logout') }}" class="">退出</a>
                                 </li>
                             </ul>
                         </li>
