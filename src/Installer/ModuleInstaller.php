@@ -18,6 +18,10 @@ abstract class ModuleInstaller
         ];
     }
 
+    protected function moduleRootNamespace()
+    {
+        return $this->moduleDirectoryName;
+    }
 
     /**
      * 得到当前Module的模板文件夹下某文件路径

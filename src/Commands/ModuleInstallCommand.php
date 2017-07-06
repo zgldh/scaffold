@@ -40,6 +40,8 @@ class ModuleInstallCommand extends Command
     public function handle()
     {
         $moduleNameSpace = $this->argument('moduleNameSpace');
+        $moduleNameSpace = str_replace('/', '\\', camel_case($moduleNameSpace));
+        $moduleNameSpace = str_replace('\module', '\Module', $moduleNameSpace);
         $moduleInstallerClass = $moduleNameSpace . '\\ModuleInstaller';
         if (class_exists($moduleInstallerClass)) {
             $installer = new $moduleInstallerClass;
