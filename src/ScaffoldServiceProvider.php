@@ -1,17 +1,9 @@
 <?php namespace zgldh\Scaffold;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use InfyOm\Generator\InfyOmGeneratorServiceProvider;
-use Prettus\Repository\Providers\RepositoryServiceProvider;
-use Spatie\Permission\PermissionServiceProvider;
-use Yajra\Datatables\DatatablesServiceProvider;
 use zgldh\Scaffold\Commands\ModuleCreateCommand;
 use zgldh\Scaffold\Commands\ModuleInstallCommand;
-use zgldh\Scaffold\Commands\PackageGenerator;
 use zgldh\Scaffold\Commands\ScaffoldInitCommand;
-use zgldh\Scaffold\Commands\ScaffoldPackagesCommand;
-use zgldh\UploadManager\UploadManagerServiceProvider;
 
 /**
  * Created by PhpStorm.
