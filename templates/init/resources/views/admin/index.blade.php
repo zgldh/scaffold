@@ -53,10 +53,11 @@
         <!-- Left side column. contains the logo and sidebar -->
     @include('admin.sidebar')
 
-
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" id="content-wrapper">
-            @yield('content','<router-view></router-view>')
+            @section('content')
+                <router-view></router-view>
+            @show
         </div>
 
         <!-- Main Footer -->
