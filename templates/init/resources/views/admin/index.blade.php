@@ -41,7 +41,7 @@
                             <ul class="dropdown-menu">
                                 <!-- Menu Footer-->
                                 <li>
-                                    <a href="{{ url('/logout') }}" class="">退出</a>
+                                    <a href="{{ url('/admin/logout') }}" class="">退出</a>
                                 </li>
                             </ul>
                         </li>
@@ -52,6 +52,7 @@
 
         <!-- Left side column. contains the logo and sidebar -->
     @include('admin.sidebar')
+
 
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" id="content-wrapper">

@@ -37,6 +37,20 @@ html, body {
   }
 }
 
+.login-page {
+  background-image: url('../images/bgimage.jpg');
+  background-size: 100% 100%;
+  .login-logo {
+    color: white;
+  }
+  .login-logo-img {
+    height: 50px;
+    width: 100%;
+    background: url("../images/default_logo_large.png") no-repeat center center;
+    background-size: auto 50px;
+  }
+}
+
 body.sidebar-collapse {
   .logo {
     background-image: url('../images/default_logo.png');

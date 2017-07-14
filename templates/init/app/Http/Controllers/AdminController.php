@@ -1,9 +1,12 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    use AuthenticatesUsers;
+
     /**
      * Create a new controller instance.
      *
@@ -11,7 +14,6 @@ class AdminController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('auth'); // 当安装 module-user 以后，可使用中间件保护后台
     }
 
     /**
@@ -19,8 +21,36 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.index');
+        $user = $request->user();
+        if ($user && $user->isAdmin()) {
+            return view('admin.index');
+        }
+        return redirect()->guest('/admin/login');
+    }
+
+    /**
+     * Show login page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('admin.login');
+    }
+
+    public function username()
+    {
+        return 'name';
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
+
+        return redirect()->guest('/admin');
     }
 }

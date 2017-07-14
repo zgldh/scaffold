@@ -75,32 +75,6 @@ class ModuleCreateCommand extends Command
     }
 
     /**
-     * 从数据库生成
-     * @param $table
-     * @param $folder
-     * @param null $name
-     */
-    private function fromTable($table, $folder, $name = null)
-    {
-        if (!$name) {
-            $name = basename($folder);
-        }
-
-        $this->setupDynamicVariables($folder, $name, new ConfigParser());
-
-        $parameters = [
-            'model'       => $name,
-            '--fromTable' => true,
-            '--tableName' => $table,
-            '--quiet'     => true
-        ];
-
-        $this->generateAll($parameters);
-
-        $this->info('All complete');
-    }
-
-    /**
      * 从配置文件生成
      * @param $file
      * @param null $name
