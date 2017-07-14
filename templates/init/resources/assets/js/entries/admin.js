@@ -8,6 +8,20 @@ require('../bootstrap');
 require('../custom');
 require('../../vendor/admin-lte/js/app');
 
+// Add a response interceptor
+window.axios.interceptors.response.use(function (response) {
+  // Do something with response data
+  return response;
+}, function (error) {
+  // Do something with response error
+  if (error.response.status == 401) {
+    // Jump to /admin/login page
+    alert('您未登录。');
+    window.location.href = '/admin/login';
+  }
+  return Promise.reject(error);
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
