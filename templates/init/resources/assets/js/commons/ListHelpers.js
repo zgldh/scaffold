@@ -1,3 +1,5 @@
+import {Loading} from 'element-ui';
+
 export var mixin = {
   data: function () {
     return {
@@ -23,7 +25,8 @@ export var mixin = {
         },
         _: null,
       },
-      loading: true
+      loading: null,
+      _draw: null,
     };
   },
   mounted: function () {
@@ -31,7 +34,19 @@ export var mixin = {
     this.queryTableData();
   },
   methods: {
+    showLoading: function (target) {
+      this.loading = Loading.service({
+        target: target,
+        fullscreen: false,
+        lock: false,
+        text: '读取中...'
+      });
+    },
+    hideLoading: function () {
+      this.loading.close();
+    },
     queryTableData: function () {
+      this.showLoading('.datatable-loading-section');
       axios.get(this.resource, {
         params: this.buildDataTablesParameters(),
         paramsSerializer: (params) => {
@@ -79,8 +94,13 @@ export var mixin = {
         }
       })
         .then(result => {
-          this.tableData = result.data.data;
-          this.loading = false;
+          if (this._draw == result.data.draw) {
+            this.tableData = result.data.data;
+            this.hideLoading();
+          }
+        })
+        .catch(result => {
+          this.hideLoading();
         });
     },
     onSubmitSearch: function () {
@@ -96,7 +116,8 @@ export var mixin = {
       alert('handleClick');
     },
     handleSizeChange: function () {
-      alert('handleSizeChange');
+      this.datatablesParameters.length = this.pageSize;
+      this.queryTableData();
     },
     handleCurrentChange: function () {
       alert('handleCurrentChange');
@@ -121,6 +142,7 @@ export var mixin = {
     },
     buildDataTablesParameters: function () {
       this.datatablesParameters.draw++;
+      this._draw = this.datatablesParameters.draw;
       this.datatablesParameters._ = new Date().getTime();
       return this.datatablesParameters;
     }
