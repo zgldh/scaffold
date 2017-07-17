@@ -1,11 +1,14 @@
-import {Loading} from 'element-ui';
+import { Loading } from 'element-ui';
 
 export var mixin = {
   data: function () {
     return {
-      currentPage: 1,
-      pageSize: 25,
-      pageSizeList: pageSizeList,
+      pagination: {
+        currentPage: 1,
+        totalCount: 0,
+        pageSize: 25,
+        pageSizeList: pageSizeList,
+      },
 
       selectedItems: [],
 
@@ -46,6 +49,9 @@ export var mixin = {
       this.loading.close();
     },
     queryTableData: function () {
+      if (this.loading && this.loading.visible) {
+        return false;
+      }
       this.showLoading('.datatable-loading-section');
       axios.get(this.resource, {
         params: this.buildDataTablesParameters(),
@@ -61,7 +67,7 @@ export var mixin = {
             parameters['columns[' + index + '][data]'] = element.data;
             parameters['columns[' + index + '][name]'] = element.name;
             parameters['columns[' + index + '][searchable]'] = element.searchable ? element.searchable : true;
-            parameters['columns[' + index + '][orderable]'] = element.orderable ? element.orderable : true;
+            parameters['columns[' + index + '][orderable]'] = element.orderable == 'custom' ? true : false;
             parameters['columns[' + index + '][search][value]'] = element.search.value ? element.search.value : null;
             parameters['columns[' + index + '][search][regex]'] = element.search.regex ? element.search.regex : false;
             if (element.search.hasOwnProperty('advance')) {
@@ -73,7 +79,9 @@ export var mixin = {
             }
           });
           params.order.forEach(function (element, index) {
-            parameters['order[' + index + '][column]'] = element.column;
+            parameters['order[' + index + '][column]'] = isNaN(element.column) ? params.columns.findIndex(column => {
+              return column.data == element.column;
+            }) : parseInt(element.column);
             parameters['order[' + index + '][dir]'] = element.dir ? element.dir : 'asc';
           });
           parameters['search[value]'] = params.search.value !== undefined ? params.search.value : null;
@@ -96,6 +104,7 @@ export var mixin = {
         .then(result => {
           if (this._draw == result.data.draw) {
             this.tableData = result.data.data;
+            this.pagination.totalCount = result.data.recordsFiltered;
             this.hideLoading();
           }
         })
@@ -112,15 +121,21 @@ export var mixin = {
     onBundleDelete: function () {
       alert('onBundleDelete');
     },
+    onSortChange: function ({column, prop, order}) {
+      this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
+      this.queryTableData();
+    },
     handleClick: function () {
       alert('handleClick');
     },
     handleSizeChange: function () {
-      this.datatablesParameters.length = this.pageSize;
+      this.datatablesParameters.length = this.pagination.pageSize;
       this.queryTableData();
     },
-    handleCurrentChange: function () {
-      alert('handleCurrentChange');
+    handlePageChange: function (page) {
+      this.pagination.currentPage = page;
+      this.datatablesParameters.start = (page - 1) * this.pagination.pageSize;
+      this.queryTableData();
     },
     initializeDataTablesParameters: function () {
       this.$refs.table.columns.forEach((column, index, columns) => {
