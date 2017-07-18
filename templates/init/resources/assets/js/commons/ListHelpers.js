@@ -1,4 +1,5 @@
 import {Loading} from 'element-ui';
+import _ from 'lodash';
 
 export var mixin = {
   data: function () {
@@ -122,6 +123,9 @@ export var mixin = {
     handleCurrentChange: function () {
       alert('handleCurrentChange');
     },
+    onAutoSearchChanged: _.debounce(function (newValue) {
+      this.queryTableData();
+    }, 500),
     initializeDataTablesParameters: function () {
       this.$refs.table.columns.forEach((column, index, columns) => {
         if (!column.property) {
