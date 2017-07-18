@@ -1,14 +1,14 @@
-import { Loading } from 'element-ui';
+import {Loading} from 'element-ui';
 import _ from 'lodash';
 
 export var mixin = {
   data: function () {
     return {
       pagination: {
-      currentPage: 1,
+        currentPage: 1,
         totalCount: 0,
-      pageSize: 25,
-      pageSizeList: pageSizeList,
+        pageSize: 25,
+        pageSizeList: pageSizeList,
       },
 
       selectedItems: [],
@@ -141,6 +141,12 @@ export var mixin = {
     onAutoSearchChanged: _.debounce(function (newValue) {
       this.queryTableData();
     }, 500),
+    onAutoSearchIconClick: function (newValue) {
+      if (this.datatablesParameters.search.value) {
+        this.datatablesParameters.search.value = null;
+        this.queryTableData();
+      }
+    },
     initializeDataTablesParameters: function () {
       this.$refs.table.columns.forEach((column, index, columns) => {
         if (!column.property) {
