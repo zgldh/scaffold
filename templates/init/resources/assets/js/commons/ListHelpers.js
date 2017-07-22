@@ -1,4 +1,4 @@
-import {Loading} from 'element-ui';
+import { Loading } from 'element-ui';
 import _ from 'lodash';
 
 export var mixin = {
@@ -9,9 +9,8 @@ export var mixin = {
         totalCount: 0,
         pageSize: 25,
         pageSizeList: PAGE_SIZE_LIST,
+        $enableAddressBar: true    // true: 在浏览器地址栏保存 currentPage 和 pageSize
       },
-
-      selectedItems: [],
 
       searchForm: {},
 
@@ -28,9 +27,22 @@ export var mixin = {
         },
         _: null,
       },
+      selectedItems: [],
+
       loading: null,
       _draw: null,
     };
+  },
+  beforeMount: function () {
+    if (this.pagination.$enableAddressBar) {
+      this.pagination.currentPage = this.$route.query.hasOwnProperty('page') ? parseInt(this.$route.query.page) : 1;
+      this.pagination.pageSize = this.$route.query.hasOwnProperty('pageSize') ? parseInt(this.$route.query.pageSize) : 25;
+      this.datatablesParameters.length = this.pagination.pageSize;
+      this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
+    }
+    if (this.searchForm.$enableAddressBar) {
+
+    }
   },
   mounted: function () {
     this.initializeDataTablesParameters();
@@ -70,6 +82,10 @@ export var mixin = {
       this.buildSearchParameters();
       this.queryTableData();
     },
+    onResetSearch: function () {
+      this.searchForm = {};
+      this.$nextTick(this.onSubmitSearch);
+    },
     onCreate: function () {
       alert('onCreate');
     },
@@ -83,14 +99,24 @@ export var mixin = {
     handleClick: function () {
       alert('handleClick');
     },
+    updatePaginationAddressBarParams: function () {
+      if (this.pagination.$enableAddressBar) {
+        this.$router.push({
+          path: this.$route.path,
+          query: {page: this.pagination.currentPage, pageSize: this.datatablesParameters.length}
+        });
+      }
+    },
     handleSizeChange: function () {
       this.datatablesParameters.length = this.pagination.pageSize;
       this.queryTableData();
+      this.updatePaginationAddressBarParams();
     },
     handlePageChange: function (page) {
       this.pagination.currentPage = page;
       this.datatablesParameters.start = (page - 1) * this.pagination.pageSize;
       this.queryTableData();
+      this.updatePaginationAddressBarParams();
     },
     onAutoSearchChanged: _.debounce(function (newValue) {
       this.queryTableData();
