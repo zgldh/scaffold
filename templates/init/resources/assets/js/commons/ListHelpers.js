@@ -15,6 +15,7 @@ export var mixin = {
       searchForm: {},
 
       tableData: [],
+      selectedItems: [],
       datatablesParameters: {
         draw: 0,
         columns: [],
@@ -27,7 +28,6 @@ export var mixin = {
         },
         _: null,
       },
-      selectedItems: [],
 
       loading: null,
       _draw: null,
@@ -78,27 +78,7 @@ export var mixin = {
         this.hideLoading();
       });
     },
-    onSubmitSearch: function () {
-      this.buildSearchParameters();
-      this.queryTableData();
-    },
-    onResetSearch: function () {
-      this.searchForm = {};
-      this.$nextTick(this.onSubmitSearch);
-    },
-    onCreate: function () {
-      alert('onCreate');
-    },
-    onBundleDelete: function () {
-      alert('onBundleDelete');
-    },
-    onSortChange: function ({column, prop, order}) {
-      this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
-      this.queryTableData();
-    },
-    handleClick: function () {
-      alert('handleClick');
-    },
+
     updatePaginationAddressBarParams: function () {
       if (this.pagination.$enableAddressBar) {
         this.$router.push({
@@ -107,12 +87,12 @@ export var mixin = {
         });
       }
     },
-    handleSizeChange: function () {
+    onPageSizeChange: function () {
       this.datatablesParameters.length = this.pagination.pageSize;
       this.queryTableData();
       this.updatePaginationAddressBarParams();
     },
-    handlePageChange: function (page) {
+    onPageChange: function (page) {
       this.pagination.currentPage = page;
       this.datatablesParameters.start = (page - 1) * this.pagination.pageSize;
       this.queryTableData();
@@ -127,6 +107,74 @@ export var mixin = {
         this.queryTableData();
       }
     },
+    onSubmitSearch: function () {
+      this.buildSearchParameters();
+      this.queryTableData();
+    },
+    onResetSearch: function () {
+      this.searchForm = {};
+      this.$nextTick(this.onSubmitSearch);
+    },
+    onSelectionChange: function (selection) {
+      this.selectedItems = selection;
+    },
+    onCreate: function () {
+      alert('onCreate');
+    },
+    onEditClick: function (row, column, $index, store) {
+      alert('handleClick');
+    },
+    _onBundle: function (action, resourceUrl, options, items) {
+      var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
+      return axios.post(resourceUrl ? resourceUrl : ( this.resource + '/bundle'), {
+        action: action,
+        indexes: selectedItems.map((item) => item.id),
+        options: options
+      }).then(response => {
+        if (response && response.status == 200) {
+          return response;
+        }
+        else {
+          throw new Error(response.data);
+        }
+      }).catch(({response}) => {
+        this.$message({
+          type: 'error',
+          message: response.data.message
+        });
+        throw response;
+      });
+    },
+    _onDeleteClick: function ({url, data, confirmText, messageText}) {
+      data = data ? data : {};
+      data._method = 'delete';
+      return this.$confirm(confirmText, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return axios.post(url, data)
+      }).then(result => {
+        this.$message({
+          type: 'success',
+          message: messageText
+        });
+        return result.data;
+      }, ({response}) => {
+        this.$message({
+          type: 'error',
+          message: response.data.message
+        });
+      });
+    },
+    onBundleDelete: function () {
+      alert('onBundleDelete');
+    },
+    onSortChange: function ({column, prop, order}) {
+      this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
+      this.queryTableData();
+    },
+
     initializeDataTablesParameters: function () {
       this.$refs.table.$children.forEach((column, index, columns) => {
         if (column.$options._componentTag !== "el-table-column") {
