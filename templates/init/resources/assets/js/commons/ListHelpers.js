@@ -1,4 +1,4 @@
-import { Loading } from 'element-ui';
+import {Loading} from 'element-ui';
 import _ from 'lodash';
 
 export var mixin = {
@@ -118,12 +118,6 @@ export var mixin = {
     onSelectionChange: function (selection) {
       this.selectedItems = selection;
     },
-    onCreate: function () {
-      alert('onCreate');
-    },
-    onEditClick: function (row, column, $index, store) {
-      alert('handleClick');
-    },
     _onBundle: function (action, resourceUrl, options, items) {
       var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
       return axios.post(resourceUrl ? resourceUrl : ( this.resource + '/bundle'), {
@@ -166,9 +160,6 @@ export var mixin = {
           message: response.data.message
         });
       });
-    },
-    onBundleDelete: function () {
-      alert('onBundleDelete');
     },
     onSortChange: function ({column, prop, order}) {
       this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
