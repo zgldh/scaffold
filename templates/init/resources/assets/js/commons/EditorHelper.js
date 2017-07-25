@@ -5,7 +5,8 @@ export var mixin = {
     return {
       errors: {},
       missingErrors: [],
-      saving: false
+      saving: false,
+      loading: false
     };
   },
   beforeMount: function () {
@@ -19,9 +20,19 @@ export var mixin = {
           this.saving = true;
           this.errors = {};
           this.missingErrors = [];
-          axios.post(this.resource, this.form)
+          let require = null;
+          if (this.form.id) {
+            require = axios.put(this.resource, this.form);
+          }
+          else {
+            require = axios.post(this.resource, this.form);
+          }
+          require
             .then(result => {
-              console.log(result);
+              this.$message({
+                type: 'success',
+                message: "保存完毕"
+              });
               this.saving = false;
             })
             .catch(({response}) => {
