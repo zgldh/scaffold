@@ -88,10 +88,30 @@ body.sidebar-collapse {
     .search {
       margin-top: 1em;
     }
+
+    .datatable-container {
+      .tools {
+        .el-pagination {
+          &, * {
+            font-size: 14px !important;
+          }
+          margin-top: 2px;
+        }
+      }
+    }
   }
 }
 
 .admin-editor-page {
+}
+
+.assist-tip {
+  font: 12px Extra Extra Small;
+  color: $text-color;
+}
+
+.missing-errors {
+  margin: 1em 0;
 }
 
 .page-enter-active, .page-leave-active {
