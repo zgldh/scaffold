@@ -93,3 +93,12 @@ body.sidebar-collapse {
 
 .admin-editor-page {
 }
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .3s ease;
+}
+
+.page-enter, .page-leave-to /* .fade-leave-active in <2.1.8 */
+{
+  opacity: 0;
+}

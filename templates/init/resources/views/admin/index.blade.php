@@ -57,7 +57,9 @@
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" id="content-wrapper">
             @section('content')
-                <router-view></router-view>
+                <transition name="page" mode="out-in">
+                    <router-view></router-view>
+                </transition>
             @show
         </div>
 
