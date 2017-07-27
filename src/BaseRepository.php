@@ -71,6 +71,7 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         }
 
         $dt = Datatables::eloquent($query);
+        $dt->escapeColumns('~');
 
         $columns = \Request::input('columns', []);
         if (sizeof($columns) > 0) {
