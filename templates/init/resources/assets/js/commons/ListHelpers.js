@@ -1,6 +1,13 @@
 import {Loading} from 'element-ui';
 import _ from 'lodash';
 
+const PARAMS_PAGE_SIZE = 'pageSize';
+const PARAMS_PAGE = 'page';
+const PARAMS_SEARCH_TERM = 'term';
+const PARAMS_SEARCH_PREFIX = 's--';
+const PARAMS_SORT_COLUMN = 'sort';
+const PARAMS_SORT_DIRECTION = 'dir';
+
 export var mixin = {
   data: function () {
     return {
@@ -29,26 +36,68 @@ export var mixin = {
         _: null,
       },
 
+      defaultSort: {prop: 'date', order: 'descending'},
+
       loading: null,
       _draw: null,
     };
   },
   beforeMount: function () {
     if (this.pagination.$enableAddressBar) {
-      this.pagination.currentPage = this.$route.query.hasOwnProperty('page') ? parseInt(this.$route.query.page) : 1;
-      this.pagination.pageSize = this.$route.query.hasOwnProperty('pageSize') ? parseInt(this.$route.query.pageSize) : 25;
-      this.datatablesParameters.length = this.pagination.pageSize;
-      this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
-    }
-    if (this.searchForm.$enableAddressBar) {
-
+      this.pagination.currentPage = this.$route.query.hasOwnProperty(PARAMS_PAGE) ? parseInt(this.$route.query[PARAMS_PAGE]) : 1;
+      this.pagination.pageSize = this.$route.query.hasOwnProperty(PARAMS_PAGE_SIZE) ? parseInt(this.$route.query[PARAMS_PAGE_SIZE]) : 25;
+      if (this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN)) {
+        this.defaultSort = {
+          prop: this.$route.query[PARAMS_SORT_COLUMN],
+          order: this.$route.query[PARAMS_SORT_DIRECTION]
+        };
+      }
     }
   },
   mounted: function () {
     this.initializeDataTablesParameters();
-    this.queryTableData();
+    if (!this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN)) {
+      this.queryTableData();
+    }
   },
   methods: {
+    initializeDataTablesParameters: function () {
+      this.$refs.table.$children.forEach((column, index, columns) => {
+        if (column.$options._componentTag !== "el-table-column") {
+          return;
+        }
+        if (!column.columnConfig.property) {
+          return;
+        }
+        this.datatablesParameters.columns.push({
+          data: column.columnConfig.property,
+          name: column.columnConfig.property,
+          searchable: column.$el.getAttribute('searchable') ? (column.$el.getAttribute('searchable').toLowerCase() === 'true') : true,
+          orderable: column.columnConfig.sortable == 'custom' ? true : false,
+          search: {
+            value: null,
+            regex: false,
+            advance: {}
+          },
+        });
+      });
+
+      if (this.pagination.$enableAddressBar) {
+        let hasSearchParams = false;
+        _.forEach(this.$route.query, (value, key) => {
+          if (key.indexOf(PARAMS_SEARCH_PREFIX) !== -1) {
+            this.searchForm[key.substr(PARAMS_SEARCH_PREFIX.length)] = value;
+            hasSearchParams = true;
+          }
+        });
+        if (hasSearchParams) {
+          this.buildSearchParameters();
+        }
+        this.datatablesParameters.search.value = this.$route.query.hasOwnProperty(PARAMS_SEARCH_TERM) ? this.$route.query[PARAMS_SEARCH_TERM] : null;
+      }
+      this.datatablesParameters.length = this.pagination.pageSize;
+      this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
+    },
     showLoading: function (target) {
       this.loading = Loading.service({
         target: target,
@@ -78,66 +127,92 @@ export var mixin = {
         this.hideLoading();
       });
     },
-
-    updatePaginationAddressBarParams: function () {
+    updateAddressBarParams: function () {
       if (this.pagination.$enableAddressBar) {
+        let payload = JSON.parse(JSON.stringify(this.$route.query));
+        let queries = {};
+        if (arguments.length === 2) {
+          queries[arguments[0]] = arguments[1];
+        }
+        else {
+          queries = arguments[0];
+        }
+        _.forEach(queries, function (data, key) {
+          if (data === null) {
+            delete payload[key];
+          }
+          else {
+            payload[key] = data;
+          }
+        });
         this.$router.push({
           path: this.$route.path,
-          query: {page: this.pagination.currentPage, pageSize: this.datatablesParameters.length}
+          query: payload
         });
       }
+    },
+    clearSearchFormAddressBarParams: function (searchPrefix) {
+      let payload = JSON.parse(JSON.stringify(this.$route.query));
+      _.forEach(payload, function (data, key) {
+        if (key.indexOf(searchPrefix) !== -1) {
+          delete payload[key];
+        }
+      });
+      this.$router.push({
+        path: this.$route.path,
+        query: payload
+      });
     },
     onPageSizeChange: function () {
       this.datatablesParameters.length = this.pagination.pageSize;
       this.queryTableData();
-      this.updatePaginationAddressBarParams();
+      this.updateAddressBarParams(PARAMS_PAGE_SIZE, this.pagination.pageSize);
     },
     onPageChange: function (page) {
       this.pagination.currentPage = page;
       this.datatablesParameters.start = (page - 1) * this.pagination.pageSize;
       this.queryTableData();
-      this.updatePaginationAddressBarParams();
+      this.updateAddressBarParams(PARAMS_PAGE, this.pagination.currentPage);
+    },
+    onSortChange: function ({column, prop, order}) {
+      if (order === null) {
+        this.updateAddressBarParams({
+          'sort': null,
+          'dir': null
+        });
+      }
+      else {
+        this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
+        this.queryTableData();
+        this.updateAddressBarParams({
+          'sort': prop,
+          'dir': order
+        });
+      }
     },
     onAutoSearchChanged: _.debounce(function (newValue) {
       this.queryTableData();
+      this.updateAddressBarParams(PARAMS_SEARCH_TERM, this.datatablesParameters.search.value);
     }, 500),
     onAutoSearchIconClick: function (newValue) {
       if (this.datatablesParameters.search.value) {
         this.datatablesParameters.search.value = null;
         this.queryTableData();
+        this.updateAddressBarParams(PARAMS_SEARCH_TERM, null);
       }
     },
     onSubmitSearch: function () {
       this.buildSearchParameters();
       this.queryTableData();
+      this.updateAddressBarParams(PrefixObject(this.searchForm, PARAMS_SEARCH_PREFIX));
     },
     onResetSearch: function () {
       this.searchForm = {};
       this.$nextTick(this.onSubmitSearch);
+      this.clearSearchFormAddressBarParams(PARAMS_SEARCH_PREFIX);
     },
     onSelectionChange: function (selection) {
       this.selectedItems = selection;
-    },
-    _onBundle: function (action, resourceUrl, options, items) {
-      var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
-      return axios.post(resourceUrl ? resourceUrl : ( this.resource + '/bundle'), {
-        action: action,
-        indexes: selectedItems.map((item) => item.id),
-        options: options
-      }).then(response => {
-        if (response && response.status == 200) {
-          return response;
-        }
-        else {
-          throw new Error(response.data);
-        }
-      }).catch(({response}) => {
-        this.$message({
-          type: 'error',
-          message: response.data.message
-        });
-        throw response;
-      });
     },
     _onDeleteClick: function ({url, data, confirmText, messageText}) {
       data = data ? data : {};
@@ -161,30 +236,26 @@ export var mixin = {
         });
       });
     },
-    onSortChange: function ({column, prop, order}) {
-      this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
-      this.queryTableData();
-    },
 
-    initializeDataTablesParameters: function () {
-      this.$refs.table.$children.forEach((column, index, columns) => {
-        if (column.$options._componentTag !== "el-table-column") {
-          return;
+    _onBundle: function (action, resourceUrl, options, items) {
+      var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
+      return axios.post(resourceUrl ? resourceUrl : ( this.resource + '/bundle'), {
+        action: action,
+        indexes: selectedItems.map((item) => item.id),
+        options: options
+      }).then(response => {
+        if (response && response.status == 200) {
+          return response;
         }
-        if (!column.columnConfig.property) {
-          return;
+        else {
+          throw new Error(response.data);
         }
-        this.datatablesParameters.columns.push({
-          data: column.columnConfig.property,
-          name: column.columnConfig.property,
-          searchable: column.$el.getAttribute('searchable') ? (column.$el.getAttribute('searchable').toLowerCase() === 'true') : true,
-          orderable: column.columnConfig.sortable == 'custom' ? true : false,
-          search: {
-            value: null,
-            regex: false,
-            advance: {}
-          },
+      }).catch(({response}) => {
+        this.$message({
+          type: 'error',
+          message: response.data.message
         });
+        throw response;
       });
     },
     buildDataTablesParameters: function () {
@@ -199,7 +270,7 @@ export var mixin = {
         // console.log('search',item.);
         var columnName = item.$el.getAttribute('column');
         var operator = item.$el.getAttribute('operator') ? item.$el.getAttribute('operator') : '=';
-        var value = item.value;
+        var value = this.searchForm[columnName];
         if (value === '' || value === null || value === undefined) {
           this.clearAdvanceSearchToColumn(columnName, operator);
         }
@@ -291,6 +362,14 @@ function FindColumnConfigByName (columns, columnName) {
     throw new Error("Can't find column named '" + columnName + "'");
   }
   return column;
+}
+
+function PrefixObject (params, prefix) {
+  var result = {};
+  _.forEach(params, function (val, key) {
+    result[prefix + key] = val;
+  });
+  return result;
 }
 
 function SerializerDatatablesParameters (params) {
