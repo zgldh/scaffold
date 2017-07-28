@@ -176,19 +176,16 @@ export var mixin = {
     },
     onSortChange: function ({column, prop, order}) {
       if (order === null) {
-        this.updateAddressBarParams({
-          'sort': null,
-          'dir': null
-        });
+        this.datatablesParameters.order = [];
       }
       else {
         this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
-        this.queryTableData();
-        this.updateAddressBarParams({
-          'sort': prop,
-          'dir': order
-        });
       }
+      this.queryTableData();
+      this.updateAddressBarParams({
+        'sort': prop,
+        'dir': order
+      });
     },
     onAutoSearchChanged: _.debounce(function (newValue) {
       this.queryTableData();
