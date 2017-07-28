@@ -16,4 +16,5 @@ window.axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-require('materialize-css');
+import "materialize-css";
+import "babel-polyfill";

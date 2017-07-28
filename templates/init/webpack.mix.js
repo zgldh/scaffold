@@ -34,6 +34,6 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
   .js('resources/assets/js/entries/app.js', 'public/js')
   .js('resources/assets/js/entries/admin.js', 'public/js');
 
-mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress', 'materialize-css'])
+mix.extract(['vue', 'vuex', 'vue-router', 'element-ui', 'jquery', 'lodash', 'axios', 'nprogress', 'materialize-css', 'babel-polyfill']);
 mix.sourceMaps();
 mix.browserSync('$HOST$');

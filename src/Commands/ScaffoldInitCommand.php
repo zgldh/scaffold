@@ -114,6 +114,7 @@ class ScaffoldInitCommand extends Command
         $package->setDevDependencies("vue-router", "~2.3");
         $package->setDevDependencies("vuex", "~2.2");
 
+        $package->setDependencies("babel-polyfill", "^6.23.0");
         $package->setDependencies("little-loader", "^0.1.1");
         $package->setDependencies("element-ui", "~1.3");
 
