@@ -161,6 +161,8 @@ class ScaffoldInitCommand extends Command
 
         Utils::replaceFilePlaceholders(resource_path('assets/js/entries/admin.js'), $this->dynamicVariables);
 
+        app()->call('storage:link');
+
         $this->info('Complete!');
     }
 
