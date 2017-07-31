@@ -90,6 +90,34 @@ abstract class ModuleInstaller
         Utils::addToVueRoute($routeLine);
     }
 
+    /**
+     * 添加到 admin menu 里
+     * @param $menuItem string
+     */
+    protected function addAdminMenuItem($menuItem)
+    {
+        Utils::addAdminMenuItem($menuItem);
+    }
+
+    /**
+     * 添加 factory & seeds
+     * @param $factories
+     * @param $seeds
+     */
+    protected function publicFactoryAndSeed($factories, $seeds)
+    {
+        $factoryPath = database_path('factories/');
+        $seedPath = database_path('seeds/');
+        $factories = is_array($factories) ? $factories : [$factories];
+        $seeds = is_array($seeds) ? $seeds : [$seeds];
+        foreach ($factories as $factory) {
+            Utils::copy($factory, $factoryPath . basename($factory), $this->dynamicVariables);
+        }
+        foreach ($seeds as $seed) {
+            Utils::copy($seed, $seedPath . basename($seed), $this->dynamicVariables);
+        }
+    }
+
     protected function publishMigration($className, $filePath)
     {
         if (!class_exists($className)) {
