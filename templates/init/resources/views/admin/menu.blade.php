@@ -15,7 +15,7 @@
 </router-treeview>
 
 <router-link tag="li" to="/upload" exact>
-    <a><i class="fa fa-edit"></i> 上传内容管理</a>
+    <a><i class="fa fa-upload"></i> <span>上传内容管理</span></a>
 </router-link>
 
 <router-link tag="li" to="/actionlog">

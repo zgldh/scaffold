@@ -124,7 +124,7 @@ abstract class ModuleInstaller
             // Publish the migration
             sleep(1);
             $timestamp = date('Y_m_d_His', time());
-            $destPath = database_path('/migrations/' . $timestamp . '_' . basename($filePath) . '.php');
+            $destPath = database_path('/migrations/' . $timestamp . '_' . basename($filePath));
             Utils::copy($filePath, $destPath, $this->dynamicVariables);
         }
     }
