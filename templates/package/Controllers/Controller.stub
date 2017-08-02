@@ -25,13 +25,9 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function index(IndexRequest $request)
     {
-        if ($request->ajax()) {
-            $with = $request->getWith();
-            $data = $this->repository->datatables(null, $with);
-            return $data;
-        } else {
-            return view('$NAME_SPACE$::index');
-        }
+        $with = $request->getWith();
+        $data = $this->repository->datatables(null, $with);
+        return $data;
     }
 
     /**
@@ -45,6 +41,7 @@ class $MODEL_NAME$Controller extends AppBaseController
         $input = $request->all();
 
         $$MODEL_NAME_LOWER$ = $this->repository->create($input);
+        $$MODEL_NAME_LOWER$->load($request->getWith());
 
         return $this->sendResponse($$MODEL_NAME_LOWER$, '$MODEL_NAME$ saved successfully.');
     }
@@ -58,8 +55,8 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function show($id, ShowRequest $request)
     {
-        $this->repository->with($request->getWith());
         $$MODEL_NAME_LOWER$ = $this->repository->findWithoutFail($id);
+        $$MODEL_NAME_LOWER$->load($request->getWith());
 
         if (empty($$MODEL_NAME_LOWER$)) {
             return $this->sendError('$MODEL_NAME$ not found');
@@ -85,6 +82,7 @@ class $MODEL_NAME$Controller extends AppBaseController
         }
 
         $$MODEL_NAME_LOWER$ = $this->repository->update($request->all(), $id);
+        $$MODEL_NAME_LOWER$->load($request->getWith());
 
         return $this->sendResponse($$MODEL_NAME_LOWER$, '$MODEL_NAME$ updated successfully.');
     }

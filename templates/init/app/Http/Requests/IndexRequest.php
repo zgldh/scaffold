@@ -1,9 +1,11 @@
 <?php namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use zgldh\Scaffold\Traits\HasWithParameter;
 
 class IndexRequest extends FormRequest
 {
+    use HasWithParameter;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,17 +23,6 @@ class IndexRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
-    }
-
-    public function getWith()
-    {
-        $with = $this->input('_with');
-        if (is_string($with)) {
-            return preg_split('/,/', $with);
-        } elseif (is_array($with)) {
-            return $with;
-        }
         return [];
     }
 }
