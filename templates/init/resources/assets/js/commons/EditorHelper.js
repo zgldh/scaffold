@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {BuildHttpRequestPayload} from './Utils.js';
 
 export var mixin = {
   data: function () {
@@ -15,19 +16,17 @@ export var mixin = {
   },
   methods: {
     _onSave: function (event) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         this.$refs.form.validate(valid => {
           if (valid) {
             this.saving = true;
             this.errors = {};
             this.missingErrors = [];
-            let require = null;
+            let payload = BuildHttpRequestPayload(this.form);
             if (this.form.id) {
-              require = axios.put(this.resource, this.form);
+              payload.append('_method', 'put');
             }
-            else {
-              require = axios.post(this.resource, this.form);
-            }
+            let require = axios.post(this.resource, payload);
             require.then(result => {
               this.$message({
                 type: 'success',

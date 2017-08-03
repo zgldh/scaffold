@@ -14,3 +14,14 @@ export function getCookie (cookieName) {
 export function getXsrfToken () {
   return getCookie('XSRF-TOKEN');
 }
+
+export function BuildHttpRequestPayload (object) {
+  let formData = new FormData();
+  for (let key in object) {
+    if (object.hasOwnProperty(key)) {
+      formData.append(key, object[key]);
+    }
+  }
+
+  return formData;
+}
