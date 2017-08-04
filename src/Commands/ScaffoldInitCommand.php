@@ -159,6 +159,7 @@ class ScaffoldInitCommand extends Command
         Utils::copy(Utils::template('init/resources'), base_path('resources'));
         Utils::copy(Utils::template('init/routes'), base_path('routes'));
 
+        KernelEditor::addMiddleware('\App\Http\Middleware\MultipartFormDataParser::class');
         Utils::replaceFilePlaceholders(resource_path('assets/js/entries/admin.js'), $this->dynamicVariables);
 
         app()->call('storage:link');

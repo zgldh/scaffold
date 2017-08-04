@@ -17,11 +17,20 @@ export function getXsrfToken () {
 
 export function BuildHttpRequestPayload (object) {
   let formData = new FormData();
+  let normalData = {};
+
   for (let key in object) {
     if (object.hasOwnProperty(key)) {
-      formData.append(key, object[key]);
+      if (object[key] && object[key].constructor === File) {
+        formData.append(key, object[key]);
+      }
+      else {
+        normalData[key] = object[key];
+      }
     }
   }
+
+  formData.append('_data', JSON.stringify(normalData));
 
   return formData;
 }
