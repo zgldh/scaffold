@@ -68,11 +68,11 @@ class ScaffoldInitCommand extends Command
         $this->setupModules();
         //    8. 自动执行 `composer dumpautoload`
         $this->composerDumpAutoload();
+        //    9. 自动执行 `php artisan vendor:publish`, `php artisan migrate`
+        $this->publishVendors();
 
         $this->info('Scaffold is ready. Please run following commands:');
         $this->line('npm install');
-        $this->line('php artisan vendor:publish');
-        $this->line('php artisan migrate');
         $this->line('gulp watch');
         $this->line('Go to browser for: http://' . $this->host . ' to start development.');
     }
@@ -185,6 +185,14 @@ class ScaffoldInitCommand extends Command
     {
         $this->line('Composer dumpautoload');
         exec('composer dumpautoload');
+        $this->info('Complete!');
+    }
+
+    private function publishVendors()
+    {
+        $this->line('Publishing vendors');
+        exec('php artisan vendor:publish');
+        exec('php artisan migrate');
         $this->info('Complete!');
     }
 

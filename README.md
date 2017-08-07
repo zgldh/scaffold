@@ -19,8 +19,6 @@
     6. 自动设置好 `/resources`
     7. 自动执行 `composer dumpautoload`
 5. 执行 `npm install`
-6. 执行 `php artisan vendor:publish`
-6. 执行 `php artisan migrate`
 7. 安装其他 Module
 7. 执行 `npm run watch` 开始开发调试。
 
