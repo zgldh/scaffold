@@ -3,7 +3,7 @@
 </router-link>
 
 <router-treeview title="用户管理" icon="fa fa-users" :match="['/user']">
-    <router-link tag="li" to="/user" exact>
+    <router-link tag="li" to="/user/list" exact>
         <a><i class="fa fa-user"></i> <span>用户列表</span></a>
     </router-link>
     <router-link tag="li" to="/user/role">
