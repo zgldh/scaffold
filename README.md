@@ -6,7 +6,7 @@
 
 1. 使用 `composer require zgldh/scaffold:dev-master` 后， 所需要的其他 composer
  包自动引用完毕。
-2. 编辑 `/config/app.php` 加入 `ScaffoldServiceProvider`
+2. 编辑 `/config/app.php` 加入 `ScaffoldServiceProvider`。注意行尾加逗号,
 3. 使用 `zgldh:scaffold:init` 后：
     1. 参数：
         1. 需要知道 Modules 目录名
@@ -21,6 +21,7 @@
 5. 执行 `npm install`
 6. 执行 `php artisan vendor:publish`
 6. 执行 `php artisan migrate`
+7. 安装其他 Module
 7. 执行 `npm run watch` 开始开发调试。
 
 ## 安装 Module 的方法

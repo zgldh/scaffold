@@ -162,7 +162,7 @@ class ScaffoldInitCommand extends Command
         KernelEditor::addMiddleware('\App\Http\Middleware\MultipartFormDataParser::class');
         Utils::replaceFilePlaceholders(resource_path('assets/js/entries/admin.js'), $this->dynamicVariables);
 
-        app()->call('storage:link');
+        \Artisan::call('storage:link');
 
         $this->info('Complete!');
     }
