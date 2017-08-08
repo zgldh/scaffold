@@ -184,15 +184,15 @@ class ScaffoldInitCommand extends Command
     private function composerDumpAutoload()
     {
         $this->line('Composer dumpautoload');
-        exec('composer dumpautoload');
+        system('composer dumpautoload');
         $this->info('Complete!');
     }
 
     private function publishVendors()
     {
         $this->line('Publishing vendors');
-        exec('php artisan vendor:publish');
-        exec('php artisan migrate');
+        system('php artisan vendor:publish');
+        system('php artisan migrate');
         $this->info('Complete!');
     }
 
