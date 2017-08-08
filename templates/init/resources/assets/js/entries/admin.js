@@ -35,7 +35,6 @@ Vue.use(require('element-ui'));
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
 
 var routes = [].concat(
-  // require('$NAME$/Dashboard/resources/assets/routes.js').default,
 // Modules routes
 );
 

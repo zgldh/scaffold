@@ -176,7 +176,7 @@ class ScaffoldInitCommand extends Command
             $this->dynamicVariables);
         Utils::addServiceProvider($this->moduleDirectoryName . '\Dashboard\DashboardServiceProvider::class');
         Utils::addRoute("require base_path('{$this->moduleDirectoryName}/Dashboard/routes.php');");
-        Utils::addToVueRoute("require('{$this->moduleDirectoryName}/Dashboard/resources/assets/routes.js').default;");
+        Utils::addToVueRoute("require('{$this->moduleDirectoryName}/Dashboard/resources/assets/routes.js').default");
 
         $this->info('Complete!');
     }
