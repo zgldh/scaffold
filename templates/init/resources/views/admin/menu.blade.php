@@ -18,6 +18,6 @@
     <a><i class="fa fa-upload"></i> <span>上传内容管理</span></a>
 </router-link>
 
-<router-link tag="li" to="/actionlog">
-    <a><i class="fa fa-circle-o"></i> 操作记录</a>
+<router-link tag="li" to="/action-log" exact>
+    <a><i class="fa fa-circle-o"></i> <span>操作记录</span></a>
 </router-link>
