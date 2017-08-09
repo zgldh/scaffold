@@ -91,6 +91,25 @@ class Utils
     }
 
     /**
+     * Add service alias settings into config/app.php
+     * @param $alias
+     * @param $facade
+     */
+    public static function addAlias($alias, $facade)
+    {
+        $appConfigPath = base_path('config/app.php');
+        $appConfig = file_get_contents($appConfigPath);
+        if (!str_contains($appConfig, $facade)) {
+            $aliasContent = "'{$alias}'     => {$facade}";
+            $providerEndIndex = strpos($appConfig, "]", strpos($appConfig, " 'aliases' => ["));
+            $appConfig = substr($appConfig, 0, $providerEndIndex) .
+                "    " . $aliasContent . ",\n    " .
+                substr($appConfig, $providerEndIndex);
+            file_put_contents($appConfigPath, $appConfig);
+        }
+    }
+
+    /**
      * Add route setting to route files under /routes/*.php
      * @param $route
      */
