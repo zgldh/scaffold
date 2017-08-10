@@ -35,9 +35,13 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
-        return view('admin.login');
+        $redirect = $request->get('redirect', '/admin');
+        $data = [
+            'redirect' => $redirect
+        ];
+        return view('admin.login', $data);
     }
 
     public function username()
@@ -52,5 +56,11 @@ class AdminController extends Controller
         $request->session()->regenerate();
 
         return redirect()->guest('/admin');
+    }
+
+    public function redirectTo()
+    {
+        $path = \Request::get('redirect') ?: '/';
+        return $path;
     }
 }

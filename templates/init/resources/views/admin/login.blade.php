@@ -18,7 +18,7 @@
 
         <form method="post" action="{{ url('/admin/login') }}">
             {!! csrf_field() !!}
-
+            <input type="hidden" name="redirect" value="{{ $redirect }}">
             <div class="form-group has-feedback {{ $errors->has('name') ? ' has-error' : '' }}">
                 <input type="name" class="form-control" name="name" value="{{ old('name') }}" placeholder="用户名">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

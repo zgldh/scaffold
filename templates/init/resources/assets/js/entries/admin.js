@@ -17,7 +17,7 @@ window.axios.interceptors.response.use(function (response) {
   if (error.response.status == 401) {
     // Jump to /admin/login page
     alert('您未登录。');
-    window.location.href = '/admin/login';
+    window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.href);
   }
   return Promise.reject(error);
 });
