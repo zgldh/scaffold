@@ -8,20 +8,64 @@ class FieldDefinition
 {
     private $schema = '';
 
+    /**
+     * 字段名
+     * @var string
+     */
     private $name = '';
+    /**
+     * 数据库字段类型
+     * @var string
+     */
     private $dbType = '';
+    /**
+     * 索引类型 'index','unique'
+     * @var null
+     */
     private $indexType = null;
+    /**
+     * 数据库是否可以为null
+     * @var bool
+     */
     private $nullable = false;
+    /**
+     * 数据库/界面默认值
+     * @var null
+     */
     private $defaultValue = null;
 
+    /**
+     * 界面控件类型
+     * @var string
+     */
     private $htmlType = 'text';
+    /**
+     * 界面控件label名
+     * @var string
+     */
     private $label = '';
+    /**
+     * 是否必填
+     * @var bool
+     */
     private $required = false;
+    /**
+     * Laravel validate 验证机制
+     * @var string
+     */
     private $validations = '';
+    /**
+     * 是否可以排序
+     * @var bool
+     */
     private $sortable = true;
+    /**
+     * 是否显示在列表页
+     * @var bool
+     */
     private $inIndex = false;
 
-    public function __construct($name = '', $dbType = 'text')
+    public function __construct($name = '', $dbType = 'string')
     {
         $this->name = $name;
         $this->label = $name;
@@ -32,7 +76,7 @@ class FieldDefinition
      * @param string $name
      * @return FieldDefinition
      */
-    public function setName($name)
+    public function name($name)
     {
         $this->name = $name;
         return $this;
@@ -50,7 +94,7 @@ class FieldDefinition
      * @param string $schema
      * @return FieldDefinition
      */
-    public function setSchema($schema)
+    public function schema($schema)
     {
         $this->schema = $schema;
         return $this;
@@ -68,7 +112,7 @@ class FieldDefinition
      * @param string $dbType
      * @return FieldDefinition
      */
-    public function setDbType($dbType)
+    public function dbType($dbType)
     {
         $this->dbType = $dbType;
         return $this;
@@ -110,7 +154,7 @@ class FieldDefinition
      * @param null $defaultValue
      * @return FieldDefinition
      */
-    public function setDefaultValue($defaultValue)
+    public function defaultValue($defaultValue)
     {
         $this->defaultValue = $defaultValue;
         return $this;
@@ -120,7 +164,7 @@ class FieldDefinition
      * @param bool $nullable
      * @return FieldDefinition
      */
-    public function setNullable($nullable = true)
+    public function nullable($nullable = true)
     {
         $this->nullable = $nullable;
         return $this;
@@ -130,7 +174,7 @@ class FieldDefinition
      * @param null $indexType
      * @return FieldDefinition
      */
-    public function setIndexType($indexType)
+    public function index($indexType)
     {
         $this->indexType = $indexType;
         return $this;
@@ -140,7 +184,7 @@ class FieldDefinition
      * @param string $htmlType
      * @return FieldDefinition
      */
-    public function setHtmlType($htmlType)
+    public function htmlType($htmlType)
     {
         $this->htmlType = $htmlType;
         return $this;
@@ -158,7 +202,7 @@ class FieldDefinition
      * @param string $label
      * @return FieldDefinition
      */
-    public function setLabel($label)
+    public function label($label)
     {
         $this->label = $label;
         return $this;
@@ -176,7 +220,7 @@ class FieldDefinition
      * @param bool $required
      * @return FieldDefinition
      */
-    public function setRequired($required = true)
+    public function required($required = true)
     {
         $this->required = $required;
         return $this;
@@ -194,7 +238,7 @@ class FieldDefinition
      * @param string $validations
      * @return FieldDefinition
      */
-    public function setValidations($validations)
+    public function validations($validations)
     {
         $this->validations = $validations;
         return $this;
@@ -229,7 +273,7 @@ class FieldDefinition
      * @param bool $inIndex
      * @return FieldDefinition
      */
-    public function setInIndex($inIndex = true)
+    public function inIndex($inIndex = true)
     {
         $this->inIndex = $inIndex;
         return $this;

@@ -18,7 +18,7 @@ abstract class ModuleStarter
         return new ModelDefinition($tableName, $fields);
     }
 
-    protected function newField($name = '', $fieldType = 'text')
+    protected function newField($name = '', $fieldType = 'string')
     {
         return new FieldDefinition($name, $fieldType);
     }
