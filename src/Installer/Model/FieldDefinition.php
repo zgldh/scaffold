@@ -65,6 +65,19 @@ class FieldDefinition
      */
     private $inIndex = false;
 
+    /**
+     * 是否在列表中搜索
+     * @var mixed
+     */
+    private $searchType = 'inherent';
+
+    /**
+     * 本字段和别的Model有什么关系
+     * @var mixed
+     */
+    private $relationship = null;
+
+
     public function __construct($name = '', $dbType = 'string')
     {
         $this->name = $name;
@@ -285,5 +298,197 @@ class FieldDefinition
     public function isInIndex()
     {
         return $this->inIndex;
+    }
+
+    /**
+     * @param  mixed $searchType
+     * @return FieldDefinition
+     */
+    public function noSearch()
+    {
+        $this->searchType = false;
+        return $this;
+    }
+
+    /**
+     * @param  mixed $searchType
+     * @return FieldDefinition
+     */
+    public function searchType($searchType)
+    {
+        $this->searchType = $searchType;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSearchType()
+    {
+        return $this->searchType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelationship()
+    {
+        return json_decode($this->relationship);
+    }
+
+    /**
+     * @param mixed $relationship
+     * @return FieldDefinition
+     */
+    public function setRelationship($relationship)
+    {
+        $this->relationship = $relationship;
+        return $this;
+    }
+
+
+    /**
+     * Define a one-to-many relationship.
+     *
+     * @param  string $related
+     * @param  string $foreignKey
+     * @param  string $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function hasMany($related, $foreignKey = null, $localKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a has-many-through relationship.
+     *
+     * @param  string $related
+     * @param  string $through
+     * @param  string|null $firstKey
+     * @param  string|null $secondKey
+     * @param  string|null $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a polymorphic one-to-many relationship.
+     *
+     * @param  string $related
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     * @param  string $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @param  string $related
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  string $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a polymorphic many-to-many relationship.
+     *
+     * @param  string $related
+     * @param  string $name
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  bool $inverse
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function morphToMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null, $inverse = false)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a polymorphic, inverse many-to-many relationship.
+     *
+     * @param  string $related
+     * @param  string $name
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function morphedByMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+
+    /**
+     * Define a one-to-one relationship.
+     *
+     * @param  string $related
+     * @param  string $foreignKey
+     * @param  string $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function hasOne($related, $foreignKey = null, $localKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a polymorphic one-to-one relationship.
+     *
+     * @param  string $related
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     * @param  string $localKey
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function morphOne($related, $name, $type = null, $id = null, $localKey = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  string $related
+     * @param  string $foreignKey
+     * @param  string $ownerKey
+     * @param  string $relation
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
+    {
+        $this->relationship = json_encode(func_get_args());
+    }
+
+    /**
+     * Define a polymorphic, inverse one-to-one or many relationship.
+     *
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function morphTo($name = null, $type = null, $id = null)
+    {
+        $this->relationship = json_encode(func_get_args());
     }
 }

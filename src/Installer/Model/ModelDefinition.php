@@ -8,6 +8,7 @@ class ModelDefinition
 {
     private $table = '';
     private $fields = [];
+    private $searches = [];
     private $middleware = '';
 
     public function __construct($table = '', $fields = [])
@@ -34,10 +35,11 @@ class ModelDefinition
         return $this->table;
     }
 
-    public function addField(FieldDefinition $field)
+    public function addField($name = '', $fieldType = 'string')
     {
+        $field = new FieldDefinition($name, $fieldType);
         $this->fields[] = $field;
-        return $this;
+        return $field;
     }
 
     /**
@@ -74,5 +76,28 @@ class ModelDefinition
     public function getMiddleware()
     {
         return $this->middleware;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearches()
+    {
+        return $this->searches;
+    }
+
+    /**
+     * @param array $searches
+     * @return ModelDefinition
+     */
+    public function setSearches($searches)
+    {
+        $this->searches = $searches;
+        return $this;
+    }
+
+    public function addSearch($fieldName, $searchType)
+    {
+        $this->searches[$fieldName] = $searchType;
     }
 }
