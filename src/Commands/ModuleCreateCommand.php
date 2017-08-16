@@ -1,9 +1,12 @@
 <?php namespace zgldh\Scaffold\Commands;
 
 use Artisan;
+use Hamcrest\Util;
 use Illuminate\Console\Command;
 use InfyOm\Generator\Utils\FileUtil;
 use zgldh\Scaffold\Installer\ConfigParser;
+use zgldh\Scaffold\Installer\Model\ModelDefinition;
+use zgldh\Scaffold\Installer\ModuleStarter;
 use zgldh\Scaffold\Installer\Utils;
 use zgldh\User\UserCreateCommand;
 
@@ -14,7 +17,7 @@ class ModuleCreateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zgldh:module:create {starter}';
+    protected $signature = 'zgldh:module:create {starterClass}';
 
     /**
      * The console command description.
@@ -22,6 +25,18 @@ class ModuleCreateCommand extends Command
      * @var string
      */
     protected $description = 'Create module.';
+
+    private $moduleDirectoryName = null;
+    /**
+     * @var ModuleStarter
+     */
+    private $starter = null;
+    private $namespace = null;
+    private $folder = null;
+    /**
+     * @var ModelDefinition
+     */
+    private $model = null;
 
     /**
      * Create a new command instance.
@@ -39,14 +54,107 @@ class ModuleCreateCommand extends Command
      */
     public function handle()
     {
-        $starter = $this->argument('starter');
-
-        if (file_exists($starter)) {
-            $this->fromFieldFile($starter);
+        $starterClass = $this->argument('starterClass');
+//        dd($starterClass);
+        if (!$starterClass) {
+            $this->error("Please use zgldh:module:create Class\To\Starter");
+        } elseif (!class_exists($starterClass)) {
+            $this->error($starterClass . " doesn't exist");
+        } elseif (!$this->isModuleStarter($starterClass)) {
+            $this->error($starterClass . " is not a ModuleStarter");
         } else {
-            $this->error("Please use zgldh:module:create Path/To/Starter.php");
-            return false;
+            $this->igniteStarter($starterClass);
         }
+    }
+
+    private function isModuleStarter($className)
+    {
+        $ref = new \ReflectionClass($className);
+        return $ref->isSubclassOf(ModuleStarter::class);
+    }
+
+    /**
+     * @param $starterClass
+     * @return bool
+     */
+    private function igniteStarter($starterClass)
+    {
+        $this->moduleDirectoryName = config('zgldh-scaffold.modules', 'Modules');
+        $this->starter = new $starterClass();
+
+        $this->namespace = $this->starter->getModuleNameSpace();
+        $this->folder = $this->starter->getModuleFolder();
+        $this->info('Generating ' . $this->namespace . ' to ' . $this->folder . '...');
+
+        $models = $this->starter->getModels();
+        foreach ($models as $model) {
+            $this->model = $model;
+            $this->line('Model: ' . $this->model->getTable());
+            $this->generateController();
+        }
+        return false;
+//
+//        $this->addServiceProvider('User', 'UserServiceProvider::class');
+//        $this->addRoute('User');
+//        $this->addToVueRoute('User');
+//        $this->updateAuthConfig();
+//        $this->addAdminMenuItem($this->getModuleTemplateContent('menu.blade.php'));
+//        $this->publicFactoryAndSeed(
+//            $this->getModuleTemplatePath('ModuleUserFactory.php'),
+//            $this->getModuleTemplatePath('ModuleUserSeed.php')
+//        );
+//
+//        // Install laravel-permission
+//        App::register(PermissionServiceProvider::class);
+//        Artisan::call('vendor:publish', [
+//            '--provider' => PermissionServiceProvider::class,
+//            '--tag'      => 'migrations']);
+//        Artisan::call('vendor:publish', [
+//            '--provider' => PermissionServiceProvider::class,
+//            '--tag'      => 'config']);
+//
+//        // Publish migrations
+//        $this->publishMigration('AddColumnsToUsersTable', __DIR__ . '/../migrations/add_columns_to_users_table.php');
+//
+//        Artisan::call('migrate');
+//
+//        $this->createBasicAdmin();
+//
+//        exec('composer dumpautoload');
+
+
+        $this->info('Complete.');
+    }
+
+    private function generateController()
+    {
+        $this->comment("\tController...");
+        $pascalCase = $this->model->getPascaleCase();
+        $controllerTemplate = Utils::template('raw' . DIRECTORY_SEPARATOR . 'Controller.stub');
+        $controllerDestPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $pascalCase . '.php';
+        $middleware = $this->model->getMiddleware();
+        $variables = [
+            'NAME_SPACE'                   => $this->namespace,
+            'MODEL_NAME'                   => $pascalCase,
+            'MIDDLEWARE'                   => $middleware ? '$this->middleware("' . $middleware . '");' : '',
+            'USE_CONTROLLER_ACTION_LOG'    => $this->model->isActionLog() ? "use " . $this->moduleDirectoryName . "\ActionLog\Models\ActionLog;" : '',
+            'CONTROLLER_INDEX_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SEARCH, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_STORE_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_CREATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_SHOW_ACTION_LOG'   => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SHOW, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_UPDATE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_UPDATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_DELETE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_DELETE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+        ];
+        Utils::copy($controllerTemplate, $controllerDestPath, $variables);
+        return;
+        $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = "";
+        if ($this->dynamicVariables['MIDDLEWARE']) {
+            $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = '$this->middleware("' . $this->dynamicVariables['MIDDLEWARE'] . '");';
+        }
+
+        $template = file_get_contents(Utils::template('package/Controllers/Controller.stub'));
+        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
+        $fileName = $this->dynamicVariables['MODEL_NAME'] . 'Controller.php';
+        FileUtil::createFile($controllerFolder, $fileName, $templateData);
     }
 
     private $dynamicVariables = [];
@@ -210,20 +318,6 @@ class ModuleCreateCommand extends Command
         $template = file_get_contents(Utils::template('package/menu_item.stub'));
         $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
         Utils::addAdminMenuItem($templateData);
-    }
-
-    private function generateController($controllerFolder)
-    {
-        $this->info('Controller...');
-        $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = "";
-        if ($this->dynamicVariables['MIDDLEWARE']) {
-            $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = '$this->middleware("' . $this->dynamicVariables['MIDDLEWARE'] . '");';
-        }
-
-        $template = file_get_contents(Utils::template('package/Controllers/Controller.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $fileName = $this->dynamicVariables['MODEL_NAME'] . 'Controller.php';
-        FileUtil::createFile($controllerFolder, $fileName, $templateData);
     }
 
     private function generateServiceProvider($folder)

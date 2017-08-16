@@ -11,7 +11,7 @@ class Utils
 {
     public static function template($name)
     {
-        $path = __DIR__ . '/../../templates/' . $name;
+        $path = realpath(__DIR__ . '/../../templates/' . $name);
         return $path;
     }
 
@@ -68,6 +68,10 @@ class Utils
         } elseif (file_exists($filePath)) {
             $template = file_get_contents($filePath);
             $templateData = Utils::fillTemplate($variables, $template, $pending);
+            $folder = dirname($destPath);
+            if(!file_exists($folder)) {
+                mkdir($folder, 0755, true);
+            }
             file_put_contents($destPath, $templateData);
         }
 

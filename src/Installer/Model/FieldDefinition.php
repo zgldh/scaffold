@@ -27,7 +27,7 @@ class FieldDefinition
      * 数据库是否可以为null
      * @var bool
      */
-    private $nullable = false;
+    private $nullable = true;
     /**
      * 数据库/界面默认值
      * @var null
@@ -78,6 +78,11 @@ class FieldDefinition
     private $relationship = null;
 
 
+    /**
+     * FieldDefinition constructor.
+     * @param string $name 'some_field_name'
+     * @param string $dbType
+     */
     public function __construct($name = '', $dbType = 'string')
     {
         $this->name = $name;
@@ -170,6 +175,10 @@ class FieldDefinition
     public function defaultValue($defaultValue)
     {
         $this->defaultValue = $defaultValue;
+        if ($defaultValue === null) {
+            $this->nullable();
+            $this->required(false);
+        }
         return $this;
     }
 
@@ -236,6 +245,9 @@ class FieldDefinition
     public function required($required = true)
     {
         $this->required = $required;
+        if ($required) {
+            $this->nullable(false);
+        }
         return $this;
     }
 

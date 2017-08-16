@@ -1,0 +1,20 @@
+<?php namespace $NAME_SPACE$\Repositories;
+
+use $NAME_SPACE$\Modules\$MODEL_NAME$;
+use zgldh\Scaffold\BaseRepository;
+
+class $MODEL_NAME$Repository extends BaseRepository
+{
+    /**
+     * @var array
+     */
+    protected $fieldSearchable = $FIELD_SEARCHABLE$;
+
+    /**
+     * Configure the Model
+     **/
+    public function model()
+    {
+        return Upload::class;
+    }
+}

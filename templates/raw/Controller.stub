@@ -1,32 +1,34 @@
-<?php namespace $NAME_SPACE_CONTROLLER$;
+<?php namespace $NAME_SPACE$\Controllers;
 
-use $NAME_SPACE_REQUEST$\Create$MODEL_NAME$Request;
-use $NAME_SPACE_REQUEST$\Update$MODEL_NAME$Request;
+$USE_CONTROLLER_ACTION_LOG$
+use $NAME_SPACE$\Requests\Create$MODEL_NAME$Request;
+use $NAME_SPACE$\Requests\Update$MODEL_NAME$Request;
+use $NAME_SPACE$\Repositories\$MODEL_NAME$Repository;
 use App\Http\Requests\IndexRequest;
 use App\Http\Requests\ShowRequest;
 use Illuminate\Http\JsonResponse;
-use $NAME_SPACE_REPOSITORY$\$MODEL_NAME$Repository;
 use zgldh\Scaffold\AppBaseController;
 
 class $MODEL_NAME$Controller extends AppBaseController
 {
 
-    public function __construct($MODEL_NAME$Repository $$MODEL_NAME_LOWER$Repository)
+    public function __construct($MODEL_NAME$Repository $repository)
     {
-        $this->repository = $$MODEL_NAME_LOWER$Repository;
-        $CONTROLLER_MIDDLEWARE$
+        $this->repository = $repository;
+        $MIDDLEWARE$
     }
 
     /**
      * Display a listing of the $MODEL_NAME$.
      *
-     * @param Request $request
+     * @param IndexRequest $request
      * @return Response
      */
     public function index(IndexRequest $request)
     {
         $with = $request->getWith();
         $data = $this->repository->datatables(null, $with);
+        $CONTROLLER_INDEX_ACTION_LOG$
         return $data;
     }
 
@@ -40,10 +42,12 @@ class $MODEL_NAME$Controller extends AppBaseController
     {
         $input = $request->all();
 
-        $$MODEL_NAME_LOWER$ = $this->repository->create($input);
-        $$MODEL_NAME_LOWER$->load($request->getWith());
+        $item = $this->repository->create($input);
+        $item->load($request->getWith());
 
-        return $this->sendResponse($$MODEL_NAME_LOWER$, '$MODEL_NAME$ saved successfully.');
+        $CONTROLLER_STORE_ACTION_LOG$
+
+        return $this->sendResponse($item, '$MODEL_NAME$ saved successfully.');
     }
 
     /**
@@ -55,14 +59,16 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function show($id, ShowRequest $request)
     {
-        $$MODEL_NAME_LOWER$ = $this->repository->findWithoutFail($id);
-        $$MODEL_NAME_LOWER$->load($request->getWith());
+        $item = $this->repository->findWithoutFail($id);
+        $item->load($request->getWith());
 
-        if (empty($$MODEL_NAME_LOWER$)) {
+        if (empty($item)) {
             return $this->sendError('$MODEL_NAME$ not found');
         }
 
-        return $this->sendResponse($$MODEL_NAME_LOWER$, '');
+        $CONTROLLER_SHOW_ACTION_LOG$
+
+        return $this->sendResponse($item, '');
     }
 
     /**
@@ -75,16 +81,18 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function update($id, Update$MODEL_NAME$Request $request)
     {
-        $$MODEL_NAME_LOWER$ = $this->repository->findWithoutFail($id);
+        $item = $this->repository->findWithoutFail($id);
 
-        if (empty($$MODEL_NAME_LOWER$)) {
+        if (empty($item)) {
             return $this->sendError('$MODEL_NAME$ not found');
         }
 
-        $$MODEL_NAME_LOWER$ = $this->repository->update($request->all(), $id);
-        $$MODEL_NAME_LOWER$->load($request->getWith());
+        $item = $this->repository->update($request->all(), $id);
+        $item->load($request->getWith());
 
-        return $this->sendResponse($$MODEL_NAME_LOWER$, '$MODEL_NAME$ updated successfully.');
+        $CONTROLLER_UPDATE_ACTION_LOG$
+
+        return $this->sendResponse($item, '$MODEL_NAME$ updated successfully.');
     }
 
     /**
@@ -96,13 +104,16 @@ class $MODEL_NAME$Controller extends AppBaseController
      */
     public function destroy($id)
     {
-        $$MODEL_NAME_LOWER$ = $this->repository->findWithoutFail($id);
+        $item = $this->repository->findWithoutFail($id);
 
-        if (empty($$MODEL_NAME_LOWER$)) {
+        if (empty($item)) {
             return $this->sendError('$MODEL_NAME$ not found');
         }
 
         $this->repository->delete($id);
-        return $this->sendResponse($$MODEL_NAME_LOWER$, '$MODEL_NAME$ deleted successfully.');
+
+        $CONTROLLER_DELETE_ACTION_LOG$
+
+        return $this->sendResponse($item, '$MODEL_NAME$ deleted successfully.');
     }
 }
