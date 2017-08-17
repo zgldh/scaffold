@@ -15,6 +15,25 @@ class Utils
         return $path;
     }
 
+    public static function renderTemplate($name, $data)
+    {
+        if (ends_with($name, '.stub')) {
+            $result = self::fillTemplate($data, file_get_contents(self::template($name)));
+        } else {
+            $result = view('zgldh.scaffold::' . $name, $data)->render();
+        }
+        return $result;
+    }
+
+    public static function writeFile($name, $content)
+    {
+        $folder = dirname($name);
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+        file_put_contents($name, $content);
+    }
+
     public static function fillTemplate($variables, $template, $pending = '$')
     {
         foreach ($variables as $variable => $value) {
@@ -69,7 +88,7 @@ class Utils
             $template = file_get_contents($filePath);
             $templateData = Utils::fillTemplate($variables, $template, $pending);
             $folder = dirname($destPath);
-            if(!file_exists($folder)) {
+            if (!file_exists($folder)) {
                 mkdir($folder, 0755, true);
             }
             file_put_contents($destPath, $templateData);

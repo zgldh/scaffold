@@ -155,6 +155,14 @@ class FieldDefinition
     /**
      * @return bool
      */
+    public function isUnique()
+    {
+        return $this->indexType === 'unique';
+    }
+
+    /**
+     * @return bool
+     */
     public function isNullable()
     {
         return $this->nullable;
@@ -193,12 +201,22 @@ class FieldDefinition
     }
 
     /**
-     * @param null $indexType
+     * @param null $indexType 'index','unique'
      * @return FieldDefinition
      */
     public function index($indexType)
     {
         $this->indexType = $indexType;
+        return $this;
+    }
+
+    /**
+     * Set this field as unique indexType
+     * @return $this
+     */
+    public function unique()
+    {
+        $this->indexType = 'unique';
         return $this;
     }
 
@@ -313,7 +331,6 @@ class FieldDefinition
     }
 
     /**
-     * @param  mixed $searchType
      * @return FieldDefinition
      */
     public function noSearch()

@@ -34,6 +34,8 @@ class ScaffoldServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'templates',
+            'zgldh.scaffold');
     }
 
     private function registerCommands()

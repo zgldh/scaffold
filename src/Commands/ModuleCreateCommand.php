@@ -91,6 +91,8 @@ class ModuleCreateCommand extends Command
             $this->model = $model;
             $this->line('Model: ' . $this->model->getTable());
             $this->generateController();
+            $this->generateRequests();
+//            $this->generateRepository();
         }
         return false;
 //
@@ -130,6 +132,47 @@ class ModuleCreateCommand extends Command
     {
         $this->comment("\tController...");
         $pascalCase = $this->model->getPascaleCase();
+        $template = Utils::template('raw' . DIRECTORY_SEPARATOR . 'Controller.stub');
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $pascalCase . 'Controller.php';
+        $middleware = $this->model->getMiddleware();
+        $variables = [
+            'NAME_SPACE'                   => $this->namespace,
+            'MODEL_NAME'                   => $pascalCase,
+            'MIDDLEWARE'                   => $middleware ? '$this->middleware("' . $middleware . '");' : '',
+            'USE_CONTROLLER_ACTION_LOG'    => $this->model->isActionLog() ? "use " . $this->moduleDirectoryName . "\ActionLog\Models\ActionLog;" : '',
+            'CONTROLLER_INDEX_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SEARCH, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_STORE_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_CREATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_SHOW_ACTION_LOG'   => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SHOW, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_UPDATE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_UPDATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'CONTROLLER_DELETE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_DELETE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+        ];
+        Utils::copy($template, $destinationPath, $variables);
+        return;
+    }
+
+    private function generateRequests()
+    {
+        $this->comment("\tRequests...");
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
+        $createContent = Utils::renderTemplate('raw.Requests.Create', $variables);
+        $updateContent = Utils::renderTemplate('raw.Requests.Update', $variables);
+
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Requests';
+        Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "Create{$pascalCase}Request.php", $createContent);
+        Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "Update{$pascalCase}Request.php", $updateContent);
+
+        return;
+    }
+
+    private function generateRepository()
+    {
+        $this->comment("\tRepository...");
+        $pascalCase = $this->model->getPascaleCase();
         $controllerTemplate = Utils::template('raw' . DIRECTORY_SEPARATOR . 'Controller.stub');
         $controllerDestPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $pascalCase . '.php';
         $middleware = $this->model->getMiddleware();
@@ -146,15 +189,6 @@ class ModuleCreateCommand extends Command
         ];
         Utils::copy($controllerTemplate, $controllerDestPath, $variables);
         return;
-        $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = "";
-        if ($this->dynamicVariables['MIDDLEWARE']) {
-            $this->dynamicVariables['CONTROLLER_MIDDLEWARE'] = '$this->middleware("' . $this->dynamicVariables['MIDDLEWARE'] . '");';
-        }
-
-        $template = file_get_contents(Utils::template('package/Controllers/Controller.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $fileName = $this->dynamicVariables['MODEL_NAME'] . 'Controller.php';
-        FileUtil::createFile($controllerFolder, $fileName, $templateData);
     }
 
     private $dynamicVariables = [];
