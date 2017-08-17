@@ -55,7 +55,8 @@ class ModuleCreateCommand extends Command
     public function handle()
     {
         $starterClass = $this->argument('starterClass');
-//        dd($starterClass);
+        $starterClass = str_replace('/', '\\', $starterClass);
+
         if (!$starterClass) {
             $this->error("Please use zgldh:module:create Class\To\Starter");
         } elseif (!class_exists($starterClass)) {
@@ -92,7 +93,7 @@ class ModuleCreateCommand extends Command
             $this->line('Model: ' . $this->model->getTable());
             $this->generateController();
             $this->generateRequests();
-//            $this->generateRepository();
+            $this->generateRepository();
         }
         return false;
 //
@@ -132,21 +133,17 @@ class ModuleCreateCommand extends Command
     {
         $this->comment("\tController...");
         $pascalCase = $this->model->getPascaleCase();
-        $template = Utils::template('raw' . DIRECTORY_SEPARATOR . 'Controller.stub');
-        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $pascalCase . 'Controller.php';
-        $middleware = $this->model->getMiddleware();
         $variables = [
-            'NAME_SPACE'                   => $this->namespace,
-            'MODEL_NAME'                   => $pascalCase,
-            'MIDDLEWARE'                   => $middleware ? '$this->middleware("' . $middleware . '");' : '',
-            'USE_CONTROLLER_ACTION_LOG'    => $this->model->isActionLog() ? "use " . $this->moduleDirectoryName . "\ActionLog\Models\ActionLog;" : '',
-            'CONTROLLER_INDEX_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SEARCH, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_STORE_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_CREATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_SHOW_ACTION_LOG'   => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SHOW, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_UPDATE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_UPDATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_DELETE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_DELETE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'MODULE_DIRECTORY_NAME' => $this->moduleDirectoryName,
+            'NAME_SPACE'            => $this->namespace,
+            'MODEL_NAME'            => $pascalCase,
+            'MODEL'                 => $this->model
         ];
-        Utils::copy($template, $destinationPath, $variables);
+        $content = Utils::renderTemplate('raw.Controller', $variables);
+
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers';
+        Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "{$pascalCase}Controller.php", $content);
+
         return;
     }
 
@@ -173,21 +170,16 @@ class ModuleCreateCommand extends Command
     {
         $this->comment("\tRepository...");
         $pascalCase = $this->model->getPascaleCase();
-        $controllerTemplate = Utils::template('raw' . DIRECTORY_SEPARATOR . 'Controller.stub');
-        $controllerDestPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $pascalCase . '.php';
-        $middleware = $this->model->getMiddleware();
         $variables = [
-            'NAME_SPACE'                   => $this->namespace,
-            'MODEL_NAME'                   => $pascalCase,
-            'MIDDLEWARE'                   => $middleware ? '$this->middleware("' . $middleware . '");' : '',
-            'USE_CONTROLLER_ACTION_LOG'    => $this->model->isActionLog() ? "use " . $this->moduleDirectoryName . "\ActionLog\Models\ActionLog;" : '',
-            'CONTROLLER_INDEX_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SEARCH, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_STORE_ACTION_LOG'  => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_CREATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_SHOW_ACTION_LOG'   => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_SHOW, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_UPDATE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_UPDATE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
-            'CONTROLLER_DELETE_ACTION_LOG' => $this->model->isActionLog() ? 'ActionLog::log(ActionLog::TYPE_DELETE, "' . $this->namespace . '\\' . $pascalCase . '");' : '',
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
         ];
-        Utils::copy($controllerTemplate, $controllerDestPath, $variables);
+        $content = Utils::renderTemplate('raw.Repository', $variables);
+
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Repositories';
+        Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "{$pascalCase}Repository.php", $content);
+
         return;
     }
 

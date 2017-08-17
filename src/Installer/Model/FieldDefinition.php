@@ -340,6 +340,15 @@ class FieldDefinition
     }
 
     /**
+     * If this field is not searchable
+     * @return bool
+     */
+    public function isNotSearchable()
+    {
+        return $this->searchType === false;
+    }
+
+    /**
      * @param  mixed $searchType
      * @return FieldDefinition
      */
@@ -445,8 +454,14 @@ class FieldDefinition
      * @param  bool $inverse
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function morphToMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null, $inverse = false)
-    {
+    public function morphToMany(
+        $related,
+        $name,
+        $table = null,
+        $foreignKey = null,
+        $relatedKey = null,
+        $inverse = false
+    ) {
         $this->relationship = json_encode(func_get_args());
     }
 

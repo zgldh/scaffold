@@ -12,6 +12,7 @@ class ModelDefinition
     private $middleware = '';
     private $softDelete = false;
     private $actionLog = false;
+    private $route = '';
 
     private $PascaleCase = '';
     private $camelCase = '';
@@ -28,6 +29,8 @@ class ModelDefinition
         $this->setCamelCase($name);
         $this->setSnakeCase($name);
         $this->setTable(str_plural($name));
+        $this->route($name);
+
         $this->fields = $fields;
     }
 
@@ -199,5 +202,38 @@ class ModelDefinition
     public function isActionLog()
     {
         return $this->actionLog;
+    }
+
+    /**
+     * @param string $route 'blog', 'my-works', 'goods-to-sell'
+     * @return ModelDefinition
+     */
+    public function route($route)
+    {
+        $partials = preg_split('/\//', $route);
+        $partials = array_map(function ($partial) {
+            return kebab_case($partial);
+        }, $partials);
+        $this->route = join('/', $partials);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * 得到路由资源名
+     * @return string
+     */
+    public function getRouteResourceName()
+    {
+        $route = $this->getRoute();
+        $resourceName = str_after($route, '/');
+        return $resourceName;
     }
 }
