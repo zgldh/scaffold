@@ -25,5 +25,6 @@ class DashboardServiceProvider extends ServiceProvider
         //
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views',
             '$NAME$\Dashboard');
+        $this->loadTranslationsFrom(resource_path('lang/vendor/module-dashboard'), 'module-dashboard');
     }
 }

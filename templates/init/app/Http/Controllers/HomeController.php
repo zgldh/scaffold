@@ -23,4 +23,10 @@ class HomeController extends Controller
     {
         return view('app');
     }
+
+    public function getLanguage(Request $request, $module = 'scaffold')
+    {
+        $languages = __($module . '::t');
+        return $languages;
+    }
 }

@@ -160,6 +160,7 @@ class ScaffoldInitCommand extends Command
         Utils::copy(Utils::template('init/routes'), base_path('routes'));
 
         KernelEditor::addMiddleware('\App\Http\Middleware\MultipartFormDataParser::class');
+        KernelEditor::addMiddleware('\App\Http\Middleware\LocaleSensor::class');
         Utils::replaceFilePlaceholders(resource_path('assets/js/entries/admin.js'), $this->dynamicVariables);
 
         \Artisan::call('storage:link');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{{config('app.locale')}}">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title',__('scaffold::t.main.title').' - '.__('scaffold::t.app_name'))</title>

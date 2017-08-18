@@ -15,6 +15,7 @@
     Route::get('/logout', 'Auth\LoginController@logout');
 
     Route::get('/', ['as' => 'dashboard.index', 'uses' => 'HomeController@index']);
+    Route::get('/lang/{module?}', ['as' => 'lang.get', 'uses' => 'HomeController@getLanguage']);
     Route::get('/admin', ['as' => 'admin.index', 'uses' => 'AdminController@index']);
     Route::get('/admin/logout', ['as' => 'admin.login.page', 'uses' => 'AdminController@logout']);
     Route::get('/admin/login', ['as' => 'admin.login.page', 'uses' => 'AdminController@showLoginForm']);
