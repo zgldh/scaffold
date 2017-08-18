@@ -38,6 +38,13 @@ html, body {
 }
 
 .login-page {
+  .login-box {
+    width: auto;
+  }
+  .login-box-body {
+    width: 360px;
+    margin: 0 auto;
+  }
   background-image: url('../images/bgimage.jpg');
   background-size: 100% 100%;
   .login-logo {

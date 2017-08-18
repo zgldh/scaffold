@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title','网站名字后台管理')</title>
+    <title>@yield('title',__('scaffold::t.main.title').' - '.__('scaffold::t.app_name'))</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -14,8 +14,8 @@
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="#" class="logo" title="{{config('app.name')}}">
-                <b>{{config('app.name')}}</b>
+            <a href="#" class="logo" title="{{__('scaffold::t.app_name')}}">
+                <b>{{__('scaffold::t.app_name')}}</b>
             </a>
 
             <!-- Header Navbar -->
@@ -36,12 +36,12 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">管理员</span>
+                                <span class="hidden-xs">{{\Auth::user()->name}}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- Menu Footer-->
                                 <li>
-                                    <a href="{{ url('/admin/logout') }}" class="">退出</a>
+                                    <a href="{{ url('/admin/logout') }}" class="">@lang('scaffold::t.main.logout')</a>
                                 </li>
                             </ul>
                         </li>
@@ -65,7 +65,9 @@
 
         <!-- Main Footer -->
         <footer class="main-footer" style="max-height: 100px;text-align: center">
-            <strong>Copyright © 2017 <a href="#">Company</a>.</strong> All rights reserved.
+            <strong>@lang('scaffold::t.main.copyright') ©
+                <a href="#">@lang('scaffold::t.main.company_name')</a>.</strong>
+            @lang('scaffold::t.main.all_right_reserved')
         </footer>
 
     </div>

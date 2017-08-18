@@ -36,6 +36,7 @@ class ScaffoldServiceProvider extends ServiceProvider
         //
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'templates',
             'zgldh.scaffold');
+        $this->loadTranslationsFrom(resource_path('lang/vendor/scaffold'), 'scaffold');
     }
 
     private function registerCommands()
