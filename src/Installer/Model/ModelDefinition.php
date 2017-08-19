@@ -11,7 +11,7 @@ class ModelDefinition
     private $searches = [];
     private $middleware = '';
     private $softDelete = false;
-    private $actionLog = false;
+    private $activityLog = false;
     private $route = '';
 
     private $PascaleCase = '';
@@ -186,22 +186,22 @@ class ModelDefinition
     }
 
     /**
-     * 为本 Model 添加基础 ActionLog 支持
-     * @param bool $actionLog
+     * 为本 Model 添加基础 ActivityLog 支持
+     * @param bool $activityLog
      * @return ModelDefinition
      */
-    public function setActionLog($actionLog = true)
+    public function useActivityLog($activityLog = true)
     {
-        $this->actionLog = $actionLog;
+        $this->activityLog = $activityLog;
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function isActionLog()
+    public function isActivityLog()
     {
-        return $this->actionLog;
+        return $this->activityLog;
     }
 
     /**

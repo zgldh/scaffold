@@ -35,6 +35,17 @@ abstract class ModuleInstaller
     }
 
     /**
+     * 得到当前Module的 language 文件夹路径
+     * @param $path
+     * @return string
+     */
+    protected function getModuleLanguagePath()
+    {
+        $path = $this->moduleTemplatePath . '../lang';
+        return $path;
+    }
+
+    /**
      * 得到当前Module的模板文件夹下某文件内容
      * @param $path
      * @return string
@@ -66,7 +77,7 @@ abstract class ModuleInstaller
      */
     protected function addServiceProvider($targetModuleName, $serviceProviderClass)
     {
-        $serviceProvider = '\\' . $this->moduleDirectoryName . '\\' . $targetModuleName . '\\' . $serviceProviderClass;
+        $serviceProvider = $this->moduleDirectoryName . '\\' . $targetModuleName . '\\' . $serviceProviderClass;
         Utils::addServiceProvider($serviceProvider);
     }
 
@@ -97,6 +108,15 @@ abstract class ModuleInstaller
     protected function addAdminMenuItem($menuItem)
     {
         Utils::addAdminMenuItem($menuItem);
+    }
+
+    /**
+     * 复制 language 文件到 resources/lang/vendor 目录
+     * @param $vendorName
+     */
+    protected function copyLanguageFiles($vendorName)
+    {
+        Utils::copy($this->getModuleLanguagePath(), resource_path('lang/vendor/' . $vendorName));
     }
 
     /**

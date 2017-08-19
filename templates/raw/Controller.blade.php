@@ -6,9 +6,6 @@
     $middleWare = $MODEL->getMiddleware();
     echo '<?php' ?> namespace {{$NAME_SPACE}}\Controllers;
 
-@if($MODEL->isActionLog())
-use {{$MODULE_DIRECTORY_NAME}}\ActionLog\Models\ActionLog;
-@endif
 use {{$NAME_SPACE}}\Requests\Create{{$MODEL_NAME}}Request;
 use {{$NAME_SPACE}}\Requests\Update{{$MODEL_NAME}}Request;
 use {{$NAME_SPACE}}\Repositories\{{$MODEL_NAME}}Repository;
@@ -38,9 +35,7 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
     {
         $with = $request->getWith();
         $data = $this->repository->datatables(null, $with);
-@if($MODEL->isActionLog())
-        ActionLog::log(ActionLog::TYPE_SEARCH, "{{$NAME_SPACE}}\{{$MODEL_NAME}}");
-@endif
+
         return $data;
     }
 
@@ -56,9 +51,7 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
 
         $item = $this->repository->create($input);
         $item->load($request->getWith());
-@if($MODEL->isActionLog())
-        ActionLog::log(ActionLog::TYPE_CREATE, "{{$NAME_SPACE}}\{{$MODEL_NAME}}");
-@endif
+
         return $this->sendResponse($item, '{{$MODEL_NAME}} saved successfully.');
     }
 
@@ -77,9 +70,7 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
         if (empty($item)) {
             return $this->sendError('{{$MODEL_NAME}} not found');
         }
-@if($MODEL->isActionLog())
-        ActionLog::log(ActionLog::TYPE_SHOW, "{{$NAME_SPACE}}\{{$MODEL_NAME}}");
-@endif
+
         return $this->sendResponse($item, '');
     }
 
@@ -101,9 +92,7 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
 
         $item = $this->repository->update($request->all(), $id);
         $item->load($request->getWith());
-@if($MODEL->isActionLog())
-        ActionLog::log(ActionLog::TYPE_UPDATE, "{{$NAME_SPACE}}\{{$MODEL_NAME}}");
-@endif
+
         return $this->sendResponse($item, '{{$MODEL_NAME}} updated successfully.');
     }
 
@@ -123,9 +112,7 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
         }
 
         $this->repository->delete($id);
-@if($MODEL->isActionLog())
-        ActionLog::log(ActionLog::TYPE_DELETE, "{{$NAME_SPACE}}\{{$MODEL_NAME}}");
-@endif
+
         return $this->sendResponse($item, '{{$MODEL_NAME}} deleted successfully.');
     }
 }
