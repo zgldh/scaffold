@@ -145,6 +145,85 @@ class FieldDefinition
     }
 
     /**
+     * @return string
+     */
+    public function getCastType()
+    {
+        $castType = 'string';
+        $dbType = preg_split('/[:\(]/', $this->dbType);
+        switch ($dbType) {
+            case 'string':
+            case 'text':
+            case 'mediumText':
+            case 'longText':
+            case 'uuid':
+            case 'char':
+            case 'enum':
+            case 'ipAddress':
+            case 'macAddress':
+            case 'binary':
+                $castType = 'string';
+                break;
+
+            case 'json':
+            case 'jsonb':
+                $castType = 'array';
+                break;
+
+            case 'boolean':
+                $castType = 'boolean';
+                break;
+
+            case 'date':
+                $castType = 'date';
+                break;
+
+            case 'dateTime':
+            case 'dateTimeTz':
+            case 'time':
+            case 'timeTz':
+                $castType = 'datetime';
+                break;
+
+            case 'timestamp':
+            case 'timestampTz':
+                $castType = 'timestamp';
+                break;
+
+            case 'bigIncrements':
+            case 'bigInteger':
+            case 'increments':
+            case 'integer':
+            case 'mediumIncrements':
+            case 'mediumInteger':
+            case 'smallIncrements':
+            case 'smallInteger':
+            case 'tinyInteger':
+            case 'unsignedBigInteger':
+            case 'unsignedInteger':
+            case 'unsignedMediumInteger':
+            case 'unsignedSmallInteger':
+            case 'unsignedTinyInteger':
+                $castType = 'integer';
+                break;
+
+            case 'decimal':
+            case 'double':
+            case 'float':
+                $castType = 'float';
+                break;
+
+//            case 'rememberToken':
+//            case 'nullableTimestamps':
+//            case 'softDeletes':
+//            case 'timestamps':
+//            case 'timestampsTz':
+
+        }
+        return $castType;
+    }
+
+    /**
      * @return null
      */
     public function getIndexType()
@@ -371,7 +450,10 @@ class FieldDefinition
      */
     public function getRelationship()
     {
-        return json_decode($this->relationship);
+        if ($this->relationship) {
+            return json_decode($this->relationship, true);
+        }
+        return null;
     }
 
     /**
@@ -395,7 +477,9 @@ class FieldDefinition
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'hasMany';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -410,7 +494,9 @@ class FieldDefinition
      */
     public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'hasManyThrough';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -425,7 +511,9 @@ class FieldDefinition
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'morphMany';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -440,7 +528,9 @@ class FieldDefinition
      */
     public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'belongsToMany';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -462,7 +552,9 @@ class FieldDefinition
         $relatedKey = null,
         $inverse = false
     ) {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'morphToMany';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -477,7 +569,9 @@ class FieldDefinition
      */
     public function morphedByMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'morphedByMany';
+        $this->relationship = json_encode($args);
     }
 
 
@@ -491,7 +585,9 @@ class FieldDefinition
      */
     public function hasOne($related, $foreignKey = null, $localKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'hasOne';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -506,7 +602,9 @@ class FieldDefinition
      */
     public function morphOne($related, $name, $type = null, $id = null, $localKey = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'morphOne';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -520,7 +618,9 @@ class FieldDefinition
      */
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'belongsTo';
+        $this->relationship = json_encode($args);
     }
 
     /**
@@ -533,6 +633,26 @@ class FieldDefinition
      */
     public function morphTo($name = null, $type = null, $id = null)
     {
-        $this->relationship = json_encode(func_get_args());
+        $args = func_get_args();
+        $args['type'] = 'morphTo';
+        $this->relationship = json_encode($args);
+    }
+
+    /**
+     * Generate validation rule for this field.
+     * @return array|string
+     */
+    public function getRule()
+    {
+        $rules = [];
+        if ($this->isRequired()) {
+            $rules[] = 'required';
+        }
+        if ($this->getValidations()) {
+            $rules[] = $this->getValidations();
+        }
+
+        $rules = join('|', $rules);
+        return $rules;
     }
 }

@@ -174,4 +174,21 @@ class Utils
             file_put_contents($menuPath, $menus . "\n" . $menuContent . "\n");
         }
     }
+
+    /**
+     * 输出好看的数组
+     * @param $val
+     * @return mixed|string
+     */
+    public static function exportArray($val)
+    {
+        if (isset($val[0])) {
+            $array = json_encode($val, JSON_PRETTY_PRINT);
+        } else {
+            $array = var_export($val, true);
+            $array = trim($array, ' array()');
+            $array = '[' . $array . ']';
+        }
+        return $array;
+    }
 }

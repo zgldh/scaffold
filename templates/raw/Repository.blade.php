@@ -1,4 +1,5 @@
 <?php
+use zgldh\Scaffold\Installer\Utils;
     /**
      * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
      * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
@@ -13,7 +14,7 @@
     }
     echo '<?php' ?> namespace {{$NAME_SPACE}}\Repositories;
 
-use {{$NAME_SPACE}}\Modules\{{$MODEL_NAME}};
+use {{$NAME_SPACE}}\Models\{{$MODEL_NAME}};
 use zgldh\Scaffold\BaseRepository;
 
 class {{$MODEL_NAME}}Repository extends BaseRepository
@@ -21,7 +22,7 @@ class {{$MODEL_NAME}}Repository extends BaseRepository
     /**
      * @var array
      */
-    protected $fieldSearchable = <?php echo json_encode($searchableFields, JSON_PRETTY_PRINT);?>;
+    protected $fieldSearchable = <?php echo Utils::exportArray($searchableFields);?>;
 
     /**
      * Configure the Model

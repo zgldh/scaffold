@@ -94,7 +94,9 @@ class ModuleCreateCommand extends Command
             $this->generateController();
             $this->generateRequests();
             $this->generateRepository();
+            $this->generateModel();
         }
+
         return false;
 //
 //        $this->addServiceProvider('User', 'UserServiceProvider::class');
@@ -179,6 +181,23 @@ class ModuleCreateCommand extends Command
 
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Repositories';
         Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "{$pascalCase}Repository.php", $content);
+
+        return;
+    }
+
+    private function generateModel()
+    {
+        $this->comment("\tModel...");
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
+        $content = Utils::renderTemplate('raw.Model', $variables);
+
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models'. DIRECTORY_SEPARATOR . "{$pascalCase}.php";
+        Utils::writeFile($destinationPath, $content);
 
         return;
     }
