@@ -1,7 +1,7 @@
 {
   "name": "zgldh/scaffold",
   "description": "Scaffold for Laravel.",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "keywords": [
     "laravel",
     "scaffold"
@@ -11,6 +11,7 @@
     "php": ">=7.0.0",
     "laravel/framework": "5.4.*",
     "doctrine/dbal": "~2.3",
+    "friendsofphp/php-cs-fixer": "^2.4",
     "zgldh/laracasts-generators": "1.1.4",
     "laravel/passport": "~2.0",
     "barryvdh/laravel-ide-helper": "~2.2",

@@ -97,6 +97,8 @@ class ModuleCreateCommand extends Command
             $this->generateModel();
         }
 
+        $this->codeFormat();
+
         return false;
 //
 //        $this->addServiceProvider('User', 'UserServiceProvider::class');
@@ -196,7 +198,7 @@ class ModuleCreateCommand extends Command
         ];
         $content = Utils::renderTemplate('raw.Model', $variables);
 
-        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models'. DIRECTORY_SEPARATOR . "{$pascalCase}.php";
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . "{$pascalCase}.php";
         Utils::writeFile($destinationPath, $content);
 
         return;
@@ -379,5 +381,17 @@ class ModuleCreateCommand extends Command
         $serviceProviderClassName = Utils::fillTemplate($this->dynamicVariables,
             '\\$NAME_SPACE$\$MODEL_NAME$ServiceProvider::class');
         Utils::addServiceProvider($serviceProviderClassName);
+    }
+
+    private function codeFormat()
+    {
+        $this->comment("Code formatting...");
+        $rules = include_once(__DIR__ . '/../Installer/CodeFormatRules.php');
+        $command = 'php ' . base_path('vendor/friendsofphp/php-cs-fixer/php-cs-fixer') . ' fix ';
+        $command .= $this->folder;
+        $command .= ' --using-cache=no';
+        $command .= ' --rules="' . str_replace('"', '\"', json_encode($rules)) . '"';
+
+        system($command);
     }
 }
