@@ -29,7 +29,7 @@ class ModelDefinition
         $this->setPascaleCase($name);
         $this->setCamelCase($name);
         $this->setSnakeCase($name);
-        $this->setTable(str_plural($name));
+        $this->setTable(str_plural($this->getSnakeCase()));
         $this->route($name);
 
         $this->fields = $fields;
@@ -41,7 +41,7 @@ class ModelDefinition
      */
     public function setTable($table)
     {
-        $this->table = $this->getSnakeCase();
+        $this->table = $table;
         return $this;
     }
 

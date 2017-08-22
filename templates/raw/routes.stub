@@ -1,4 +1,0 @@
-<?php
-
-Route::post('$MODEL_NAME_LOWER$/bundle','\$NAME_SPACE_CONTROLLER$\$MODEL_NAME$Controller@bundle');
-Route::resource('$MODEL_NAME_LOWER$', '\$NAME_SPACE_CONTROLLER$\$MODEL_NAME$Controller');

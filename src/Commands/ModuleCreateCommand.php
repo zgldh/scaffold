@@ -96,6 +96,7 @@ class ModuleCreateCommand extends Command
             $this->generateModel();
         }
         $this->generateLanguageFiles();
+        $this->generateRoutes();
         $this->generateServiceProvider();
 
         $this->codeFormat();
@@ -222,6 +223,26 @@ class ModuleCreateCommand extends Command
 
     }
 
+    /**
+     * 生成 routes.php
+     */
+    private function generateRoutes()
+    {
+        $this->info('Route...');
+
+        $this->comment("\tModel...");
+        $variables = [
+            'STARTER' => $this->starter,
+        ];
+        $content = Utils::renderTemplate('raw.routes', $variables);
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . "routes.php";
+        Utils::writeFile($destinationPath, $content);
+
+        Utils::addRoute("require base_path('{$this->namespace}/routes.php');");
+
+        return;
+    }
+
     private function generateServiceProvider()
     {
         $this->comment("\tService Provider...");
@@ -294,7 +315,7 @@ class ModuleCreateCommand extends Command
         \Artisan::call('infyom.scaffold:requests', $parameters);
 
         $this->generateController($folder . '/Controllers/');
-        $this->generateRoute();
+        $this->generateRoutes();
         $this->generateResources($folder . '/resources');
         $this->generateServiceProvider($folder . '/');
     }
@@ -313,24 +334,6 @@ class ModuleCreateCommand extends Command
         return str_replace('/', '\\', $str);
     }
 
-    /**
-     * 生成 routes.php
-     */
-    private function generateRoute()
-    {
-        $this->info('Route...');
-
-        // 1. Create routes.php
-        $template = file_get_contents(Utils::template('package/routes.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $routesFilePath = $this->dynamicVariables['PACKAGE_FOLDER'] . DIRECTORY_SEPARATOR . 'routes.php';
-        file_put_contents($routesFilePath, $templateData);
-
-        // 2. Update /routes/web.php
-        $template = file_get_contents(Utils::template('package/routes_web_item.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        Utils::addRoute($templateData);
-    }
 
     /**
      * TODO 生成 resources

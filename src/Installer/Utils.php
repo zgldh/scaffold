@@ -138,6 +138,7 @@ class Utils
      */
     public static function addRoute($route, $file = 'web')
     {
+        $route = str_replace('\\', '/', $route);
         $routeFilePath = base_path('routes/' . $file . '.php');
         $routeFile = file_get_contents($routeFilePath);
         if (!str_contains($routeFile, $route)) {

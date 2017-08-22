@@ -40,7 +40,7 @@ class {{$MODEL_NAME}} extends Model
     use SoftDeletes;
 @endif
 
-    public $table = 'uploads';
+    public $table = '{{$MODEL->getTable()}}';
 
     public $fillable = <?php echo Utils::exportArray($fillableFields);?>;
 @if($MODEL->isActivityLog())

@@ -20,7 +20,11 @@ abstract class ModuleStarter
      */
     protected function newModel($name, $fields = [])
     {
-        return new ModelDefinition($name, $fields);
+        $model = new ModelDefinition($name, $fields);
+        if (kebab_case($name) !== kebab_case($this->getModuleName())) {
+            $model->route($this->getModuleName() . '/' . $name);
+        }
+        return $model;
     }
 
     /**
