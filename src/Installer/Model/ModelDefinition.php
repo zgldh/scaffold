@@ -7,6 +7,7 @@
 class ModelDefinition
 {
     private $table = '';
+    private $title = ''; // Should be some Chinese characters
     private $fields = [];
     private $searches = [];
     private $middleware = '';
@@ -235,5 +236,23 @@ class ModelDefinition
         $route = $this->getRoute();
         $resourceName = str_after($route, '/');
         return $resourceName;
+    }
+
+    /**
+     * @param string $title
+     * @return ModelDefinition
+     */
+    public function title($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

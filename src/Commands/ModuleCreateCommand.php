@@ -82,7 +82,6 @@ class ModuleCreateCommand extends Command
     {
         $this->moduleDirectoryName = config('zgldh-scaffold.modules', 'Modules');
         $this->starter = new $starterClass();
-
         $this->namespace = $this->starter->getModuleNameSpace();
         $this->folder = $this->starter->getModuleFolder();
         $this->info('Generating ' . $this->namespace . ' to ' . $this->folder . '...');
@@ -96,6 +95,8 @@ class ModuleCreateCommand extends Command
             $this->generateRepository();
             $this->generateModel();
         }
+        $this->generateLanguageFiles();
+        $this->generateServiceProvider();
 
         $this->codeFormat();
 
@@ -204,6 +205,41 @@ class ModuleCreateCommand extends Command
         return;
     }
 
+    private function generateLanguageFiles()
+    {
+        $this->comment("\tLanguage Files...");
+
+        $variables = [
+            'STARTER' => $this->starter,
+        ];
+        $enContent = Utils::renderTemplate('raw.lang.en.t', $variables);
+        $zhCnContent = Utils::renderTemplate('raw.lang.zh-CN.t', $variables);
+
+        $moduleSnakeCase = kebab_case($this->starter->getModuleName());
+        $folder = resource_path('lang/vendor/' . $moduleSnakeCase);
+        Utils::writeFile($folder . '/en/t.php', $enContent);
+        Utils::writeFile($folder . '/zh-CN/t.php', $zhCnContent);
+
+    }
+
+    private function generateServiceProvider()
+    {
+        $this->comment("\tService Provider...");
+
+        // 1. Create file
+        $moduleName = $this->starter->getModuleName();
+        $variables = [
+            'NAME_SPACE'  => $this->namespace,
+            'MODULE_NAME' => $moduleName,
+        ];
+        $content = Utils::renderTemplate('raw.ServiceProvider', $variables);
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . "{$moduleName}ServiceProvider.php";
+        Utils::writeFile($destinationPath, $content);
+
+        // 2. Add to config/app.php
+        Utils::addServiceProvider("{$this->namespace}\\{$moduleName}ServiceProvider::class");
+    }
+
     private $dynamicVariables = [];
 
     private function setupDynamicVariables($folder, $modelName, ConfigParser $config = null)
@@ -229,43 +265,6 @@ class ModuleCreateCommand extends Command
         $this->dynamicVariables['DATATABLE_COLUMNS'] = $config->getDatatablesColumns();
     }
 
-    /**
-     * 从配置文件生成
-     * @param $file
-     * @param null $name
-     */
-    private function fromFieldFile($file, $name = null)
-    {
-        $config = new ConfigParser($file);
-        $folder = dirname($file);
-
-        $name = $name ?: $config->getPackageName();
-
-        $this->setupDynamicVariables($folder, $name, $config);
-        $this->dynamicVariables['MIDDLEWARE'] = $config->middleware ?: null;
-
-
-        $parameters = [
-            'model'        => $name,
-            '--fieldsFile' => $config->getTempConfigPath(),
-            '--tableName'  => $config->table,
-            '--quiet'      => true
-        ];
-
-        // database migration file
-        $createTableName = 'create_' . $config->table . '_table';
-        $migrationGeneratorParameters = [
-            'name'     => $createTableName,
-            '--schema' => $config->getMigrationSchema(),
-            '--model'  => false
-        ];
-        \Artisan::call('make:migration:schema', $migrationGeneratorParameters);
-
-        $this->generateAll($parameters);
-
-        $this->info('All complete');
-        $this->info('You can edit migration file to improve the performance.');
-    }
 
     /**
      * 生成 model， repository， request， controller， route， resource， ServiceProvider
@@ -365,22 +364,6 @@ class ModuleCreateCommand extends Command
         $template = file_get_contents(Utils::template('package/menu_item.stub'));
         $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
         Utils::addAdminMenuItem($templateData);
-    }
-
-    private function generateServiceProvider($folder)
-    {
-        $this->info('ServiceProvider...');
-
-        // 1. Create file
-        $template = file_get_contents(Utils::template('package/ServiceProvider.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $fileName = $this->dynamicVariables['MODEL_NAME'] . 'ServiceProvider.php';
-        FileUtil::createFile($folder, $fileName, $templateData);
-
-        // 2. Add to config/app.php
-        $serviceProviderClassName = Utils::fillTemplate($this->dynamicVariables,
-            '\\$NAME_SPACE$\$MODEL_NAME$ServiceProvider::class');
-        Utils::addServiceProvider($serviceProviderClassName);
     }
 
     private function codeFormat()

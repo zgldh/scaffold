@@ -9,7 +9,7 @@ use zgldh\Scaffold\Installer\Model\ModelDefinition;
  */
 abstract class ModuleStarter
 {
-    abstract protected function defineName();
+    abstract protected function defineTitle();
 
     abstract protected function defineModels();
 
@@ -33,24 +33,49 @@ abstract class ModuleStarter
         return new FieldDefinition($name, $fieldType);
     }
 
+    /**
+     * Get current defining module namespace. 'Modules/Blog'
+     * @return string
+     */
     public function getModuleNameSpace()
     {
         return dirname(static::class);
     }
 
+    /**
+     * Get current defining module name. 'Blog'
+     * @return string
+     */
+    public function getModuleName()
+    {
+        return basename($this->getModuleNameSpace());
+    }
+
+    /**
+     * Get the folder path to the defining module root '/var/wwwroot/Modules/Blog'
+     * @return string
+     */
     public function getModuleFolder()
     {
         $ref = new \ReflectionClass(static::class);
         return dirname($ref->getFileName());
     }
 
+    /**
+     * Get the module name. Should be Chinese characters '博客'
+     * @return mixed
+     */
+    public function getModuleTitle()
+    {
+        return $this->defineTitle();
+    }
+
+    /**
+     * Get models array
+     * @return mixed
+     */
     public function getModels()
     {
         return $this->defineModels();
-    }
-
-    public function getModuleName()
-    {
-        return $this->defineName();
     }
 }
