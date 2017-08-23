@@ -94,6 +94,7 @@ class ModuleCreateCommand extends Command
             $this->generateRequests();
             $this->generateRepository();
             $this->generateModel();
+            $this->generateMigration();
         }
         $this->generateLanguageFiles();
         $this->generateRoutes();
@@ -192,6 +193,23 @@ class ModuleCreateCommand extends Command
     private function generateModel()
     {
         $this->comment("\tModel...");
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
+        $content = Utils::renderTemplate('raw.Model', $variables);
+
+        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . "{$pascalCase}.php";
+        Utils::writeFile($destinationPath, $content);
+
+        return;
+    }
+
+    private function generateMigration()
+    {
+        $this->comment("\tMigration File...");
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
