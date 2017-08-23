@@ -102,6 +102,8 @@ class ModuleCreateCommand extends Command
 
         $this->codeFormat();
 
+        system('composer dumpautoload');
+
         return false;
 //
 //        $this->addServiceProvider('User', 'UserServiceProvider::class');
@@ -207,20 +209,29 @@ class ModuleCreateCommand extends Command
         return;
     }
 
+
     private function generateMigration()
     {
         $this->comment("\tMigration File...");
-        $pascalCase = $this->model->getPascaleCase();
-        $variables = [
-            'NAME_SPACE' => $this->namespace,
-            'MODEL_NAME' => $pascalCase,
-            'MODEL'      => $this->model
-        ];
-        $content = Utils::renderTemplate('raw.Model', $variables);
 
-        $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . "{$pascalCase}.php";
-        Utils::writeFile($destinationPath, $content);
+        $create = "create_{$this->model->getTable()}_table";
+        if ($filePath = Utils::isMigrationFileExists($create)) {
+            $this->warn("\t! There is already a migration file " . $filePath . ' !');
+            $confirm = $this->confirm("\tYES to generate anyway; NO to skip. No matter your choice, the old migration file will remain in place.");
+            if (!$confirm) {
+                $this->info("\tNo migration generated.");
+                return false;
+            }
+            $this->info("\tKeep going to generate...");
+        }
+        $command = "make:migration:schema";
+        $schema = $this->model->getTableSchema();
 
+        \Artisan::call($command, [
+            'name'     => $create,
+            '--schema' => $schema,
+            '--model'  => false
+        ]);
         return;
     }
 

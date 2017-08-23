@@ -255,4 +255,24 @@ class ModelDefinition
     {
         return $this->title;
     }
+
+    /**
+     * @return string
+     */
+    public function getTableSchema()
+    {
+        $schema = [];
+        $fields = $this->getFields();
+        foreach ($fields as $field) {
+            /**
+             * @var FieldDefinition $field
+             */
+            $schema[] = $field->getSchema();
+        }
+        if ($this->isSoftDelete()) {
+            $schema[] = "deleted_at:softDeletes";
+        }
+
+        return join(',', $schema);
+    }
 }

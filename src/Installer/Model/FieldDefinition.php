@@ -6,8 +6,6 @@
  */
 class FieldDefinition
 {
-    private $schema = '';
-
     /**
      * 字段名
      * @var string
@@ -32,7 +30,7 @@ class FieldDefinition
      * 数据库/界面默认值
      * @var null
      */
-    private $defaultValue = null;
+    private $defaultValue = INF;
 
     /**
      * 界面控件类型
@@ -109,21 +107,35 @@ class FieldDefinition
     }
 
     /**
-     * @param string $schema
-     * @return FieldDefinition
-     */
-    public function schema($schema)
-    {
-        $this->schema = $schema;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getSchema()
     {
-        return $this->schema;
+        $schema = [
+            $this->getName(),
+            $this->getDbType()
+        ];
+        if ($this->isNullable()) {
+            $schema[] = 'nullable';
+        }
+        $defaultValue = $this->getDefaultValue();
+        if ($defaultValue !== INF) {
+            $schema[] = "default({$defaultValue})";
+        }
+        $indexType = $this->getIndexType();
+        if ($indexType) {
+            $schema[] = $indexType;
+        }
+
+        $schema[] = "comment('{$this->getDbComment()}')";
+
+        $schema = join(':', $schema);
+        return $schema;
+    }
+
+    private function getDbComment()
+    {
+        return $this->label;
     }
 
     /**

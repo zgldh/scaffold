@@ -192,4 +192,16 @@ class Utils
         }
         return $array;
     }
+
+    public static function isMigrationFileExists($className)
+    {
+        $fileTail = snake_case($className) . '.php';
+        $files = glob(database_path('migrations/*'));
+        foreach ($files as $file) {
+            if ($fileTail === substr(basename($file), 18)) {
+                return $file;
+            }
+        }
+        return false;
+    }
 }
