@@ -95,6 +95,7 @@ class ModuleCreateCommand extends Command
             $this->generateRepository();
             $this->generateModel();
             $this->generateMigration();
+            $this->generateResources();
         }
         $this->generateLanguageFiles();
         $this->generateRoutes();
@@ -235,6 +236,41 @@ class ModuleCreateCommand extends Command
         return;
     }
 
+
+    /**
+     * TODO 生成 resources
+     * @param $resourceFolder
+     */
+    private function generateResources($resourceFolder)
+    {
+        $this->comment("\tResources...");
+
+        // 1. Copy files
+        Utils::copy(Utils::template('package/resources'), $resourceFolder);
+        $templateIndex = $resourceFolder . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'index.blade.php';
+        $assetAppPage = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'AppPage.vue';
+        $assetFormFields = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'FormFields.html';
+        $assetTableColumns = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'TableColumns.js';
+
+        // 2. Replace dynamic variables
+        Utils::replaceFilePlaceholders($templateIndex, $this->dynamicVariables);
+        Utils::replaceFilePlaceholders($assetAppPage, $this->dynamicVariables);
+        Utils::replaceFilePlaceholders($assetFormFields, $this->dynamicVariables);
+        Utils::replaceFilePlaceholders($assetTableColumns, $this->dynamicVariables);
+
+        // 3. Create entry file
+        $entryName = $this->dynamicVariables['MODEL_IDENTIFIER'] . '.js';
+        $template = file_get_contents(Utils::template('package/entry.js.stub'));
+        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
+        $routesFilePath = resource_path('assets/js/entries/' . $entryName);
+        file_put_contents($routesFilePath, $templateData);
+
+        // 4. Add Menu to  resources\views\layouts\menu.blade.php
+        $template = file_get_contents(Utils::template('package/menu_item.stub'));
+        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
+        Utils::addAdminMenuItem($templateData);
+    }
+
     private function generateLanguageFiles()
     {
         $this->comment("\tLanguage Files...");
@@ -292,6 +328,7 @@ class ModuleCreateCommand extends Command
 
     private $dynamicVariables = [];
 
+
     private function setupDynamicVariables($folder, $modelName, ConfigParser $config = null)
     {
         $folder = str_replace('\\', '/', $folder);
@@ -314,7 +351,6 @@ class ModuleCreateCommand extends Command
         $this->dynamicVariables['FORM_FIELDS'] = $config->getFormFields();
         $this->dynamicVariables['DATATABLE_COLUMNS'] = $config->getDatatablesColumns();
     }
-
 
     /**
      * 生成 model， repository， request， controller， route， resource， ServiceProvider
@@ -361,41 +397,6 @@ class ModuleCreateCommand extends Command
     private function covertToNameSpace($str)
     {
         return str_replace('/', '\\', $str);
-    }
-
-
-    /**
-     * TODO 生成 resources
-     * @param $resourceFolder
-     */
-    private function generateResources($resourceFolder)
-    {
-        $this->info('Resources...');
-
-        // 1. Copy files
-        Utils::copy(Utils::template('package/resources'), $resourceFolder);
-        $templateIndex = $resourceFolder . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'index.blade.php';
-        $assetAppPage = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'AppPage.vue';
-        $assetFormFields = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'FormFields.html';
-        $assetTableColumns = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'TableColumns.js';
-
-        // 2. Replace dynamic variables
-        Utils::replaceFilePlaceholders($templateIndex, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetAppPage, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetFormFields, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetTableColumns, $this->dynamicVariables);
-
-        // 3. Create entry file
-        $entryName = $this->dynamicVariables['MODEL_IDENTIFIER'] . '.js';
-        $template = file_get_contents(Utils::template('package/entry.js.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $routesFilePath = resource_path('assets/js/entries/' . $entryName);
-        file_put_contents($routesFilePath, $templateData);
-
-        // 4. Add Menu to  resources\views\layouts\menu.blade.php
-        $template = file_get_contents(Utils::template('package/menu_item.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        Utils::addAdminMenuItem($templateData);
     }
 
     private function codeFormat()
