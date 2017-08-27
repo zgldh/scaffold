@@ -9,6 +9,9 @@ class ModelDefinition
     private $table = '';
     private $title = ''; // Should be some Chinese characters
     private $fields = [];
+    /**
+     * @var array key: field name; value: search type
+     */
     private $searches = [];
     private $middleware = '';
     private $softDelete = false;
@@ -79,6 +82,20 @@ class ModelDefinition
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultValues()
+    {
+        $fields = [];
+        foreach ($this->fields as $field) {
+            $defaultValue = $field->getDefaultValue();
+            $defaultValue = $defaultValue == INF ? null : $defaultValue;
+            $fields[$field->getName()] = $defaultValue;
+        }
+        return $fields;
+    }
+
+    /**
      * @param string $middleware
      * @return ModelDefinition
      */
@@ -101,7 +118,15 @@ class ModelDefinition
      */
     public function getSearches()
     {
-        return $this->searches;
+        $searches = [];
+        $fields = $this->getFields();
+        foreach ($fields as $field) {
+            if (!$field->isNotSearchable()) {
+                $searches[$field->getName()] = $field->getSearchType();
+            }
+        }
+        $searches = array_merge($searches, $this->searches);
+        return $searches;
     }
 
     /**
@@ -176,6 +201,14 @@ class ModelDefinition
     public function getSnakeCase()
     {
         return $this->snake_case;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKebabCase()
+    {
+        return kebab_case($this->snake_case);
     }
 
     /**
@@ -274,5 +307,29 @@ class ModelDefinition
         }
 
         return join(',', $schema);
+    }
+
+    /**
+     * TODO 生成 ListPage.vue 的搜索表单 HTML
+     */
+    public function generateListSearchForm()
+    {
+        return '<p>TODO 生成 ListPage.vue 的搜索表单 HTML</p>';
+    }
+
+    /**
+     * TODO 生成 ListPage.vue 的 Datatable 数据列 HTML
+     */
+    public function generateDatatableColumns()
+    {
+        return '<p>TODO 生成 ListPage.vue 的 Datatable 数据列 HTML</p>';
+    }
+
+    /**
+     * TODO 生成 EditorPage.vue 的编辑表单 HTML
+     */
+    public function generateEditorForm()
+    {
+        return '<p>TODO 生成 EditorPage.vue 的编辑表单 HTML</p>';
     }
 }

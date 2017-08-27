@@ -97,6 +97,7 @@ class ModuleCreateCommand extends Command
             $this->generateMigration();
             $this->generateResources();
         }
+        $this->generateResourceRoutes();
         $this->generateLanguageFiles();
         $this->generateRoutes();
         $this->generateServiceProvider();
@@ -241,34 +242,52 @@ class ModuleCreateCommand extends Command
      * TODO 生成 resources
      * @param $resourceFolder
      */
-    private function generateResources($resourceFolder)
+    private function generateResources()
     {
         $this->comment("\tResources...");
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
 
-        // 1. Copy files
-        Utils::copy(Utils::template('package/resources'), $resourceFolder);
-        $templateIndex = $resourceFolder . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'index.blade.php';
-        $assetAppPage = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'AppPage.vue';
-        $assetFormFields = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'FormFields.html';
-        $assetTableColumns = $resourceFolder . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'TableColumns.js';
+        $resourceFolder = $this->folder . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+        $viewFolder = $resourceFolder . "views" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
+        $assetsFolder = $resourceFolder . "assets" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
 
-        // 2. Replace dynamic variables
-        Utils::replaceFilePlaceholders($templateIndex, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetAppPage, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetFormFields, $this->dynamicVariables);
-        Utils::replaceFilePlaceholders($assetTableColumns, $this->dynamicVariables);
+        $viewContent = Utils::renderTemplate('raw.resources.views.index', $variables);
+        $viewPath = $viewFolder . "index.blade.php";
+        Utils::writeFile($viewPath, $viewContent);
 
-        // 3. Create entry file
-        $entryName = $this->dynamicVariables['MODEL_IDENTIFIER'] . '.js';
-        $template = file_get_contents(Utils::template('package/entry.js.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        $routesFilePath = resource_path('assets/js/entries/' . $entryName);
-        file_put_contents($routesFilePath, $templateData);
+        $listPageContent = Utils::renderTemplate('raw.resources.assets.ListPage', $variables);
+        $editorPageContent = Utils::renderTemplate('raw.resources.assets.EditorPage', $variables);
+        $listPagePath = $assetsFolder . "ListPage.vue";
+        $editorPagePath = $assetsFolder . "EditorPage.vue";
+        Utils::writeFile($listPagePath, $listPageContent);
+        Utils::writeFile($editorPagePath, $editorPageContent);
+    }
 
-        // 4. Add Menu to  resources\views\layouts\menu.blade.php
-        $template = file_get_contents(Utils::template('package/menu_item.stub'));
-        $templateData = Utils::fillTemplate($this->dynamicVariables, $template);
-        Utils::addAdminMenuItem($templateData);
+    /**
+     * TODO 生成 vue admin routes
+     */
+    private function generateResourceRoutes()
+    {
+        return false;
+        $this->comment("\tResources routes...");
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
+
+        $resourceFolder = $this->folder . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+        $viewFolder = $resourceFolder . "views" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
+
+        $routesContent = Utils::renderTemplate('raw.resources.assets.routes', $variables);
+        $routesPath = $viewFolder . "routes.js";
+        Utils::writeFile($routesContent, $routesPath);
     }
 
     private function generateLanguageFiles()

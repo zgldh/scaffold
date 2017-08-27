@@ -193,6 +193,11 @@ class Utils
         return $array;
     }
 
+    /**
+     * 数据库迁移文件是否存在
+     * @param $className
+     * @return bool
+     */
     public static function isMigrationFileExists($className)
     {
         $fileTail = snake_case($className) . '.php';
