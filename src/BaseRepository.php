@@ -4,7 +4,6 @@ use Exception;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
-use Yajra\Datatables\Facades\Datatables;
 
 /**
  * Created by PhpStorm.
@@ -70,7 +69,7 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
             $query = call_user_func_array([$query, 'with'], $with);
         }
 
-        $dt = Datatables::eloquent($query);
+        $dt = \DataTables::eloquent($query);
         $dt->escapeColumns('~');
 
         $columns = \Request::input('columns', []);

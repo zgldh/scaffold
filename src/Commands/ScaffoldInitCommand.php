@@ -146,6 +146,8 @@ class ScaffoldInitCommand extends Command
         Utils::addServiceProvider('Yajra\Datatables\DatatablesServiceProvider::class');
         Utils::addServiceProvider('Clockwork\Support\Laravel\ClockworkServiceProvider::class');
 
+        Utils::addAlias('DataTables', 'Yajra\DataTables\Facades\DataTables::class');
+
         KernelEditor::addMiddleware('\Clockwork\Support\Laravel\ClockworkMiddleware::class');
 
         $this->info('Complete!');
