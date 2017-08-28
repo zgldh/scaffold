@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
         if (is_a($exception, AuthenticationException::class)) {
             return $this->unauthenticated($request, $exception);
         }
-        if ($this->isHttpException($exception) && $request->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
                 'message' => $exception->getMessage(),
