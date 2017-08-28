@@ -20,7 +20,7 @@ class MultipartFormDataParser
      */
     public function handle($request, Closure $next)
     {
-        if ($request->has('_data')) {
+        if ($request->filled('_data')) {
             $data = json_decode($request->get('_data'), true);
             $request->merge($data);
         }

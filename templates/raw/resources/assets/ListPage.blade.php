@@ -3,7 +3,7 @@
  * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
-$modelKebabCase = $MODEL->getKebabCase();
+$modelSnakeCase = $MODEL->getSnakeCase();
 ?>
 <template>
     <div class="admin-list-page">
@@ -123,11 +123,11 @@ $modelKebabCase = $MODEL->getKebabCase();
     },
     methods: {
       onEditClick: function (row, column, $index, store) {
-        return this.$router.push('/{{$modelKebabCase}}/' + row.id + '/edit');
+        return this.$router.push('/{{$modelSnakeCase}}/' + row.id + '/edit');
       },
       onDeleteClick: function (row, column, $index, store) {
         return this._onDeleteClick({
-          url: '/{{$modelKebabCase}}/' + row.id,
+          url: '/{{$modelSnakeCase}}/' + row.id,
           params: {},
           confirmText: '确认要删除吗？',
           messageText: '删除完毕'

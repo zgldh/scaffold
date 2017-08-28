@@ -20,7 +20,7 @@ class LocaleSensor
      */
     public function handle($request, Closure $next)
     {
-        if ($request->has('_locale')) {
+        if ($request->filled('_locale')) {
             \App::setLocale($request->get('_locale'));
         } elseif ($request->hasHeader('Locale')) {
             \App::setLocale($request->header('Locale'));

@@ -21,7 +21,7 @@ abstract class ModuleStarter
     protected function newModel($name, $fields = [])
     {
         $model = new ModelDefinition($name, $fields);
-        if (kebab_case($name) !== kebab_case($this->getModuleName())) {
+        if (snake_case($name) !== snake_case($this->getModuleName())) {
             $model->route($this->getModuleName() . '/' . $name);
         }
         return $model;

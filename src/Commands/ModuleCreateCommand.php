@@ -300,7 +300,7 @@ class ModuleCreateCommand extends Command
         $enContent = Utils::renderTemplate('raw.lang.en.t', $variables);
         $zhCnContent = Utils::renderTemplate('raw.lang.zh-CN.t', $variables);
 
-        $moduleSnakeCase = kebab_case($this->starter->getModuleName());
+        $moduleSnakeCase = snake_case($this->starter->getModuleName());
         $folder = resource_path('lang/vendor/' . $moduleSnakeCase);
         Utils::writeFile($folder . '/en/t.php', $enContent);
         Utils::writeFile($folder . '/zh-CN/t.php', $zhCnContent);

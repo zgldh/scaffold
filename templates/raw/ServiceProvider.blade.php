@@ -4,7 +4,7 @@ use zgldh\Scaffold\Installer\Utils;
  * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
-$moduleSnakeCase = kebab_case($MODULE_NAME);
+$moduleSnakeCase = snake_case($MODULE_NAME);
 echo '<?php' ?> namespace {{$NAME_SPACE}};
 
 use Illuminate\Support\ServiceProvider;

@@ -3,7 +3,7 @@
  * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
-$modelKebabCase = $MODEL->getKebabCase();
+$modelSnakeCase = $MODEL->getSnakeCase();
 ?>
 <template>
     <div class="admin-editor-page">
@@ -18,7 +18,7 @@ $modelKebabCase = $MODEL->getKebabCase();
                     <router-link to="/"><i class="fa fa-dashboard"></i> 总览</router-link>
                 </li>
                 <li>
-                    <router-link to="/{{$modelKebabCase}}/list">{{$MODEL->getTitle()}}</router-link>
+                    <router-link to="/{{$modelSnakeCase}}/list">{{$MODEL->getTitle()}}</router-link>
                 </li>
                 <li class="active" v-if="form.id">编辑{{$MODEL->getTitle()}}</li>
                 <li class="active" v-else>新建{{$MODEL->getTitle()}}</li>
@@ -77,7 +77,7 @@ $modelKebabCase = $MODEL->getKebabCase();
     components: {},
     computed: {
       resource: function () {
-        var resourceURL = '/{{$modelKebabCase}}';
+        var resourceURL = '/{{$modelSnakeCase}}';
         return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
       }
     },
@@ -99,7 +99,7 @@ $modelKebabCase = $MODEL->getKebabCase();
     methods: {
       onSave: function (event) {
         this._onSave(event).then(result => {
-          this.$router.replace('/{{$modelKebabCase}}/' + result.data.data.id + '/edit');
+          this.$router.replace('/{{$modelSnakeCase}}/' + result.data.data.id + '/edit');
           this.form = result.data.data;
           this.form.permissions = this.form.permissions.map(permission => permission.id);
         });

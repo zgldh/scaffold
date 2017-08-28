@@ -533,12 +533,16 @@ class FieldDefinition
      *
      * @param  string $related
      * @param  string $table
-     * @param  string $foreignKey
+     * @param  string $foreignPivotKey
+     * @param  string $relatedPivotKey
+     * @param  string $parentKey
      * @param  string $relatedKey
      * @param  string $relation
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null,
+                                  $relatedPivotKey = null, $parentKey = null,
+                                  $relatedKey = null, $relation = null)
     {
         $args = func_get_args();
         $args['type'] = 'belongsToMany';
@@ -563,7 +567,8 @@ class FieldDefinition
         $foreignKey = null,
         $relatedKey = null,
         $inverse = false
-    ) {
+    )
+    {
         $args = func_get_args();
         $args['type'] = 'morphToMany';
         $this->relationship = json_encode($args);

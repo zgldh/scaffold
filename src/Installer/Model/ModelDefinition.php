@@ -239,14 +239,14 @@ class ModelDefinition
     }
 
     /**
-     * @param string $route 'blog', 'my-works', 'goods-to-sell'
+     * @param string $route 'blog', 'my_works', 'goods_to_sell'
      * @return ModelDefinition
      */
     public function route($route)
     {
         $partials = preg_split('/\//', $route);
         $partials = array_map(function ($partial) {
-            return kebab_case($partial);
+            return snake_case($partial);
         }, $partials);
         $this->route = join('/', $partials);
         return $this;
