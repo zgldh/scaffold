@@ -11,11 +11,10 @@
     "php": ">=7.0.0",
     "laravel/framework": "5.5.*",
     "doctrine/dbal": "~2.3",
-    "friendsofphp/php-cs-fixer": "^2.4",
     "zgldh/laracasts-generators": "1.2.1",
     "laravel/passport": "~2.0",
     "barryvdh/laravel-ide-helper": "~2.2",
-    "graham-campbell/exceptions": "^9.0",
+    "graham-campbell/exceptions": "^10.0",
     "prettus/l5-repository": "~2.6",
     "yajra/laravel-datatables-oracle": "~8.0",
     "itsgoingd/clockwork": "~1.12"

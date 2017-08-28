@@ -102,7 +102,8 @@ class ModuleCreateCommand extends Command
         $this->generateRoutes();
         $this->generateServiceProvider();
 
-        $this->codeFormat();
+//        Temporary disable code format feature.
+//        $this->codeFormat();
 
         system('composer dumpautoload');
 
