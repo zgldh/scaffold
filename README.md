@@ -7,6 +7,7 @@
 1. 使用 `composer require zgldh/scaffold:dev-master` 后， 所需要的其他 composer
  包自动引用完毕。
 2. 编辑 `/config/app.php` 加入 `ScaffoldServiceProvider`。注意行尾加逗号,
+2. 编辑 `.env` 写入 `APP_URL` 和 `DB_` 数据库相关配置。
 3. 使用 `zgldh:scaffold:init` 后：
     1. 参数：
         1. 需要知道 Modules 目录名
