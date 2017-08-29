@@ -100,6 +100,7 @@ class ModuleCreateCommand extends Command
         $this->generateResourceRoutes();
         $this->generateLanguageFiles();
         $this->generateRoutes();
+        $this->generateMenu();
         $this->generateServiceProvider();
 
 //        Temporary disable code format feature.
@@ -240,8 +241,7 @@ class ModuleCreateCommand extends Command
 
 
     /**
-     * TODO 生成 resources
-     * @param $resourceFolder
+     * 生成 resources
      */
     private function generateResources()
     {
@@ -270,30 +270,27 @@ class ModuleCreateCommand extends Command
     }
 
     /**
-     * TODO 生成 vue admin routes
+     * 生成 vue admin routes
      */
     private function generateResourceRoutes()
     {
-        return false;
-        $this->comment("\tResources routes...");
-        $pascalCase = $this->model->getPascaleCase();
+        $this->comment("Resources routes...");
         $variables = [
-            'NAME_SPACE' => $this->namespace,
-            'MODEL_NAME' => $pascalCase,
-            'MODEL'      => $this->model
+            'STARTER' => $this->starter,
         ];
 
         $resourceFolder = $this->folder . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
-        $viewFolder = $resourceFolder . "views" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
-
+        $routesPath = $resourceFolder . "assets" . DIRECTORY_SEPARATOR . "routes.js";
         $routesContent = Utils::renderTemplate('raw.resources.assets.routes', $variables);
-        $routesPath = $viewFolder . "routes.js";
-        Utils::writeFile($routesContent, $routesPath);
+        Utils::writeFile($routesPath, $routesContent);
+
+        $routeLine = "require('{$this->moduleDirectoryName}/{$this->starter->getModuleName()}/resources/assets/routes.js').default";
+        Utils::addToVueRoute($routeLine);
     }
 
     private function generateLanguageFiles()
     {
-        $this->comment("\tLanguage Files...");
+        $this->comment("Language Files...");
 
         $variables = [
             'STARTER' => $this->starter,
@@ -313,9 +310,7 @@ class ModuleCreateCommand extends Command
      */
     private function generateRoutes()
     {
-        $this->info('Route...');
-
-        $this->comment("\tModel...");
+        $this->comment("Route...");
         $variables = [
             'STARTER' => $this->starter,
         ];
@@ -328,9 +323,23 @@ class ModuleCreateCommand extends Command
         return;
     }
 
+    /**
+     * 生成 menu 到 resources\views\admin\menu.blade.php
+     */
+    private function generateMenu()
+    {
+        $this->comment("Menu...");
+        $variables = [
+            'STARTER' => $this->starter,
+        ];
+        $content = Utils::renderTemplate('raw.menuItem', $variables);
+        Utils::addAdminMenuItem($content);
+        return;
+    }
+
     private function generateServiceProvider()
     {
-        $this->comment("\tService Provider...");
+        $this->comment("Service Provider...");
 
         // 1. Create file
         $moduleName = $this->starter->getModuleName();

@@ -1,4 +1,0 @@
-{{-- Model: $MODEL_NAME$ $MODEL_NAME_PRESENTATION$ --}}
-<router-link tag="li" to="/$MODEL_NAME_LOWER$" exact>
-    <a><i class="fa fa-circle-o"></i><span>$MODEL_NAME_PRESENTATION$</span></a>
-</router-link>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
+ * @var $MODEL  \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
@@ -27,6 +27,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
             <div class="box">
                 <div class="box-header with-border">
                     <div class="buttons">
+                        <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
                         <el-button type="danger" @click="onBundleDelete" icon="delete"
                                    :disabled="selectedItems.length==0">
                             批量删除
@@ -58,7 +59,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                             </el-col>
                             <el-col :span="12">
                                 <el-pagination
-                                        \@current-change="onPageChange"
+                                        {!! '@current-change="onPageChange"' !!}
                                         :current-page="pagination.currentPage"
                                         :page-size="pagination.pageSize==-1?1:pagination.pageSize"
                                         :layout="pagination.pageSize==-1?'total':'total, prev, pager, next, jumper'"
@@ -84,8 +85,8 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                                 style="width: 100%"
                                 max-height="500"
                                 :default-sort="defaultSort"
-                                \@sort-change="onSortChange"
-                                \@selection-change="onSelectionChange"
+                                {!! '@sort-change="onSortChange"' !!}
+                                {!! '@selection-change="onSelectionChange"' !!}
                                 ref="table"
                         >
                             {!! $MODEL->generateDatatableColumns() !!}
@@ -95,6 +96,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                 <!-- /.box-body -->
 
                 <div class="box-footer">
+                    <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
                     <el-button type="danger" @click="onBundleDelete" icon="delete" :disabled="selectedItems.length==0">
                         批量删除
                     </el-button>
@@ -107,7 +109,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
 </template>
 
 <script type="javascript">
-  import { mixin } from "resources/assets/js/commons/ListHelpers.js";
+  import {mixin} from "resources/assets/js/commons/ListHelpers.js";
 
   export default {
     mixins: [mixin],
@@ -122,6 +124,9 @@ $modelSnakeCase = $MODEL->getSnakeCase();
       return data;
     },
     methods: {
+      onCreate: function () {
+        return this.$router.push('/{{$modelSnakeCase}}/create');
+      },
       onEditClick: function (row, column, $index, store) {
         return this.$router.push('/{{$modelSnakeCase}}/' + row.id + '/edit');
       },
