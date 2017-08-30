@@ -318,62 +318,6 @@ class ModelDefinition
     }
 
     /**
-     * 生成 ListPage.vue 的 Datatable 数据列 HTML
-     */
-    public function generateDatatableColumns()
-    {
-        $html = <<<EOT
-              <el-table-column
-                      fixed
-                      type="selection"
-                      width="55">
-              </el-table-column>
-
-EOT;
-        $fields = $this->getFields();
-        foreach ($fields as $field) {
-            /**
-             * @var FieldDefinition $field
-             */
-            if (!$field->isInIndex()) {
-                continue;
-            }
-            $prop = $field->getName();
-            $label = $field->getLabel();
-            $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
-            $searchable = $field->isNotSearchable() ? 'searchable="false"' : 'searchable="true"';
-            $html .= <<<EOT
-              <el-table-column
-                      prop="{$prop}"
-                      label="{$label}"
-                      {$sortable}
-                      {$searchable}
-                      show-overflow-tooltip>
-              </el-table-column>
-
-EOT;
-        }
-
-        $html .= <<<EOT
-              <el-table-column
-                      fixed="right"
-                      label="操作"
-                      width="120">
-                <template scope="scope">
-                  <el-button-group>
-                    <el-button @click="onEditClick(scope.row,scope.column,scope.\$index,scope.store)" type="default"
-                               size="small" icon="edit" title="编辑"></el-button>
-                    <el-button @click="onDeleteClick(scope.row,scope.column,scope.\$index,scope.store)" type="danger"
-                               size="small" icon="delete" title="删除"></el-button>
-                  </el-button-group>
-                </template>
-              </el-table-column>
-
-EOT;
-        return $html;
-    }
-
-    /**
      * TODO 生成 EditorPage.vue 的编辑表单 HTML
      */
     public function generateEditorForm()

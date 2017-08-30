@@ -89,7 +89,47 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                                 {!! '@selection-change="onSelectionChange"' !!}
                                 ref="table"
                         >
-                            {!! $MODEL->generateDatatableColumns() !!}
+                            <el-table-column
+                                    fixed
+                                    type="selection"
+                                    width="55">
+                            </el-table-column>
+
+@php
+    $fields = $MODEL->getFields();
+    foreach ($fields as $field):
+    if (!$field->isInIndex()):
+        continue;
+    endif;
+    $prop = $field->getName();
+    $label = $field->getLabel();
+    $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
+    $searchable = $field->isNotSearchable() ? 'searchable="false"' : 'searchable="true"';
+@endphp
+                            <el-table-column
+                                    prop="{{$prop}}"
+                                    label="{{$label}}"
+                                    {!! $sortable !!}
+                                    {!! $searchable !!}
+                                    show-overflow-tooltip>
+                            </el-table-column>
+
+@php
+    endforeach;
+@endphp
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="120">
+                                <template scope="scope">
+                                    <el-button-group>
+                                        <el-button @click="onEditClick(scope.row,scope.column,scope.\$index,scope.store)" type="default"
+                                                   size="small" icon="edit" title="编辑"></el-button>
+                                        <el-button @click="onDeleteClick(scope.row,scope.column,scope.\$index,scope.store)" type="danger"
+                                                   size="small" icon="delete" title="删除"></el-button>
+                                    </el-button-group>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                 </div>
