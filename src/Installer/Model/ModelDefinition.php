@@ -1,5 +1,8 @@
 <?php namespace zgldh\Scaffold\Installer\Model;
 
+use zgldh\Scaffold\Installer\HtmlFields\BaseField;
+use zgldh\Scaffold\Installer\HtmlFields\Factory;
+
 /**
  * Class ModuleInstaller
  * @package zgldh\Scaffold\Installer
@@ -322,6 +325,29 @@ class ModelDefinition
      */
     public function generateEditorForm()
     {
-        return '<p>TODO 生成 EditorPage.vue 的编辑表单 HTML</p>';
+        $form = <<<EOT
+<el-form ref="form" :model="form" label-width="200px" v-loading="loading">
+  <el-form-item label="ID" v-if="form.id">
+    <el-input v-model="form.id" disabled></el-input>
+  </el-form-item>
+EOT;
+        $fields = $this->getFields();
+        foreach ($fields as $field) {
+            /**
+             * @var $field BaseField
+             */
+            $field = Factory::getField($field->getHtmlType());
+            $fieldHtml = $field->html();
+            $form .= $fieldHtml . "\n";
+        }
+
+        $form .= <<<EOT
+    <el-form-item label="Created At" v-if="form.id">
+      <el-input v-model="form.created_at" disabled></el-input>
+    </el-form-item>
+</el-form>
+EOT;
+
+        return $form;
     }
 }

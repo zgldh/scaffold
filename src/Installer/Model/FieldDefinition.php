@@ -1,5 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\Model;
 
+use zgldh\Scaffold\Installer\HtmlFields\BaseField;
+
 /**
  * Class ModuleInstaller
  * @package zgldh\Scaffold\Installer
@@ -34,7 +36,7 @@ class FieldDefinition
 
     /**
      * 界面控件类型
-     * @var string
+     * @var string|BaseField
      */
     private $htmlType = 'text';
     /**
@@ -312,7 +314,7 @@ class FieldDefinition
     }
 
     /**
-     * @param string $htmlType
+     * @param string|BaseField $htmlType
      * @return FieldDefinition
      */
     public function htmlType($htmlType)
@@ -322,7 +324,7 @@ class FieldDefinition
     }
 
     /**
-     * @return string
+     * @return string|BaseField
      */
     public function getHtmlType()
     {
@@ -540,10 +542,15 @@ class FieldDefinition
      * @param  string $relation
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function belongsToMany($related, $table = null, $foreignPivotKey = null,
-                                  $relatedPivotKey = null, $parentKey = null,
-                                  $relatedKey = null, $relation = null)
-    {
+    public function belongsToMany(
+        $related,
+        $table = null,
+        $foreignPivotKey = null,
+        $relatedPivotKey = null,
+        $parentKey = null,
+        $relatedKey = null,
+        $relation = null
+    ) {
         $args = func_get_args();
         $args['type'] = 'belongsToMany';
         $this->relationship = json_encode($args);
@@ -567,8 +574,7 @@ class FieldDefinition
         $foreignKey = null,
         $relatedKey = null,
         $inverse = false
-    )
-    {
+    ) {
         $args = func_get_args();
         $args['type'] = 'morphToMany';
         $this->relationship = json_encode($args);

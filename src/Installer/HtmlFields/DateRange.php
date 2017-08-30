@@ -6,9 +6,11 @@
  * Date: 08/15/2017
  * Time: 18:00
  */
-class DateRange
+class DateRange extends BaseField
 {
-    public function __construct()
+    public function html()
     {
+        // TODO: Implement html() method.
+        return __CLASS__.json_encode($this->getOptions());
     }
 }

@@ -3,10 +3,10 @@
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
- * Date: 08/15/2017
+ * Date: 08/30/2017
  * Time: 18:00
  */
-class Select extends BaseField
+class Email extends BaseField
 {
     public function html()
     {

@@ -3,14 +3,14 @@
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
- * Date: 08/15/2017
+ * Date: 08/30/2017
  * Time: 18:00
  */
-class Select extends BaseField
+class Textarea extends BaseField
 {
     public function html()
     {
         // TODO: Implement html() method.
-        return __CLASS__.json_encode($this->getOptions());
+        return __CLASS__ . json_encode($this->getOptions());
     }
 }
