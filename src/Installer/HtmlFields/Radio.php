@@ -10,7 +10,20 @@ class Radio extends BaseField
 {
     public function html()
     {
-        // TODO: Implement html() method.
-        return __CLASS__.json_encode($this->getOptions());
+        $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
+        $html = <<<HTML
+<el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+  <el-radio-group v-model="form.{$this->getProperty()}">
+HTML;
+        foreach ($options as $value => $label) {
+            $html .= <<<HTML
+<el-radio label="{$value}">{$label}</el-radio>
+HTML;
+        }
+        $html .= <<<HTML
+  </el-radio-group>
+</el-form-item>
+HTML;
+        return $html;
     }
 }

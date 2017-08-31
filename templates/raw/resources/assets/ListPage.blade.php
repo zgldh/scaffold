@@ -6,146 +6,146 @@
 $modelSnakeCase = $MODEL->getSnakeCase();
 ?>
 <template>
-    <div class="admin-list-page">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>{{$MODEL->getTitle()}}
-                <small>列表</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li>
-                    <router-link to="/"><i class="fa fa-dashboard"></i> 总览</router-link>
-                </li>
-                <li>{{$MODEL->getTitle()}}</li>
-                <li class="active">列表</li>
-            </ol>
-        </section>
+  <div class="admin-list-page">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>{{$MODEL->getTitle()}}
+        <small>列表</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          <router-link to="/"><i class="fa fa-dashboard"></i> 总览</router-link>
+        </li>
+        <li>{{$MODEL->getTitle()}}</li>
+        <li class="active">列表</li>
+      </ol>
+    </section>
 
-        <!-- Main content -->
-        <section class="content">
+    <!-- Main content -->
+    <section class="content">
 
-            <div class="box">
-                <div class="box-header with-border">
-                    <div class="buttons">
-                        <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
-                        <el-button type="danger" @click="onBundleDelete" icon="delete"
-                                   :disabled="selectedItems.length==0">
-                            批量删除
-                        </el-button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <!-- form start -->
-                <div class="box-body datatable-loading-section">
-                    <div class="search">
-                        {!! $MODEL->generateListSearchForm() !!}
-                    </div>
+      <div class="box">
+        <div class="box-header with-border">
+          <div class="buttons">
+            <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
+            <el-button type="danger" @click="onBundleDelete" icon="delete"
+                   :disabled="selectedItems.length==0">
+              批量删除
+            </el-button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <div class="box-body datatable-loading-section">
+          <div class="search">
+            {!! $MODEL->generateListSearchForm() !!}
+          </div>
 
-                    <div class="datatable-container">
-                        <!-- 采用 datatables 标准-->
-                        <el-row class="tools">
-                            <el-col :span="4">
-                                <span class="page-size">显示
-                                <el-select v-model="pagination.pageSize" style="width: 80px"
-                                           @change="onPageSizeChange">
-                                  <el-option
-                                          v-for="item in pagination.pageSizeList"
-                                          :key="item.value"
-                                          :label="item.label"
-                                          :value="item.value">
-                                  </el-option>
-                                </el-select>
-                                  项结果</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-pagination
-                                        {!! '@current-change="onPageChange"' !!}
-                                        :current-page="pagination.currentPage"
-                                        :page-size="pagination.pageSize==-1?1:pagination.pageSize"
-                                        :layout="pagination.pageSize==-1?'total':'total, prev, pager, next, jumper'"
-                                        :total="pagination.totalCount">
-                                </el-pagination>
-                            </el-col>
-                            <el-col :span="8">
-                                <el-input class="auto-search" style="width: 200px;float: right;"
-                                          placeholder="模糊搜索"
-                                          v-model="datatablesParameters.search.value"
-                                          :icon="datatablesParameters.search.value?'close':'search'"
-                                          :on-icon-click="onAutoSearchIconClick"
-                                          @change="onAutoSearchChanged">
-                                </el-input>
-                            </el-col>
-                        </el-row>
+          <div class="datatable-container">
+            <!-- 采用 datatables 标准-->
+            <el-row class="tools">
+              <el-col :span="4">
+                <span class="page-size">显示
+                <el-select v-model="pagination.pageSize" style="width: 80px"
+                       @change="onPageSizeChange">
+                  <el-option
+                      v-for="item in pagination.pageSizeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+                  项结果</span>
+              </el-col>
+              <el-col :span="12">
+                <el-pagination
+                    {!! '@current-change="onPageChange"' !!}
+                    :current-page="pagination.currentPage"
+                    :page-size="pagination.pageSize==-1?1:pagination.pageSize"
+                    :layout="pagination.pageSize==-1?'total':'total, prev, pager, next, jumper'"
+                    :total="pagination.totalCount">
+                </el-pagination>
+              </el-col>
+              <el-col :span="8">
+                <el-input class="auto-search" style="width: 200px;float: right;"
+                      placeholder="模糊搜索"
+                      v-model="datatablesParameters.search.value"
+                      :icon="datatablesParameters.search.value?'close':'search'"
+                      :on-icon-click="onAutoSearchIconClick"
+                      @change="onAutoSearchChanged">
+                </el-input>
+              </el-col>
+            </el-row>
 
-                    </div>
-                    <div class="datatable" style="margin-top:1em;">
-                        <el-table
-                                :data="tableData"
-                                border
-                                style="width: 100%"
-                                max-height="500"
-                                :default-sort="defaultSort"
-                                {!! '@sort-change="onSortChange"' !!}
-                                {!! '@selection-change="onSelectionChange"' !!}
-                                ref="table"
-                        >
-                            <el-table-column
-                                    fixed
-                                    type="selection"
-                                    width="55">
-                            </el-table-column>
-
-@php
-    $fields = $MODEL->getFields();
-    foreach ($fields as $field):
-    if (!$field->isInIndex()):
-        continue;
-    endif;
-    $prop = $field->getName();
-    $label = $field->getLabel();
-    $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
-    $searchable = $field->isNotSearchable() ? 'searchable="false"' : 'searchable="true"';
-@endphp
-                            <el-table-column
-                                    prop="{{$prop}}"
-                                    label="{{$label}}"
-                                    {!! $sortable !!}
-                                    {!! $searchable !!}
-                                    show-overflow-tooltip>
-                            </el-table-column>
+          </div>
+          <div class="datatable" style="margin-top:1em;">
+            <el-table
+                :data="tableData"
+                border
+                style="width: 100%"
+                max-height="500"
+                :default-sort="defaultSort"
+                {!! '@sort-change="onSortChange"' !!}
+                {!! '@selection-change="onSelectionChange"' !!}
+                ref="table"
+            >
+              <el-table-column
+                  fixed
+                  type="selection"
+                  width="55">
+              </el-table-column>
 
 @php
-    endforeach;
+  $fields = $MODEL->getFields();
+  foreach ($fields as $field):
+  if (!$field->isInIndex()):
+    continue;
+  endif;
+  $prop = $field->getName();
+  $label = $field->getLabel();
+  $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
+  $searchable = $field->isNotSearchable() ? 'searchable="false"' : 'searchable="true"';
 @endphp
-                            <el-table-column
-                                    fixed="right"
-                                    label="操作"
-                                    width="120">
-                                <template scope="scope">
-                                    <el-button-group>
-                                        <el-button @click="onEditClick(scope.row,scope.column,scope.\$index,scope.store)" type="default"
-                                                   size="small" icon="edit" title="编辑"></el-button>
-                                        <el-button @click="onDeleteClick(scope.row,scope.column,scope.\$index,scope.store)" type="danger"
-                                                   size="small" icon="delete" title="删除"></el-button>
-                                    </el-button-group>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                </div>
-                <!-- /.box-body -->
+              <el-table-column
+                  prop="{{$prop}}"
+                  label="{{$label}}"
+                  {!! $sortable !!}
+                  {!! $searchable !!}
+                  show-overflow-tooltip>
+              </el-table-column>
 
-                <div class="box-footer">
-                    <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
-                    <el-button type="danger" @click="onBundleDelete" icon="delete" :disabled="selectedItems.length==0">
-                        批量删除
-                    </el-button>
-                </div>
-            </div>
+@php
+  endforeach;
+@endphp
+              <el-table-column
+                  fixed="right"
+                  label="操作"
+                  width="120">
+                <template scope="scope">
+                  <el-button-group>
+                    <el-button @click="onEditClick(scope.row,scope.column,scope.$index,scope.store)" type="default"
+                           size="small" icon="edit" title="编辑"></el-button>
+                    <el-button @click="onDeleteClick(scope.row,scope.column,scope.$index,scope.store)" type="danger"
+                           size="small" icon="delete" title="删除"></el-button>
+                  </el-button-group>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+        <!-- /.box-body -->
 
-        </section>
-        <!-- /.content -->
-    </div>
+        <div class="box-footer">
+          <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
+          <el-button type="danger" @click="onBundleDelete" icon="delete" :disabled="selectedItems.length==0">
+            批量删除
+          </el-button>
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
 </template>
 
 <script type="javascript">

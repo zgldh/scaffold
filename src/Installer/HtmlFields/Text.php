@@ -10,7 +10,12 @@ class Text extends BaseField
 {
     public function html()
     {
-        // TODO: Implement html() method.
-        return __CLASS__.json_encode($this->getOptions());
+        $html = <<<HTML
+            <el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+              <el-input v-model="form.{$this->getProperty()}"></el-input>
+            </el-form-item>
+HTML;
+
+        return $html;
     }
 }

@@ -321,7 +321,7 @@ class ModelDefinition
     }
 
     /**
-     * TODO 生成 EditorPage.vue 的编辑表单 HTML
+     * 生成 EditorPage.vue 的编辑表单 HTML
      */
     public function generateEditorForm()
     {
@@ -335,10 +335,11 @@ EOT;
         $fields = $this->getFields();
         foreach ($fields as $field) {
             /**
-             * @var $field BaseField
+             * @var $field     FieldDefinition
+             * @var $baseField BaseField
              */
-            $field = Factory::getField($field->getHtmlType());
-            $fieldHtml = $field->html();
+            $baseField = $field->getHtmlType();
+            $fieldHtml = $baseField->html();
             $form .= $fieldHtml . "\n";
         }
 
@@ -350,5 +351,21 @@ EOT;
 EOT;
 
         return $form;
+    }
+
+    /**
+     * 生成 vue 页面需要的 computed 参数
+     */
+    public function generateComputes()
+    {
+        $computes = [];
+        foreach ($this->getFields() as $field) {
+            $computedCode = $field->getComputedCode();
+            if ($computedCode) {
+                $computes[] = $computedCode;
+            }
+        }
+
+        return $computes;
     }
 }

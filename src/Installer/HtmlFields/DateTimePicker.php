@@ -3,17 +3,17 @@
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
- * Date: 08/15/2017
+ * Date: 08/31/2017
  * Time: 18:00
  */
-class DateRange extends BaseField
+class DateTimePicker extends BaseField
 {
     public function html()
     {
         $html = <<<HTML
             <el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
               <el-date-picker
-                type="daterange"
+                type="datetime"
                 v-model="form.{$this->getProperty()}"
                 placeholder="{$this->getPlaceholder()}">
               </el-date-picker>
@@ -25,6 +25,6 @@ HTML;
 
     public function getPlaceholder()
     {
-        return $this->getOption('placeholder', '选择日期范围');
+        return $this->getOption('placeholder', '选择日期');
     }
 }

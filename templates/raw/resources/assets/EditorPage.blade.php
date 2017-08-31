@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
+ * @var $MODEL  \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
@@ -65,7 +65,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
 </template>
 
 <script type="javascript">
-  import { mixin } from "resources/assets/js/commons/EditorHelper.js";
+  import {mixin} from "resources/assets/js/commons/EditorHelper.js";
 
   export default  {
     mixins: [mixin],
@@ -79,7 +79,13 @@ $modelSnakeCase = $MODEL->getSnakeCase();
       resource: function () {
         var resourceURL = '/{{$modelSnakeCase}}';
         return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
-      }
+      },
+@php
+    $computes = $MODEL->generateComputes();
+    foreach($computes as $compute):
+      echo $compute.",\n";
+    endforeach;
+@endphp
     },
     created: function () {
       this.loading = true;

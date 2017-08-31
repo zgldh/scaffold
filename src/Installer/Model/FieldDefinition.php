@@ -1,6 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\Model;
 
 use zgldh\Scaffold\Installer\HtmlFields\BaseField;
+use zgldh\Scaffold\Installer\HtmlFields\Factory;
 
 /**
  * Class ModuleInstaller
@@ -324,11 +325,14 @@ class FieldDefinition
     }
 
     /**
-     * @return string|BaseField
+     * @return BaseField
      */
     public function getHtmlType()
     {
-        return $this->htmlType;
+        $baseField = Factory::getField($this->htmlType);
+        $baseField->setLabel($this->getLabel());
+        $baseField->setProperty($this->getName());
+        return $baseField;
     }
 
     /**
@@ -452,11 +456,14 @@ class FieldDefinition
     }
 
     /**
-     * @return mixed
+     * @return BaseField
      */
     public function getSearchType()
     {
-        return $this->searchType;
+        $baseField = Factory::getField($this->htmlType);
+        $baseField->setLabel($this->getLabel());
+        $baseField->setProperty($this->getName());
+        return $baseField;
     }
 
     /**
@@ -550,7 +557,8 @@ class FieldDefinition
         $parentKey = null,
         $relatedKey = null,
         $relation = null
-    ) {
+    )
+    {
         $args = func_get_args();
         $args['type'] = 'belongsToMany';
         $this->relationship = json_encode($args);
@@ -574,7 +582,8 @@ class FieldDefinition
         $foreignKey = null,
         $relatedKey = null,
         $inverse = false
-    ) {
+    )
+    {
         $args = func_get_args();
         $args['type'] = 'morphToMany';
         $this->relationship = json_encode($args);
@@ -677,5 +686,15 @@ class FieldDefinition
 
         $rules = join('|', $rules);
         return $rules;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getComputedCode()
+    {
+        $htmlField = $this->getHtmlType();
+        $computedCode = $htmlField->getComputedCode();
+        return $computedCode;
     }
 }
