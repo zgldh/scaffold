@@ -330,6 +330,7 @@ class ModelDefinition
   <el-form-item label="ID" v-if="form.id">
     <el-input v-model="form.id" disabled></el-input>
   </el-form-item>
+
 EOT;
         $fields = $this->getFields();
         foreach ($fields as $field) {

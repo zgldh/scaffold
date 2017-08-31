@@ -55,7 +55,7 @@ class ModuleCreateCommand extends Command
     public function handle()
     {
         $starterClass = $this->argument('starterClass');
-        $starterClass = str_replace('/', '\\', $starterClass);
+        $starterClass = str_replace('/', '\\', $starterClass).'\\Starter';
 
         if (!$starterClass) {
             $this->error("Please use zgldh:module:create Class\To\Starter");
