@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {BuildHttpRequestPayload} from './Utils.js';
+import { BuildHttpRequestPayload } from './Utils.js';
 
 export var mixin = {
   data: function () {
@@ -37,15 +37,14 @@ export var mixin = {
             }).catch(({response}) => {
               if (response.status == 422) {
                 // this.$refs.form.$children
-                this._distributeErrorMessages(response.data);
+                this._distributeErrorMessages(response.data.errors);
               }
-              console.log('error', this.$refs.form, response);
               this.saving = false;
-              reject(response);
+              throw response;
             })
           }
           else {
-            reject('Invalid');
+            throw new Error('Invalid');
           }
         });
       });

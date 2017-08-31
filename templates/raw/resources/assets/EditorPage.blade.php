@@ -108,6 +108,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
           this.$router.replace('/{{$modelSnakeCase}}/' + result.data.data.id + '/edit');
           this.form = result.data.data;
           this.form.permissions = this.form.permissions.map(permission => permission.id);
+        }).catch(err => {
         });
       },
       onCancel: function (event) {

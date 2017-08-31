@@ -141,7 +141,6 @@ class ScaffoldInitCommand extends Command
             base_path('config/zgldh-scaffold.php'));
 
         Utils::addServiceProvider('Laravel\Passport\PassportServiceProvider::class');
-        Utils::addServiceProvider('GrahamCampbell\Exceptions\ExceptionsServiceProvider::class');
         Utils::addServiceProvider('Prettus\Repository\Providers\RepositoryServiceProvider::class');
         Utils::addServiceProvider('Yajra\Datatables\DatatablesServiceProvider::class');
         Utils::addServiceProvider('Clockwork\Support\Laravel\ClockworkServiceProvider::class');

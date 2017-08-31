@@ -1,10 +1,9 @@
 <?php namespace App\Exceptions;
 
 use Exception;
-use GrahamCampbell\Exceptions\ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 
-class Handler extends ExceptionHandler
+class Handler extends \Illuminate\Foundation\Exceptions\Handler
 {
     /**
      * A list of the exception types that should not be reported.
@@ -44,12 +43,6 @@ class Handler extends ExceptionHandler
     {
         if (is_a($exception, AuthenticationException::class)) {
             return $this->unauthenticated($request, $exception);
-        }
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage(),
-            ], $exception->getCode() ?: 500);
         }
         return parent::render($request, $exception);
     }
