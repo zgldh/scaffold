@@ -10,7 +10,7 @@ return [
         'password'   => '密码',
         'remember'   => '保持登录',
         'login'      => '登录',
-        'forgot'      => '我忘记了密码',
+        'forgot'     => '我忘记了密码',
     ],
 
     'main' => [
@@ -20,4 +20,18 @@ return [
         'copyright'          => '版权归属',
         'all_right_reserved' => '保留所有权利',
     ],
+
+    'terms' => [
+        'list'            => '列表',
+        'create'          => '添加',
+        'batch_delete'    => '批量删除',
+        'edit'            => '编辑',
+        'delete'          => '删除',
+        'page_size_show'  => '显示',
+        'page_size_items' => '项结果',
+        'auto_search'     => '模糊搜索',
+        'search_submit'   => '查询',
+        'search_reset'    => '清空',
+        'actions'         => '操作',
+    ]
 ];

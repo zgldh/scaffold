@@ -13,6 +13,8 @@ require('../custom');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
 
 const app = new Vue({
   el: '#app'

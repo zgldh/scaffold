@@ -18,3 +18,7 @@ window.axios.interceptors.response.use(function (response) {
 
 import "materialize-css";
 import "babel-polyfill";
+
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);

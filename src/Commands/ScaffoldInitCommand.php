@@ -112,6 +112,7 @@ class ScaffoldInitCommand extends Command
         $package->setDevDependencies("promise", "~7.1.1");
         $package->setDevDependencies("tinymce", "~4.4.3");
         $package->setDevDependencies("vue-router", "~2.3");
+        $package->setDevDependencies("vue-i18n", "~7.2");
         $package->setDevDependencies("vuex", "~2.2");
 
         $package->setDependencies("babel-polyfill", "^6.23.0");

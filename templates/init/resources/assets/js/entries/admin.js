@@ -28,9 +28,26 @@ window.axios.interceptors.response.use(function (response) {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue';
+import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
+import enLocale from 'element-ui/lib/locale/lang/en';
+import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
+
 Vue.use(VueRouter);
-Vue.use(require('element-ui'));
+Vue.use(VueI18n);
+Vue.use(require('element-ui'), {
+  i18n: function (path, options) {
+    // ...
+    console.log('i18n', path, options);
+    return i18n.t(path, null, options);
+  }
+});
+
+const i18n = new VueI18n({
+  locale: 'en', // set locale
+});
+i18n.mergeLocaleMessage('zh-cn', zhLocale);
+i18n.mergeLocaleMessage('en', enLocale);
 
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
 
@@ -44,6 +61,7 @@ const router = new VueRouter({
 });
 
 const app = new Vue({
+  i18n: i18n,
   router: router,
   store: require('../commons/store')
 }).$mount('#app');
