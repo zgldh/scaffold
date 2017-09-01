@@ -59,9 +59,9 @@ class ModelDefinition
         return $this->table;
     }
 
-    public function addField($name = '', $fieldType = 'string')
+    public function addField($name = '', $dbType = 'string')
     {
-        $field = new FieldDefinition($name, $fieldType);
+        $field = new FieldDefinition($name, $dbType);
         $this->fields[] = $field;
         return $field;
     }
@@ -135,7 +135,10 @@ class ModelDefinition
         $searches = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
-            if (!$field->isNotSearchable()) {
+            /**
+             * @var FieldDefinition $field
+             */
+            if (!$field->isNotSearchable() && $field->isInIndex()) {
                 $searches[$field->getName()] = $field->getSearchType();
             }
         }
@@ -145,6 +148,7 @@ class ModelDefinition
             $field = $this->findFieldByName($fieldName);
             $baseField->setProperty($fieldName);
             if ($field) {
+                $baseField->setField($field);
                 $baseField->setLabel($field->getLabel());
             }
             $searches[$fieldName] = $baseField;

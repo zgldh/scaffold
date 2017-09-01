@@ -26,7 +26,7 @@ HTML;
         return $html;
     }
 
-    private function getPlaceholder()
+    public function getPlaceholder()
     {
         return $this->getOption('placeholder', '请选择' . $this->getLabel());
     }

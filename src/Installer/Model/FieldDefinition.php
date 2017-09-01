@@ -166,7 +166,7 @@ class FieldDefinition
     {
         $castType = 'string';
         $dbType = preg_split('/[:\(]/', $this->dbType);
-        switch ($dbType) {
+        switch ($dbType[0]) {
             case 'string':
             case 'text':
             case 'mediumText':
@@ -330,9 +330,19 @@ class FieldDefinition
     public function getHtmlType()
     {
         $baseField = Factory::getField($this->htmlType);
+        $baseField->setField($this);
         $baseField->setLabel($this->getLabel());
         $baseField->setProperty($this->getName());
         return $baseField;
+    }
+
+    /**
+     * 是否本字段需要计算
+     * @return bool
+     */
+    public function isRenderFromComputed()
+    {
+        return $this->getHtmlType()->getComputedCode() !== null;
     }
 
     /**
@@ -461,6 +471,7 @@ class FieldDefinition
     public function getSearchType()
     {
         $baseField = Factory::getField($this->htmlType);
+        $baseField->setField($this);
         $baseField->setLabel($this->getLabel());
         $baseField->setProperty($this->getName());
         return $baseField;

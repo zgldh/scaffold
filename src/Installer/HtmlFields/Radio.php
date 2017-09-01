@@ -16,8 +16,13 @@ class Radio extends BaseField
   <el-radio-group v-model="form.{$this->getProperty()}">
 HTML;
         foreach ($options as $value => $label) {
+            if ($this->isPropertyTypeBoolean() || $this->isPropertyTypeFloat() || $this->isPropertyTypeInteger()) {
+                $labelAttribute = ':label="' . $value . '"';
+            } else {
+                $labelAttribute = 'label="' . $value . '"';
+            }
             $html .= <<<HTML
-<el-radio label="{$value}">{$label}</el-radio>
+<el-radio {$labelAttribute}>{$label}</el-radio>
 HTML;
         }
         $html .= <<<HTML
@@ -51,5 +56,16 @@ HTML;
     private function getPlaceholder()
     {
         return $this->getOption('placeholder', '请选择' . $this->getLabel());
+    }
+
+    public function getComputedCode()
+    {
+        $options = json_encode($this->getOptions(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $js = <<<JS
+          {$this->getComputedPropertyName()}: function () {
+            return {$options};
+          }
+JS;
+        return $js;
     }
 }

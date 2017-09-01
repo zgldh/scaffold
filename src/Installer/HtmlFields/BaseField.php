@@ -1,5 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\Model\FieldDefinition;
+
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
@@ -8,6 +10,10 @@
  */
 abstract class BaseField
 {
+    /**
+     * @var FieldDefinition
+     */
+    private $field = null;
     private $options = [];
     private $label = '';
     private $property = '';
@@ -105,5 +111,55 @@ abstract class BaseField
     public function getComputedPropertyName()
     {
         return '_' . $this->getProperty() . '_list';
+    }
+
+    /**
+     * @return FieldDefinition
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param FieldDefinition $field
+     * @return $this
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+        return $this;
+    }
+
+    public function isPropertyTypeInteger()
+    {
+        if ($this->field) {
+            return $this->field->getCastType() === 'integer';
+        }
+        return false;
+    }
+
+    public function isPropertyTypeFloat()
+    {
+        if ($this->field) {
+            return $this->field->getCastType() === 'float';
+        }
+        return false;
+    }
+
+    public function isPropertyTypeBoolean()
+    {
+        if ($this->field) {
+            return $this->field->getCastType() === 'boolean';
+        }
+        return false;
+    }
+
+    public function isPropertyTypeString()
+    {
+        if ($this->field) {
+            return $this->field->getCastType() === 'string';
+        }
+        return false;
     }
 }

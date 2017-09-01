@@ -112,6 +112,11 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                   {!! $sortable !!}
                   {!! $searchable !!}
                   show-overflow-tooltip>
+                @if($field->isRenderFromComputed())
+                  <template scope="scope">
+                    <span><?php echo '{{'; ?> {{$field->getHtmlType()->getComputedPropertyName()}}[scope.row.{{$prop}}] <?php echo '}}'; ?></span>
+                  </template>
+                @endif
               </el-table-column>
 
 @php
