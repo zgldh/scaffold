@@ -27,4 +27,22 @@ HTML;
     {
         return $this->getOption('placeholder', '选择日期');
     }
+
+    public function searchHtml()
+    {
+        $html = <<<HTML
+          <el-form-item label="{$this->getLabel()}">
+            <el-date-picker
+                    v-model="searchForm.{$this->getProperty()}"
+                    type="datetimerange"
+                    placeholder="{$this->getPlaceholder()}"
+                    clearable
+                    column="{$this->getProperty()}"
+                    operator="range">
+            </el-date-picker>
+          </el-form-item>
+HTML;
+
+        return $html;
+    }
 }

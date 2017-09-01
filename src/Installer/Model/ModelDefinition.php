@@ -85,6 +85,16 @@ class ModelDefinition
     }
 
     /**
+     * @return FieldDefinition
+     */
+    public function findFieldByName($name)
+    {
+        return array_first($this->fields, function ($field) use ($name) {
+            return $field->getName() === $name;
+        });
+    }
+
+    /**
      * @return array
      */
     public function getDefaultValues()
@@ -121,6 +131,7 @@ class ModelDefinition
      */
     public function getSearches()
     {
+        $me = $this;
         $searches = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
@@ -128,7 +139,16 @@ class ModelDefinition
                 $searches[$field->getName()] = $field->getSearchType();
             }
         }
-        $searches = array_merge($searches, $this->searches);
+
+        foreach ($this->searches as $fieldName => $searchType) {
+            $baseField = Factory::getField($searchType);
+            $field = $this->findFieldByName($fieldName);
+            $baseField->setProperty($fieldName);
+            if ($field) {
+                $baseField->setLabel($field->getLabel());
+            }
+            $searches[$fieldName] = $baseField;
+        }
         return $searches;
     }
 
@@ -317,7 +337,30 @@ class ModelDefinition
      */
     public function generateListSearchForm()
     {
-        return '<p>TODO 生成 ListPage.vue 的搜索表单 HTML</p>';
+        $form = <<<EOT
+<el-form :inline="true" :model="searchForm" ref="searchForm">
+
+EOT;
+        $searches = $this->getSearches();
+        foreach ($searches as $fieldName => $searchType) {
+            /**
+             * @var $searchType BaseField
+             */
+            $fieldHtml = $searchType->searchHtml();
+            $form .= $fieldHtml . "\n";
+        }
+
+        $form .= <<<EOT
+  <el-form-item>
+    <el-button-group>
+      <el-button type="primary" @click="onSubmitSearch">查询</el-button>
+      <el-button type="button" @click="onResetSearch">清空</el-button>
+    </el-button-group>
+  </el-form-item>
+</el-form>
+EOT;
+
+        return $form;
     }
 
     /**

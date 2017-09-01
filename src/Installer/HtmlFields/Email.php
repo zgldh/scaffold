@@ -1,5 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\HtmlFields\Search\TextSearch;
+
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
@@ -8,6 +10,8 @@
  */
 class Email extends BaseField
 {
+    use TextSearch;
+
     public function html()
     {
         $html = <<<HTML
@@ -18,4 +22,5 @@ HTML;
 
         return $html;
     }
+
 }

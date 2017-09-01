@@ -62,12 +62,16 @@ export var mixin = {
   },
   methods: {
     initializeDataTablesParameters: function () {
+      let hasCreatedAt = false;
       this.$refs.table.$children.forEach((column, index, columns) => {
         if (column.$options._componentTag !== "el-table-column") {
           return;
         }
         if (!column.columnConfig.property) {
           return;
+        }
+        if (!hasCreatedAt && column.columnConfig.property === 'created_at') {
+          hasCreatedAt = true;
         }
         this.datatablesParameters.columns.push({
           data: column.columnConfig.property,
@@ -81,6 +85,20 @@ export var mixin = {
           },
         });
       });
+
+      if (!hasCreatedAt) {
+        this.datatablesParameters.columns.push({
+          data: 'created_at',
+          name: 'created_at',
+          searchable: true,
+          orderable: true,
+          search: {
+            value: null,
+            regex: false,
+            advance: {}
+          },
+        });
+      }
 
       if (this.pagination.$enableAddressBar) {
         let hasSearchParams = false;
@@ -330,7 +348,7 @@ function UnifiedValue (value, dayEnd) {
 
 function FindSearchComponents (inputComponent) {
   const CONTROLLERS = [
-    'el-input', 'el-select', 'el-date-picker'
+    'el-input', 'el-select', 'el-date-picker', 'el-time-picker'
   ];
   var components = [];
   inputComponent.$children.forEach(component => {

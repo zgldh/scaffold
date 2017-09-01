@@ -163,6 +163,14 @@ $modelSnakeCase = $MODEL->getSnakeCase();
       };
       return data;
     },
+    computed:{
+      @php
+        $computes = $MODEL->generateComputes();
+        foreach($computes as $compute):
+          echo $compute.",\n";
+        endforeach;
+      @endphp
+    },
     methods: {
       onCreate: function () {
         return this.$router.push('/{{$modelSnakeCase}}/create');

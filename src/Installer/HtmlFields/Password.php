@@ -18,4 +18,9 @@ HTML;
 
         return $html;
     }
+
+    public function searchHtml()
+    {
+        return null;
+    }
 }

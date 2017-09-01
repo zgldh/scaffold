@@ -45,7 +45,21 @@ abstract class BaseField
         return $this;
     }
 
+    /**
+     * 得到字段编辑控件HTML
+     * @return mixed
+     */
     abstract public function html();
+
+    /**
+     * 得到字段搜索控件HTML
+     *
+     * @return mixed
+     */
+    public function searchHtml()
+    {
+        return $this->html();
+    }
 
     /**
      * @return string
@@ -90,6 +104,6 @@ abstract class BaseField
 
     public function getComputedPropertyName()
     {
-        return '_' . $this->getProperty().'_list';
+        return '_' . $this->getProperty() . '_list';
     }
 }

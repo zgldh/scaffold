@@ -26,7 +26,7 @@ HTML;
         return $html;
     }
 
-    public function getPlaceholder()
+    private function getPlaceholder()
     {
         return $this->getOption('placeholder', '请选择' . $this->getLabel());
     }
@@ -40,5 +40,24 @@ HTML;
           }
 JS;
         return $js;
+    }
+
+    public function searchHtml()
+    {
+        $html = <<<HTML
+              <el-form-item label="{$this->getLabel()}">
+                <el-select v-model="searchForm.{$this->getProperty()}" placeholder="{$this->getPlaceholder()}" clearable
+                           column="{$this->getProperty()}" operator="=">
+                  <el-option
+                    v-for="(item,index) in {$this->getComputedPropertyName()}"
+                    :key="index"
+                    :label="item"
+                    :value="index">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+HTML;
+
+        return $html;
     }
 }

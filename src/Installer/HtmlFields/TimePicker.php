@@ -1,5 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\HtmlFields\Search\TimeRangeSearch;
+
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
@@ -8,6 +10,8 @@
  */
 class TimePicker extends BaseField
 {
+    use TimeRangeSearch;
+
     public function html()
     {
         $html = <<<HTML
