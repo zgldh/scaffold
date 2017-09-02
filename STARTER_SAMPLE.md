@@ -1,3 +1,10 @@
+如果按默认方式安装好 scaffold， 会在项目根目录有一个 `Modules` 目录。
+
+请将以下代码放入 `Modules/Blog/Starter.php`
+
+然后执行  `php artisan zgldh:module:create Modules/Blog/Starter`
+
+```php
 <?php
 
 namespace Modules\Blog;
@@ -74,3 +81,5 @@ class Starter extends ModuleStarter
         return $comment;
     }
 }
+
+```
