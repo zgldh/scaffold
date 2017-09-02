@@ -49,6 +49,20 @@ const i18n = new VueI18n({
 i18n.mergeLocaleMessage(window.Laravel.Locale, window.Laravel.Languages);
 i18n.mergeLocaleMessage('zh-CN', zhLocale);
 i18n.mergeLocaleMessage('en', enLocale);
+Vue.mixin({
+  methods: {
+    loadLanguages: function (module) {
+      var message = this.$i18n.getLocaleMessage(this.$i18n.locale);
+      if (!message || !message.hasOwnProperty(module)) {
+        axios.get('/lang/' + module).then(result => {
+          var langs = {};
+          langs[module] = result.data;
+          this.$i18n.mergeLocaleMessage(this.$i18n.locale, langs);
+        });
+      }
+    }
+  }
+});
 
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
 
