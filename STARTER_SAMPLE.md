@@ -1,11 +1,3 @@
-如果按默认方式安装好 scaffold， 会在项目根目录有一个 `Modules` 目录。
-
-请将以下代码放入 `Modules/Blog/Starter.php`
-
-然后执行  `php artisan zgldh:module:create Modules/Blog/Starter`
-
-```php
-
 <?php
 
 namespace Modules\Blog;
@@ -16,12 +8,6 @@ use zgldh\Scaffold\Installer\HtmlFields\Radio;
 use zgldh\Scaffold\Installer\HtmlFields\Select;
 use zgldh\Scaffold\Installer\ModuleStarter;
 
-/**
- * Created by PhpStorm.
- * User: zhangwb-pc
- * Date: 08/11/2017
- * Time: 16:34.
- */
 class Starter extends ModuleStarter
 {
     protected function defineTitle()
@@ -55,15 +41,15 @@ class Starter extends ModuleStarter
         $blog->addField('email', 'string')->label('反馈邮箱')
             ->htmlType('email')->validations('email');
         $blog->addField('category', 'string(15)')->label('分类')
-            ->htmlType('select')->nullable()->inIndex();
+            ->htmlType(new Select(['news' => '新闻', 'sport' => '运动']))->nullable()->inIndex();
         $blog->addField('status', 'integer')->label('状态')
             ->defaultValue(1)->inIndex()->htmlType(new Radio([1 => '草稿', 2 => '发布']));
         $blog->addField('created_by', 'integer:unsigned')->label('创建者')
-            ->nullable()->inIndex()->htmlType(new Select())
+            ->nullable()->inIndex()->htmlType('select')
             ->belongsTo(User::class, 'created_by', 'id');
         $blog->softDelete();
 
-        $blog->addSearch('created_at', new DateRange());
+        $blog->addSearch('created_at', with(new DateRange())->setLabel('Created At'));
 
         return $blog;
     }
@@ -83,10 +69,8 @@ class Starter extends ModuleStarter
             ->nullable()->inIndex()->htmlType(new Select())
             ->belongsTo(User::class, 'user_id', 'id');
 
-        $comment->addSearch('created_at', new DateRange());
+        $comment->addSearch('created_at', with(new DateRange())->setLabel('Created At'));
 
         return $comment;
     }
 }
-
-```
