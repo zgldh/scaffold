@@ -39,7 +39,7 @@
 2. 在 Modules 目录下建立 `Blog` 目录
 3. 在 `Blog` 目录下建立 `Starter.php`
 4. 编写 `class Starter` 
-5. //TODO 如何编写
+5. //TODO [如何编写](STARTER_SAMPLE.md)
 6. 执行 `php artisan zgldh:module:create Modules\Blog`
 7. 即可自动生成 Blog 模块。
     1. 自动生成 PHP 逻辑
