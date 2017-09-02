@@ -97,6 +97,18 @@ class Utils
     }
 
     /**
+     * Update locale from config/app.php
+     * @param $locale
+     */
+    public static function setAppLocale($locale)
+    {
+        $appConfigPath = base_path('config/app.php');
+        $appConfig = file_get_contents($appConfigPath);
+        $appConfig = preg_replace('/(.*\'locale\' => \')([a-zA-Z\-]*)(\'.*)/', '$1' . $locale . '$3', $appConfig);
+        file_put_contents($appConfigPath, $appConfig);
+    }
+
+    /**
      * Add service provider settings into config/app.php
      * @param $serviceProviderClassName
      */

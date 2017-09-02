@@ -44,9 +44,10 @@ Vue.use(require('element-ui'), {
 });
 
 const i18n = new VueI18n({
-  locale: 'en', // set locale
+  locale: window.Laravel.Locale, // set locale
 });
-i18n.mergeLocaleMessage('zh-cn', zhLocale);
+i18n.mergeLocaleMessage(window.Laravel.Locale, window.Laravel.Languages);
+i18n.mergeLocaleMessage('zh-CN', zhLocale);
 i18n.mergeLocaleMessage('en', enLocale);
 
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));

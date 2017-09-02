@@ -75,7 +75,9 @@
 
 <script>
   window.Laravel = {
-    csrfToken: '{{ csrf_token() }}'
+    csrfToken: '{{ csrf_token() }}',
+    Locale: '<?php echo config('app.locale') ?>',
+    Languages: <?php echo json_encode(['scaffold' => __('scaffold::t')], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);?>
   };
 </script>
 <script src="/js/manifest.js"></script>

@@ -20,4 +20,19 @@ return [
         'copyright'          => 'Copyright',
         'all_right_reserved' => 'All rights reserved.',
     ],
+
+    'terms' => [
+        'management'      => 'Management',
+        'list'            => 'List',
+        'create'          => 'Create',
+        'batch_delete'    => 'Batch Delete',
+        'edit'            => 'Edit',
+        'delete'          => 'Delete',
+        'page_size_show'  => 'Show',
+        'page_size_items' => 'items',
+        'auto_search'     => 'Search',
+        'search_submit'   => 'Search',
+        'search_reset'    => 'Reset',
+        'actions'         => 'Actions',
+    ]
 ];

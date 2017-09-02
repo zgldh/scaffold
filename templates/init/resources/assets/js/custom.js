@@ -1,6 +1,7 @@
 // Add a request interceptor
 window.axios.interceptors.request.use(function (config) {
   // Do something before request is sent
+  config.headers.common.Locale = window.Laravel.Locale;
   return config;
 }, function (error) {
   // Do something with request error
@@ -18,7 +19,3 @@ window.axios.interceptors.response.use(function (response) {
 
 import "materialize-css";
 import "babel-polyfill";
-
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-Vue.use(VueI18n);

@@ -22,6 +22,7 @@ return [
     ],
 
     'terms' => [
+        'management'      => '管理',
         'list'            => '列表',
         'create'          => '添加',
         'batch_delete'    => '批量删除',

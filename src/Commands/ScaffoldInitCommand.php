@@ -28,6 +28,7 @@ class ScaffoldInitCommand extends Command
     private $host = 'localhost';
 
     private $dynamicVariables = [];
+    private $locale;
 
     /**
      * Create a new command instance.
@@ -48,6 +49,7 @@ class ScaffoldInitCommand extends Command
     {
         $this->moduleDirectoryName = $this->ask("What's the Module directory name? e.g. MyModules", 'Modules');
         $this->host = $this->ask("What's the local host name of this project? e.g. my-project.local", 'localhost');
+        $this->locale = $this->ask("What's the default locale?e.g. en, zh-CN", 'en');
 
         $this->dynamicVariables['NAME'] = $this->moduleDirectoryName;
         $this->dynamicVariables['HOST'] = $this->host;
@@ -140,6 +142,7 @@ class ScaffoldInitCommand extends Command
 
         Utils::replaceFilePlaceholders(Utils::template('init/config/zgldh-scaffold.php'), $this->dynamicVariables,
             base_path('config/zgldh-scaffold.php'));
+        Utils::setAppLocale($this->locale);
 
         Utils::addServiceProvider('Laravel\Passport\PassportServiceProvider::class');
         Utils::addServiceProvider('Prettus\Repository\Providers\RepositoryServiceProvider::class');
