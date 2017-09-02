@@ -2,7 +2,7 @@
 
 请将以下代码放入 `Modules/Blog/Starter.php`
 
-然后执行  `php artisan zgldh:module:create Modules/Blog/Starter`
+然后执行  `php artisan zgldh:module:create Modules/Blog`
 
 ```php
 <?php
