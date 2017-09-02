@@ -13,14 +13,14 @@ $moduleSnakeCase = snake_case($moduleName);
 <?php echo "{{-- Module: {$moduleTitle} {$moduleName} --}}"; ?>
 
 @if(sizeof($models)>1)
-<router-treeview title="{{"@lang('".$moduleSnakeCase."::t.title')"}}" icon="fa fa-circle-o" :match="['/{{snake_case($moduleName)}}']">
+<router-treeview title="<?php echo "@lang('".$moduleSnakeCase."::t.title')"; ?>" icon="fa fa-circle-o" :match="['/{{snake_case($moduleName)}}']">
 <?php foreach($models as $MODEL):
         $route = $MODEL->getRoute();
         $modelTitle = $MODEL->getTitle();
         $modelSnakeCase = $MODEL->getSnakeCase();
         ?>
     <router-link tag="li" to="/{{$route}}/list">
-        <a><i class="fa fa-circle-o"></i> <span>{{"@lang('".$moduleSnakeCase."::t.models.".$modelSnakeCase.".title')"}}</span></a>
+        <a><i class="fa fa-circle-o"></i> <span><?php echo "@lang('".$moduleSnakeCase."::t.models.".$modelSnakeCase.".title')"; ?></span></a>
     </router-link>
 <?php endforeach; ?>
 </router-treeview>
@@ -31,6 +31,6 @@ $moduleSnakeCase = snake_case($moduleName);
     $modelSnakeCase = $MODEL->getSnakeCase();
 @endphp
 <router-link tag="li" to="/{{$route}}/list" exact>
-    <a><i class="fa fa-circle-o"></i><span>{{"@lang('".$moduleSnakeCase."::t.models.".$modelSnakeCase.".title')"}}</span></a>
+    <a><i class="fa fa-circle-o"></i><span><?php echo "@lang('".$moduleSnakeCase."::t.models.".$modelSnakeCase.".title')"; ?></span></a>
 </router-link>
 @endif
