@@ -156,10 +156,14 @@ $languageNamespace = $STARTER->getLanguageNamespace();
 </template>
 
 <script type="javascript">
-  import {mixin} from "resources/assets/js/commons/ListHelpers.js";
+  import { mixin } from "resources/assets/js/commons/ListHelpers.js";
+  import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
 
   export default {
-    mixins: [mixin],
+    mixins: [
+      mixin,
+      loadModuleLanguage('{{$languageNamespace}}')
+    ],
     data: function () {
       let data = {
         resource: '/{!! $MODEL->getRoute() !!}',
