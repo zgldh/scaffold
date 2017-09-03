@@ -1,4 +1,4 @@
-import {Loading} from 'element-ui';
+import { Loading } from 'element-ui';
 import _ from 'lodash';
 
 const PARAMS_PAGE_SIZE = 'pageSize';
@@ -15,7 +15,24 @@ export var mixin = {
         currentPage: 1,
         totalCount: 0,
         pageSize: 25,
-        pageSizeList: PAGE_SIZE_LIST,
+        pageSizeList: [
+          {
+            label: 25,
+            value: 25
+          },
+          {
+            label: 50,
+            value: 50
+          },
+          {
+            label: 100,
+            value: 100
+          },
+          {
+            label: this.$i18n.t('scaffold.terms.page_size_all'),
+            value: -1
+          }
+        ],
         $enableAddressBar: true    // true: 在浏览器地址栏保存 currentPage 和 pageSize
       },
 
@@ -121,7 +138,7 @@ export var mixin = {
         target: target,
         fullscreen: false,
         lock: false,
-        text: '读取中...'
+        text: this.$i18n.t('scaffold.terms.loading') + '...'
       });
     },
     hideLoading: function () {
@@ -232,9 +249,9 @@ export var mixin = {
     _onDeleteClick: function ({url, data, confirmText, messageText}) {
       data = data ? data : {};
       data._method = 'delete';
-      return this.$confirm(confirmText, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      return this.$confirm(confirmText, this.$i18n.t('scaffold.terms.alert'), {
+        confirmButtonText: this.$i18n.t('scaffold.terms.confirm'),
+        cancelButtonText: this.$i18n.t('scaffold.terms.cancel'),
         type: 'warning'
       }).then(() => {
         return axios.post(url, data)
@@ -432,22 +449,3 @@ function SerializerDatatablesParameters (params) {
   parameterString = parameterString.join('&');
   return parameterString;
 }
-
-export const PAGE_SIZE_LIST = [
-  {
-    label: 25,
-    value: 25
-  },
-  {
-    label: 50,
-    value: 50
-  },
-  {
-    label: 100,
-    value: 100
-  },
-  {
-    label: '全部',
-    value: -1
-  }
-];

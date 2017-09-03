@@ -1,10 +1,11 @@
 <?php
 use zgldh\Scaffold\Installer\Utils;
 /**
+ * @var $STARTER \zgldh\Scaffold\Installer\ModuleStarter
  * @var $MODEL \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
-$moduleSnakeCase = snake_case($MODULE_NAME);
+$languageNamespace = $STARTER->getLanguageNamespace();
 echo '<?php' ?> namespace {{$NAME_SPACE}};
 
 use Illuminate\Support\ServiceProvider;
@@ -30,7 +31,7 @@ class {{$MODULE_NAME}}ServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-        $this->loadTranslationsFrom(resource_path('lang/vendor/{!! $moduleSnakeCase !!}'), '{!! $moduleSnakeCase !!}');
+        $this->loadTranslationsFrom(resource_path('lang/vendor/{!! $languageNamespace !!}'), '{!! $languageNamespace !!}');
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views',
         '{{$NAME_SPACE}}');
     }

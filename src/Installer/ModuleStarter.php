@@ -55,6 +55,11 @@ abstract class ModuleStarter
         return basename($this->getModuleNameSpace());
     }
 
+    public function getLanguageNamespace()
+    {
+        return snake_case($this->getModuleName());
+    }
+
     /**
      * Get the folder path to the defining module root '/var/wwwroot/Modules/Blog'
      * @return string

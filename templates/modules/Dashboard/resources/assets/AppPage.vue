@@ -2,9 +2,7 @@
   <div class="grid-full-height">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>总览
-        <small>列表</small>
-      </h1>
+      <h1>{{ $t("module_dashboard.title") }}</h1>
     </section>
 
     <section class="content-header">
@@ -15,7 +13,12 @@
 </template>
 
 <script type="javascript">
+  import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
+
   let vueConfig = {
+    mixins: [
+      loadModuleLanguage('module_dashboard')
+    ],
     components: {},
     data: function () {
       return {};

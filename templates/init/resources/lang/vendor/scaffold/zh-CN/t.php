@@ -21,18 +21,31 @@ return [
         'all_right_reserved' => '保留所有权利',
     ],
 
-    'terms' => [
+    'terms'          => [
         'management'      => '管理',
+        'loading'         => '读取中',
         'list'            => '列表',
         'create'          => '添加',
         'batch_delete'    => '批量删除',
+        'view'            => '查看',
         'edit'            => '编辑',
         'delete'          => '删除',
         'page_size_show'  => '显示',
         'page_size_items' => '项结果',
+        'page_size_all'   => '全部',
         'auto_search'     => '模糊搜索',
         'search_submit'   => '查询',
         'search_reset'    => '清空',
         'actions'         => '操作',
+        'confirm'         => '确认',
+        'cancel'          => '取消',
+        'alert'           => '提示',
+        'back'            => '返回',
+        'save'            => '保存',
+    ],
+    'delete_confirm' => [
+        'confirm_text'        => '确认要删除吗？',
+        'bundle_confirm_text' => '确认要删除 {count} 项么？',
+        'complete_text'       => '删除完毕',
     ]
 ];

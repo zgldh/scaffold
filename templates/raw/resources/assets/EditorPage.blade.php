@@ -1,27 +1,29 @@
 <?php
 /**
+ * @var $STARTER  \zgldh\Scaffold\Installer\ModuleStarter
  * @var $MODEL  \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$languageNamespace = $STARTER->getLanguageNamespace();
 ?>
 <template>
     <div class="admin-editor-page">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>{{$MODEL->getTitle()}}
-                <small v-if="form.id">编辑{{$MODEL->getTitle()}}</small>
-                <small v-else>新建{{$MODEL->getTitle()}}</small>
+            <h1><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?>
+                <small v-if="form.id">@{{$t('scaffold.terms.edit')}}</small>
+                <small v-else>@{{$t('scaffold.terms.create')}}</small>
             </h1>
             <ol class="breadcrumb">
                 <li>
-                    <router-link to="/"><i class="fa fa-dashboard"></i> 总览</router-link>
+                    <router-link to="/"><i class="fa fa-dashboard"></i> @{{$t('module_dashboard.title')}}</router-link>
                 </li>
                 <li>
-                    <router-link to="/{{$modelSnakeCase}}/list">{{$MODEL->getTitle()}}</router-link>
+                    <router-link to="/{{$modelSnakeCase}}/list"><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?></router-link>
                 </li>
-                <li class="active" v-if="form.id">编辑{{$MODEL->getTitle()}}</li>
-                <li class="active" v-else>新建{{$MODEL->getTitle()}}</li>
+                <li class="active" v-if="form.id">@{{$t('scaffold.terms.edit')}}</li>
+                <li class="active" v-else>@{{$t('scaffold.terms.create')}}</li>
             </ol>
         </section>
 
@@ -31,9 +33,9 @@ $modelSnakeCase = $MODEL->getSnakeCase();
             <div class="box box-default">
 
                 <div class="box-header with-border">
-                    <el-button type="default" @click="onCancel" icon="close">返回</el-button>
+                    <el-button type="default" @click="onCancel" icon="close">@{{$t('scaffold.terms.back')}}</el-button>
                     <el-button type="primary" @click="onSave" icon="check" :loading="saving||loading">
-                        保存
+                        @{{$t('scaffold.terms.save')}}
                     </el-button>
                 </div>
                 <!-- /.box-header -->
@@ -50,9 +52,9 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                 <!-- /.box-body -->
 
                 <div class="box-footer">
-                    <el-button type="default" @click="onCancel" icon="close">返回</el-button>
+                    <el-button type="default" @click="onCancel" icon="close">@{{$t('scaffold.terms.back')}}</el-button>
                     <el-button type="primary" @click="onSave" icon="check" :loading="saving||loading">
-                        保存
+                        @{{$t('scaffold.terms.save')}}
                     </el-button>
                 </div>
 

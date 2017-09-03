@@ -55,7 +55,7 @@ class ModuleCreateCommand extends Command
     public function handle()
     {
         $starterClass = $this->argument('starterClass');
-        $starterClass = str_replace('/', '\\', $starterClass).'\\Starter';
+        $starterClass = str_replace('/', '\\', $starterClass) . '\\Starter';
 
         if (!$starterClass) {
             $this->error("Please use zgldh:module:create Class\To\Starter");
@@ -249,6 +249,7 @@ class ModuleCreateCommand extends Command
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
+            'STARTER'    => $this->starter,
             'MODEL_NAME' => $pascalCase,
             'MODEL'      => $this->model
         ];
@@ -345,6 +346,7 @@ class ModuleCreateCommand extends Command
         $moduleName = $this->starter->getModuleName();
         $variables = [
             'NAME_SPACE'  => $this->namespace,
+            'STARTER'     => $this->starter,
             'MODULE_NAME' => $moduleName,
         ];
         $content = Utils::renderTemplate('raw.ServiceProvider', $variables);

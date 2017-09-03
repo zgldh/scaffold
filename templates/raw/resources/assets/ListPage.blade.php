@@ -1,23 +1,25 @@
 <?php
 /**
+ * @var $STARTER  \zgldh\Scaffold\Installer\ModuleStarter
  * @var $MODEL  \zgldh\Scaffold\Installer\Model\ModelDefinition
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$languageNamespace = $STARTER->getLanguageNamespace();
 ?>
 <template>
   <div class="admin-list-page">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>{{$MODEL->getTitle()}}
-        <small>列表</small>
+      <h1><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?>
+        <small>@{{$t('scaffold.terms.list')}}</small>
       </h1>
       <ol class="breadcrumb">
         <li>
-          <router-link to="/"><i class="fa fa-dashboard"></i> 总览</router-link>
+          <router-link to="/"><i class="fa fa-dashboard"></i> @{{$t('module_dashboard.title')}}</router-link>
         </li>
-        <li>{{$MODEL->getTitle()}}</li>
-        <li class="active">列表</li>
+        <li><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?></li>
+        <li class="active">@{{$t('scaffold.terms.list')}}</li>
       </ol>
     </section>
 
@@ -27,10 +29,10 @@ $modelSnakeCase = $MODEL->getSnakeCase();
       <div class="box">
         <div class="box-header with-border">
           <div class="buttons">
-            <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
+            <el-button type="primary" @click="onCreate" icon="plus">@{{$t('scaffold.terms.create')}}</el-button>
             <el-button type="danger" @click="onBundleDelete" icon="delete"
                    :disabled="selectedItems.length==0">
-              批量删除
+              @{{$t('scaffold.terms.batch_delete')}}
             </el-button>
           </div>
         </div>
@@ -45,7 +47,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
             <!-- 采用 datatables 标准-->
             <el-row class="tools">
               <el-col :span="4">
-                <span class="page-size">显示
+                <span class="page-size">@{{$t('scaffold.terms.page_size_show')}}
                 <el-select v-model="pagination.pageSize" style="width: 80px"
                        @change="onPageSizeChange">
                   <el-option
@@ -55,7 +57,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
                       :value="item.value">
                   </el-option>
                 </el-select>
-                  项结果</span>
+                  @{{$t('scaffold.terms.page_size_items')}}</span>
               </el-col>
               <el-col :span="12">
                 <el-pagination
@@ -68,7 +70,7 @@ $modelSnakeCase = $MODEL->getSnakeCase();
               </el-col>
               <el-col :span="8">
                 <el-input class="auto-search" style="width: 200px;float: right;"
-                      placeholder="模糊搜索"
+                      :placeholder="$t('scaffold.terms.auto_search')"
                       v-model="datatablesParameters.search.value"
                       :icon="datatablesParameters.search.value?'close':'search'"
                       :on-icon-click="onAutoSearchIconClick"
@@ -124,14 +126,14 @@ $modelSnakeCase = $MODEL->getSnakeCase();
 @endphp
               <el-table-column
                   fixed="right"
-                  label="操作"
+                  :label="$t('scaffold.terms.actions')"
                   width="120">
                 <template scope="scope">
                   <el-button-group>
                     <el-button @click="onEditClick(scope.row,scope.column,scope.$index,scope.store)" type="default"
-                           size="small" icon="edit" title="编辑"></el-button>
+                           size="small" icon="edit" :title="$t('scaffold.terms.edit')"></el-button>
                     <el-button @click="onDeleteClick(scope.row,scope.column,scope.$index,scope.store)" type="danger"
-                           size="small" icon="delete" title="删除"></el-button>
+                           size="small" icon="delete" :title="$t('scaffold.terms.delete')"></el-button>
                   </el-button-group>
                 </template>
               </el-table-column>
@@ -141,9 +143,9 @@ $modelSnakeCase = $MODEL->getSnakeCase();
         <!-- /.box-body -->
 
         <div class="box-footer">
-          <el-button type="primary" @click="onCreate" icon="plus">添加</el-button>
+          <el-button type="primary" @click="onCreate" icon="plus">@{{$t('scaffold.terms.create')}}</el-button>
           <el-button type="danger" @click="onBundleDelete" icon="delete" :disabled="selectedItems.length==0">
-            批量删除
+            @{{$t('scaffold.terms.batch_delete')}}
           </el-button>
         </div>
       </div>
@@ -187,24 +189,25 @@ $modelSnakeCase = $MODEL->getSnakeCase();
         return this._onDeleteClick({
           url: '/{{$modelSnakeCase}}/' + row.id,
           params: {},
-          confirmText: '确认要删除吗？',
-          messageText: '删除完毕'
+          confirmText: this.$i18n.t('scaffold.delete_confirm.confirm_text'),
+          messageText: this.$i18n.t('scaffold.delete_confirm.complete_text'),
         }).then(result => {
           this.tableData.splice($index, 1);
           this.pagination.totalCount--;
         });
       },
       onBundleDelete: function () {
-        return this.$confirm("确认要删除 " + this.selectedItems.length + " 项么？", '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        return this.$confirm(this.$i18n.t('scaffold.delete_confirm.bundle_confirm_text', {count:this.selectedItems.length}),
+          this.$i18n.t('scaffold.terms.alert'), {
+          confirmButtonText: this.$i18n.t('scaffold.terms.confirm'),
+          cancelButtonText: this.$i18n.t('scaffold.terms.cancel'),
           type: 'warning'
         }).then(() => {
           return this._onBundle('delete');
         }).then(result => {
           this.$message({
             type: 'success',
-            message: "删除完毕"
+            message: this.$i18n.t('scaffold.delete_confirm.complete_text'),
           });
           return this.queryTableData();
         });

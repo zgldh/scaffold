@@ -337,7 +337,7 @@ class ModelDefinition
     }
 
     /**
-     * TODO 生成 ListPage.vue 的搜索表单 HTML
+     * 生成 ListPage.vue 的搜索表单 HTML
      */
     public function generateListSearchForm()
     {
@@ -357,8 +357,8 @@ EOT;
         $form .= <<<EOT
   <el-form-item>
     <el-button-group>
-      <el-button type="primary" @click="onSubmitSearch">查询</el-button>
-      <el-button type="button" @click="onResetSearch">清空</el-button>
+      <el-button type="primary" @click="onSubmitSearch">{{\$t('scaffold.terms.search_submit')}}</el-button>
+      <el-button type="button" @click="onResetSearch">{{\$t('scaffold.terms.search_reset')}}</el-button>
     </el-button-group>
   </el-form-item>
 </el-form>

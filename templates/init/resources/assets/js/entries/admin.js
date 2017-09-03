@@ -28,45 +28,25 @@ window.axios.interceptors.response.use(function (response) {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue';
-import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
-import enLocale from 'element-ui/lib/locale/lang/en';
-import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
+import { i18n } from 'resources/assets/js/commons/LanguageHelper';
 
 Vue.use(VueRouter);
-Vue.use(VueI18n);
 Vue.use(require('element-ui'), {
   i18n: function (path, options) {
     // ...
-    console.log('i18n', path, options);
     return i18n.t(path, null, options);
-  }
-});
-
-const i18n = new VueI18n({
-  locale: window.Laravel.Locale, // set locale
-});
-i18n.mergeLocaleMessage(window.Laravel.Locale, window.Laravel.Languages);
-i18n.mergeLocaleMessage('zh-CN', zhLocale);
-i18n.mergeLocaleMessage('en', enLocale);
-Vue.mixin({
-  methods: {
-    loadLanguages: function (module) {
-      var message = this.$i18n.getLocaleMessage(this.$i18n.locale);
-      if (!message || !message.hasOwnProperty(module)) {
-        axios.get('/lang/' + module).then(result => {
-          var langs = {};
-          langs[module] = result.data;
-          this.$i18n.mergeLocaleMessage(this.$i18n.locale, langs);
-        });
-      }
-    }
   }
 });
 
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
 
 var routes = [].concat(
+  require('Modules/Dashboard/resources/assets/routes.js').default,
+  require('Modules/ActivityLog/resources/assets/routes.js').default,
+  require('Modules/Upload/resources/assets/routes.js').default,
+  require('Modules/User/resources/assets/routes.js').default,
+  require('Modules/Blog/resources/assets/routes.js').default,
 // Modules routes
 );
 
