@@ -21,8 +21,11 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $lang = null)
     {
+        if ($lang) {
+            \App::setLocale($lang);
+        }
         $user = $request->user();
         if ($user && $user->isAdmin()) {
             return view('admin.index');

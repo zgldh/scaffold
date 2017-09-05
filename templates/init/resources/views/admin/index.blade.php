@@ -30,6 +30,17 @@
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        <!-- Locale switch -->
+                        <li class="dropdown">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-language"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a :href="'/admin/zh-CN#'+$route.path" class="">简体中文</a></li>
+                                <li><a :href="'/admin/en#'+$route.path" class="">English</a></li>
+                            </ul>
+                        </li>
                         <!-- User Account Menu -->
                         <li class="dropdown">
                             <!-- Menu Toggle Button -->

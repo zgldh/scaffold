@@ -13,6 +13,10 @@ var path = require('path');
  */
 
 var webpackConfig = {
+  output: {
+    publicPath: "/assets/",                 // Fix for laravel-mix 1.4.2
+    chunkFilename: '[name].[chunkhash].js'  //
+  },
   resolve: {
     alias: {
       'resources': path.resolve(__dirname, 'resources'),
@@ -28,6 +32,9 @@ var webpackConfig = {
 };
 
 mix.webpackConfig(webpackConfig);
+mix.options({
+  extractVueStyles: true, // Extract .vue component styling to file, rather than inline.
+});
 
 mix.sass('resources/assets/sass/app.scss', 'public/css')
   .sass('resources/assets/sass/admin.scss', 'public/css')
