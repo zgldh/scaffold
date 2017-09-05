@@ -10,12 +10,12 @@ trait DateRangeSearch
 {
     public function searchHtml()
     {
+        $languageTerm = $this->getFieldLang(true);
         $html = <<<HTML
-          <el-form-item label="{$this->getLabel()}">
+          <el-form-item :label="\$t('{$languageTerm}')">
             <el-date-picker
                     v-model="searchForm.{$this->getProperty()}"
                     type="daterange"
-                    placeholder="{$this->getPlaceholder()}"
                     clearable
                     column="{$this->getProperty()}"
                     operator="range">

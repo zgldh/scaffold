@@ -47,5 +47,11 @@ return [
         'confirm_text'        => 'Are you sure to delete?',
         'bundle_confirm_text' => 'Are you sure to delete {count} item?|Are you sure to delete {count} items?',
         'complete_text'       => 'Deleted',
+    ],
+    'fields'         => [
+        'id'         => 'ID',
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'deleted_at' => 'Deleted At'
     ]
 ];

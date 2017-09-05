@@ -12,7 +12,7 @@ class Radio extends BaseField
     {
         $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
         $html = <<<HTML
-<el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+<el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
   <el-radio-group v-model="form.{$this->getProperty()}">
 HTML;
         foreach ($options as $value => $label) {
@@ -36,9 +36,8 @@ HTML;
     {
         $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
         $html = <<<HTML
-              <el-form-item label="{$this->getLabel()}">
-                <el-select v-model="searchForm.{$this->getProperty()}" placeholder="{$this->getPlaceholder()}" clearable
-                           column="{$this->getProperty()}" operator="=">
+              <el-form-item :label="{$this->getFieldLang(true)}">
+                <el-select v-model="searchForm.{$this->getProperty()}" clearable column="{$this->getProperty()}" operator="=">
 HTML;
         foreach ($options as $value => $label) {
             $html .= <<<HTML

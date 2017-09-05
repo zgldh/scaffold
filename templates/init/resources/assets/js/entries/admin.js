@@ -14,7 +14,11 @@ window.axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   // Do something with response error
-  if (error.response.status == 401) {
+  if (error.response.status == 500) {
+    // Jump to /admin/login page
+    alert(error.response.data.message);
+  }
+  else if (error.response.status == 401) {
     // Jump to /admin/login page
     alert('您未登录。');
     window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.href);
@@ -29,7 +33,7 @@ window.axios.interceptors.response.use(function (response) {
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { i18n } from 'resources/assets/js/commons/LanguageHelper';
+import {i18n} from 'resources/assets/js/commons/LanguageHelper';
 
 Vue.use(VueRouter);
 Vue.use(require('element-ui'), {

@@ -54,4 +54,9 @@ class Create{{$MODEL_NAME}}Request extends FormRequest
 <?php } ?>
         return $rules;
     }
+
+    public function attributes()
+    {
+        return __('<?php echo $MODEL->getModelLang().'.fields'; ?>');
+    }
 }

@@ -15,11 +15,10 @@ class TimeRange extends BaseField
     public function html()
     {
         $html = <<<HTML
-            <el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+            <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
               <el-time-picker
                 is-range
-                v-model="form.{$this->getProperty()}"
-                placeholder="{$this->getPlaceholder()}">
+                v-model="form.{$this->getProperty()}">
               </el-time-picker>
             </el-form-item>
 HTML;

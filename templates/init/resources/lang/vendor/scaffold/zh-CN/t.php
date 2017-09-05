@@ -47,5 +47,11 @@ return [
         'confirm_text'        => '确认要删除吗？',
         'bundle_confirm_text' => '确认要删除 {count} 项么？',
         'complete_text'       => '删除完毕',
+    ],
+    'fields'         => [
+        'id'         => 'ID',
+        'created_at' => '添加时间',
+        'updated_at' => '更新时间',
+        'deleted_at' => '删除时间'
     ]
 ];

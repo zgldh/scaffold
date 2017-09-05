@@ -11,8 +11,8 @@ class Select extends BaseField
     public function html()
     {
         $html = <<<HTML
-            <el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <el-select v-model="form.{$this->getProperty()}" placeholder="{$this->getPlaceholder()}">
+            <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+              <el-select v-model="form.{$this->getProperty()}">
                 <el-option
                 v-for="(item,index) in {$this->getComputedPropertyName()}"
                 :key="index"
@@ -45,9 +45,8 @@ JS;
     public function searchHtml()
     {
         $html = <<<HTML
-              <el-form-item label="{$this->getLabel()}">
-                <el-select v-model="searchForm.{$this->getProperty()}" placeholder="{$this->getPlaceholder()}" clearable
-                           column="{$this->getProperty()}" operator="=">
+              <el-form-item :label="{$this->getFieldLang(true)}">
+                <el-select v-model="searchForm.{$this->getProperty()}" clearable column="{$this->getProperty()}" operator="=">
                   <el-option
                     v-for="(item,index) in {$this->getComputedPropertyName()}"
                     :key="index"

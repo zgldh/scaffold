@@ -10,9 +10,10 @@ trait TextSearch
 {
     public function searchHtml()
     {
+        $languageTerm = $this->getFieldLang(true);
         $html = <<<HTML
-          <el-form-item label="{$this->getLabel()}">
-            <el-input v-model="searchForm.{$this->getProperty()}" placeholder="{$this->getLabel()}" column="{$this->getProperty()}" operator="like"></el-input>
+          <el-form-item :label="\$t('{$languageTerm}')">
+            <el-input v-model="searchForm.{$this->getProperty()}" column="{$this->getProperty()}" operator="like"></el-input>
           </el-form-item>
 HTML;
 

@@ -15,7 +15,7 @@ class Textarea extends BaseField
     public function html()
     {
         $html = <<<HTML
-            <el-form-item label="{$this->getLabel()}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
+            <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
               <el-input v-model="form.{$this->getProperty()}" type="textarea"></el-input>
             </el-form-item>
 HTML;

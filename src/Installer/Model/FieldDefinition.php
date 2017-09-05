@@ -10,7 +10,7 @@ use zgldh\Scaffold\Installer\HtmlFields\Factory;
 class FieldDefinition
 {
     /**
-     * 字段名
+     * 字段名 snake_case
      * @var string
      */
     private $name = '';
@@ -78,6 +78,11 @@ class FieldDefinition
      */
     private $relationship = null;
 
+    /**
+     * @var ModelDefinition
+     */
+    private $model = null;
+
 
     /**
      * FieldDefinition constructor.
@@ -86,7 +91,7 @@ class FieldDefinition
      */
     public function __construct($name = '', $dbType = 'string')
     {
-        $this->name = $name;
+        $this->name = snake_case($name);
         $this->label = $name;
         $this->dbType = $dbType;
     }
@@ -102,6 +107,7 @@ class FieldDefinition
     }
 
     /**
+     * Name as snake_case
      * @return string
      */
     public function getName()
@@ -707,5 +713,35 @@ class FieldDefinition
         $htmlField = $this->getHtmlType();
         $computedCode = $htmlField->getComputedCode();
         return $computedCode;
+    }
+
+    /**
+     * Get field language set term
+     * @return string
+     */
+    public function getFieldLang()
+    {
+        $model = $this->getModel();
+        $langTerm = $model->getModelLang();
+        $langTerm .= ".{$this->getName()}";
+        return $langTerm;
+    }
+
+    /**
+     * @param ModelDefinition $model
+     * @return FieldDefinition
+     */
+    public function setModel(ModelDefinition $model): FieldDefinition
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * @return ModelDefinition
+     */
+    public function getModel(): ModelDefinition
+    {
+        return $this->model;
     }
 }

@@ -9,6 +9,7 @@ use zgldh\Scaffold\Installer\HtmlFields\Factory;
  */
 class ModelDefinition
 {
+    private $moduleName = '';
     private $table = '';
     private $title = ''; // Should be some Chinese characters
     private $fields = [];
@@ -62,6 +63,7 @@ class ModelDefinition
     public function addField($name = '', $dbType = 'string')
     {
         $field = new FieldDefinition($name, $dbType);
+        $field->setModel($this);
         $this->fields[] = $field;
         return $field;
     }
@@ -89,9 +91,22 @@ class ModelDefinition
      */
     public function findFieldByName($name)
     {
-        return array_first($this->fields, function ($field) use ($name) {
+        $field = array_first($this->fields, function ($field) use ($name) {
             return $field->getName() === $name;
         });
+        if (!$field) {
+            $commonFieldClass = __NAMESPACE__ . '\CommonFields\\' . ucfirst(camel_case($name));
+            if (class_exists($commonFieldClass)) {
+                /**
+                 * @var FieldDefinition $field
+                 */
+                $field = new $commonFieldClass;
+                $field->setModel($this);
+            } else {
+                dd($commonFieldClass . ' not exist.');
+            }
+        }
+        return $field;
     }
 
     /**
@@ -374,7 +389,7 @@ EOT;
     {
         $form = <<<EOT
 <el-form ref="form" :model="form" label-width="200px" v-loading="loading">
-  <el-form-item label="ID" v-if="form.id">
+  <el-form-item :label="\$t('scaffold.fields.id')" v-if="form.id">
     <el-input v-model="form.id" disabled></el-input>
   </el-form-item>
 
@@ -391,7 +406,7 @@ EOT;
         }
 
         $form .= <<<EOT
-    <el-form-item label="Created At" v-if="form.id">
+    <el-form-item :label="\$t('scaffold.fields.created_at')" v-if="form.id">
       <el-input v-model="form.created_at" disabled></el-input>
     </el-form-item>
 </el-form>
@@ -414,5 +429,34 @@ EOT;
         }
 
         return $computes;
+    }
+
+    /**
+     * Get Model language set term
+     * @return string
+     */
+    public function getModelLang()
+    {
+        $moduleSnakeCase = snake_case($this->getModuleName());
+        $langTerm = "{$moduleSnakeCase}::t.models.{$this->getSnakeCase()}";
+        return $langTerm;
+    }
+
+    /**
+     * @param string $moduleName
+     * @return ModelDefinition
+     */
+    public function setModuleName(string $moduleName): ModelDefinition
+    {
+        $this->moduleName = $moduleName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleName(): string
+    {
+        return $this->moduleName;
     }
 }

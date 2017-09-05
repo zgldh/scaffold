@@ -131,6 +131,19 @@ abstract class BaseField
         return $this;
     }
 
+    /**
+     * Get field language set term
+     * @return string
+     */
+    public function getFieldLang($preTrimT = false)
+    {
+        $term = $this->getField()->getFieldLang();
+        if ($preTrimT) {
+            $term = str_replace('::t.', '::', $term);
+        }
+        return $term;
+    }
+
     public function isPropertyTypeInteger()
     {
         if ($this->field) {
