@@ -6,7 +6,7 @@
 
 1. 使用 `composer require zgldh/scaffold` 后， 所需要的其他 composer
  包自动引用完毕。
-2. 在 `/config/app.php` 加入 `zgldh/Scaffold/ScaffoldServiceProvider::class,`。
+2. 在 `/config/app.php` 加入 `zgldh\Scaffold\ScaffoldServiceProvider::class,`。
 2. 编辑 `.env` 写入 `APP_URL` 和 `DB_` 数据库相关配置。
 3. 使用 `zgldh:scaffold:init` 后：
     1. 参数：
