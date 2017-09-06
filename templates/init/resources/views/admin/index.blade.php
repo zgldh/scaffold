@@ -87,7 +87,7 @@
 <script>
   window.Laravel = {
     csrfToken: '{{ csrf_token() }}',
-    Locale: '<?php echo config('app.locale') ?>',
+    Locale: '<?php echo \App::getLocale(); ?>',
     Languages: <?php echo json_encode(['scaffold' => __('scaffold::t'), 'module_dashboard' => __('module_dashboard::t')],
       JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);?>
   };
