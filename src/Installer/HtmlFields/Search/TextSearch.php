@@ -12,7 +12,7 @@ trait TextSearch
     {
         $languageTerm = $this->getFieldLang(true);
         $html = <<<HTML
-          <el-form-item :label="\$t('{$languageTerm}')">
+          <el-form-item :label="{$languageTerm}">
             <el-input v-model="searchForm.{$this->getProperty()}" column="{$this->getProperty()}" operator="like"></el-input>
           </el-form-item>
 HTML;

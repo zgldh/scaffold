@@ -95,8 +95,10 @@ class Id extends FieldDefinition
         parent::__construct($name, $dbType);
     }
 
-    public function getFieldLang()
+    public function getFieldLang($forVueJS = false)
     {
-        return 'scaffold::t.fields.id';
+        $lang = 'scaffold::t.fields.id';
+        $lang = $forVueJS ? $this->decorateFieldLangForVue($lang) : $lang;
+        return $lang;
     }
 }

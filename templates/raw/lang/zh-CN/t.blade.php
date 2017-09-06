@@ -9,10 +9,13 @@ echo '<?php' ?>
 return [
     'title' => "{{$STARTER->getModuleTitle()}}管理",
     'models'=>[
-        @foreach($STARTER->getModels() as $MODEL)
+<?php foreach($STARTER->getModels() as $MODEL):
+    $fieldLabels = $MODEL->getFieldLabels();
+?>
         '{{$MODEL->getSnakeCase()}}'=>[
-            'title'=>'{{$MODEL->getTitle()}}'
+            'title'=>'{{$MODEL->getPascaleCase()}}',
+            'fields'=>{!! \zgldh\Scaffold\Installer\Utils::exportArray($fieldLabels) !!}
         ],
-        @endforeach
+<?php endforeach;?>
     ]
 ];

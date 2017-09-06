@@ -12,7 +12,7 @@ trait TimeRangeSearch
     {
         $languageTerm = $this->getFieldLang(true);
         $html = <<<HTML
-            <el-form-item :label="\$t('{$languageTerm}')">
+            <el-form-item :label="{$languageTerm}">
               <el-time-picker
                 is-range
                 v-model="searchForm.{$this->getProperty()}"

@@ -116,6 +116,16 @@ class FieldDefinition
     }
 
     /**
+     * For English reading name
+     * @return string
+     */
+    public function getReadingName()
+    {
+        $value = ucwords(str_replace(['-', '_'], ' ', $this->name));
+        return $value;
+    }
+
+    /**
      * @return string
      */
     public function getSchema()
@@ -717,14 +727,25 @@ class FieldDefinition
 
     /**
      * Get field language set term
+     * @param bool $forVueJS
      * @return string
      */
-    public function getFieldLang()
+    public function getFieldLang($forVueJS = false)
     {
         $model = $this->getModel();
         $langTerm = $model->getModelLang();
-        $langTerm .= ".{$this->getName()}";
+        $langTerm .= ".fields.{$this->getName()}";
+        if ($forVueJS) {
+            $langTerm = $this->decorateFieldLangForVue($langTerm);
+        }
         return $langTerm;
+    }
+
+    protected function decorateFieldLangForVue($input)
+    {
+        $input = str_replace('::t.', '::', $input);
+        $input = "\$t('{$input}')";
+        return $input;
     }
 
     /**

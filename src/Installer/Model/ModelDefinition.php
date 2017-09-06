@@ -123,6 +123,24 @@ class ModelDefinition
         return $fields;
     }
 
+    public function getFieldLabels($locale = 'zh-CN')
+    {
+        $labels = [];
+        foreach ($this->fields as $field) {
+            /**
+             * @var FieldDefinition $field
+             */
+            $key = $field->getName();
+            if ($locale === 'en') {
+                $value = $field->getReadingName();
+            } else {
+                $value = $field->getLabel();
+            }
+            $labels[$key] = $value;
+        }
+        return $labels;
+    }
+
     /**
      * @param string $middleware
      * @return ModelDefinition

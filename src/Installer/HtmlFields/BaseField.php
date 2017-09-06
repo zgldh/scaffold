@@ -135,12 +135,9 @@ abstract class BaseField
      * Get field language set term
      * @return string
      */
-    public function getFieldLang($preTrimT = false)
+    public function getFieldLang($forVueJS = false)
     {
-        $term = $this->getField()->getFieldLang();
-        if ($preTrimT) {
-            $term = str_replace('::t.', '::', $term);
-        }
+        $term = $this->getField()->getFieldLang($forVueJS);
         return $term;
     }
 

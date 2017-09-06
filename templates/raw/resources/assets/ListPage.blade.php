@@ -104,13 +104,13 @@ $languageNamespace = $STARTER->getLanguageNamespace();
     continue;
   endif;
   $prop = $field->getName();
-  $label = $field->getLabel();
+  $label = $field->getFieldLang(true);
   $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
   $searchable = $field->isNotSearchable() ? 'searchable="false"' : 'searchable="true"';
 @endphp
               <el-table-column
                   prop="{{$prop}}"
-                  label="{{$label}}"
+                  :label="{!! $label !!}"
                   {!! $sortable !!}
                   {!! $searchable !!}
                   show-overflow-tooltip>

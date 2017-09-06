@@ -95,8 +95,10 @@ class DeletedAt extends FieldDefinition
         parent::__construct($name, $dbType);
     }
 
-    public function getFieldLang()
+    public function getFieldLang($forVueJS = false)
     {
-        return 'scaffold::t.fields.deleted_at';
+        $lang = 'scaffold::t.fields.deleted_at';
+        $lang = $forVueJS ? $this->decorateFieldLangForVue($lang) : $lang;
+        return $lang;
     }
 }
