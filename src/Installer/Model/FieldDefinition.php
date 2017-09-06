@@ -743,7 +743,7 @@ class FieldDefinition
 
     protected function decorateFieldLangForVue($input)
     {
-        $input = str_replace('::t.', '::', $input);
+        $input = str_replace('::t.', '.', $input);
         $input = "\$t('{$input}')";
         return $input;
     }
