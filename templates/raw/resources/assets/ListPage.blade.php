@@ -5,6 +5,7 @@
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
 ?>
 <template>
@@ -184,14 +185,14 @@ $languageNamespace = $STARTER->getLanguageNamespace();
     },
     methods: {
       onCreate: function () {
-        return this.$router.push('/{{$modelSnakeCase}}/create');
+        return this.$router.push('/{{$route}}/create');
       },
       onEditClick: function (row, column, $index, store) {
-        return this.$router.push('/{{$modelSnakeCase}}/' + row.id + '/edit');
+        return this.$router.push('/{{$route}}/' + row.id + '/edit');
       },
       onDeleteClick: function (row, column, $index, store) {
         return this._onDeleteClick({
-          url: '/{{$modelSnakeCase}}/' + row.id,
+          url: '/{{$route}}/' + row.id,
           params: {},
           confirmText: this.$i18n.t('scaffold.delete_confirm.confirm_text'),
           messageText: this.$i18n.t('scaffold.delete_confirm.complete_text'),

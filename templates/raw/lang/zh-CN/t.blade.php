@@ -13,7 +13,7 @@ return [
     $fieldLabels = $MODEL->getFieldLabels();
 ?>
         '{{$MODEL->getSnakeCase()}}'=>[
-            'title'=>'{{$MODEL->getPascaleCase()}}',
+            'title'=>'{{$MODEL->getTitle()}}',
             'fields'=>{!! \zgldh\Scaffold\Installer\Utils::exportArray($fieldLabels) !!}
         ],
 <?php endforeach;?>

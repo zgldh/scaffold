@@ -5,6 +5,7 @@
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
 ?>
 <template>
@@ -20,7 +21,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
           <router-link to="/"><i class="fa fa-dashboard"></i> @{{$t('module_dashboard.title')}}</router-link>
         </li>
         <li>
-          <router-link to="/{{$modelSnakeCase}}/list"><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?></router-link>
+          <router-link to="/{{$route}}/list"><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?></router-link>
         </li>
         <li class="active" v-if="form.id">@{{$t('scaffold.terms.edit')}}</li>
         <li class="active" v-else>@{{$t('scaffold.terms.create')}}</li>
@@ -83,7 +84,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
   components: {},
   computed: {
     resource: function () {
-    var resourceURL = '/{{$modelSnakeCase}}';
+    var resourceURL = '/{{$route}}';
     return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
     },
 @php
@@ -111,7 +112,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
   methods: {
     onSave: function (event) {
     this._onSave(event).then(result => {
-      this.$router.replace('/{{$modelSnakeCase}}/' + result.data.data.id + '/edit');
+      this.$router.replace('/{{$route}}/' + result.data.data.id + '/edit');
       this.form = result.data.data;
       this.form.permissions = this.form.permissions.map(permission => permission.id);
     }).catch(err => {
