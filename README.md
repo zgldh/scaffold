@@ -20,6 +20,11 @@
     6. 自动设置好 `/resources`
     7. 自动执行 `composer dumpautoload`
 4. 安装其他 Module
+    0. 如果要安装基础的用户、日志、上传 Module
+    1. `composer require zgldh/module-uesr` 
+    2.  `php artisan zgldh:module:install zgldh/module-activity-log`
+    3.  `php artisan zgldh:module:install zgldh/module-upload`
+    4.  `php artisan zgldh:module:install zgldh/module-user`
 5. 执行 `npm install`
 6. 执行 `npm run watch` 开始开发调试。
 
@@ -27,7 +32,8 @@
 
 1. 比如想装 User 模块
 2. 执行 `composer require zgldh/module-user`
-3. 执行 `zgldh:module:install zgldh/module-user`
+3. 先安装依赖的其他模块。
+4. 执行 `zgldh:module:install zgldh/module-user`
     1. 自动将文件放入 Modules 目录下
     2. 自动设置好 `/database` 目录
     3. 自动设置好 `/config/app.php` 加入对应的 ServiceProvider
