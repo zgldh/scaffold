@@ -38,7 +38,6 @@
     "post-create-project-cmd": [
     ],
     "post-install-cmd": [
-      "@php vendor/zgldh/scaffold/bin/PostInstallCmd.php"
     ],
     "post-update-cmd": [
     ]

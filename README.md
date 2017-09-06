@@ -5,7 +5,8 @@
 ## 开发路线：
 
 1. 使用 `composer require zgldh/scaffold` 后， 所需要的其他 composer
- 包自动引用完毕。且自动在 `/config/app.php` 加入 `ScaffoldServiceProvider`。
+ 包自动引用完毕。
+2. 在 `/config/app.php` 加入 `zgldh/Scaffold/ScaffoldServiceProvider::class,`。
 2. 编辑 `.env` 写入 `APP_URL` 和 `DB_` 数据库相关配置。
 3. 使用 `zgldh:scaffold:init` 后：
     1. 参数：
@@ -26,7 +27,7 @@
 
 1. 比如想装 User 模块
 2. 执行 `composer require zgldh/module-user`
-3. `composer` 的 `post-install-cmd` 自动执行  `zgldh:module:install zgldh/module-user`
+3. 执行 `zgldh:module:install zgldh/module-user`
     1. 自动将文件放入 Modules 目录下
     2. 自动设置好 `/database` 目录
     3. 自动设置好 `/config/app.php` 加入对应的 ServiceProvider
