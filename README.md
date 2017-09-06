@@ -21,8 +21,8 @@
     6. 自动设置好 `/resources`
     7. 自动执行 `composer dumpautoload`
 4. 安装其他 Module
-    0. 如果要安装基础的用户、日志、上传 Module
-    1. `composer require zgldh/module-uesr` 
+    0.  如果要安装基础的用户、日志、上传 Module
+    1.  `composer require zgldh/module-uesr` 
     2.  `php artisan zgldh:module:install zgldh/module-activity-log`
     3.  `php artisan zgldh:module:install zgldh/module-upload`
     4.  `php artisan zgldh:module:install zgldh/module-user`
