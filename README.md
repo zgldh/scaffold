@@ -4,7 +4,7 @@
 
 ## 开发路线：
 
-0. 在 Laravel5.5 空项目上安装。
+1. 在 Laravel5.5 空项目上安装。
 1. 使用 `composer require zgldh/scaffold` 后， 所需要的其他 composer
  包自动引用完毕。
 2. 在 `/config/app.php` 加入 `zgldh\Scaffold\ScaffoldServiceProvider::class,`。
@@ -21,11 +21,11 @@
     6. 自动设置好 `/resources`
     7. 自动执行 `composer dumpautoload`
 4. 安装其他 Module
-    0.  如果要安装基础的用户、日志、上传 Module
-    1.  `composer require zgldh/module-uesr` 
-    2.  `php artisan zgldh:module:install zgldh/module-activity-log`
-    3.  `php artisan zgldh:module:install zgldh/module-upload`
-    4.  `php artisan zgldh:module:install zgldh/module-user`
+   1. 如果要安装基础的用户、日志、上传 Module
+   2. `composer require zgldh/module-uesr` 
+   3. `php artisan zgldh:module:install zgldh/module-activity-log`
+   4. `php artisan zgldh:module:install zgldh/module-upload`
+   5. `php artisan zgldh:module:install zgldh/module-user`
 5. 执行 `npm install`
 6. 执行 `npm run watch` 开始开发调试。
 7. 访问 `localhost:3000/admin` ， 这是本脚手架主要功能路径。
