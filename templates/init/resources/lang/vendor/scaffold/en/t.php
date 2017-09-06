@@ -26,7 +26,7 @@ return [
         'loading'         => 'Loading',
         'list'            => 'List',
         'create'          => 'Create',
-        'batch_delete'    => 'Batch Delete',
+        'bundle_delete'    => 'Batch Delete',
         'view'            => 'View',
         'edit'            => 'Edit',
         'delete'          => 'Delete',

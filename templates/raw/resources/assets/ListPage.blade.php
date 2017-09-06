@@ -32,7 +32,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
             <el-button type="primary" @click="onCreate" icon="plus">@{{$t('scaffold.terms.create')}}</el-button>
             <el-button type="danger" @click="onBundleDelete" icon="delete"
                    :disabled="selectedItems.length==0">
-              @{{$t('scaffold.terms.batch_delete')}}
+              @{{$t('scaffold.terms.bundle_delete')}}
             </el-button>
           </div>
         </div>
@@ -145,7 +145,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
         <div class="box-footer">
           <el-button type="primary" @click="onCreate" icon="plus">@{{$t('scaffold.terms.create')}}</el-button>
           <el-button type="danger" @click="onBundleDelete" icon="delete" :disabled="selectedItems.length==0">
-            @{{$t('scaffold.terms.batch_delete')}}
+            @{{$t('scaffold.terms.bundle_delete')}}
           </el-button>
         </div>
       </div>
@@ -201,7 +201,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
         });
       },
       onBundleDelete: function () {
-        return this.$confirm(this.$i18n.t('scaffold.delete_confirm.bundle_confirm_text', {count:this.selectedItems.length}),
+        return this.$confirm(this.$i18n.tc('scaffold.delete_confirm.bundle_confirm_text', this.selectedItems.length, {count:this.selectedItems.length}),
           this.$i18n.t('scaffold.terms.alert'), {
           confirmButtonText: this.$i18n.t('scaffold.terms.confirm'),
           cancelButtonText: this.$i18n.t('scaffold.terms.cancel'),

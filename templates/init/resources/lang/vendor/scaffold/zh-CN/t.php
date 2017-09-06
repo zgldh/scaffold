@@ -26,7 +26,7 @@ return [
         'loading'         => '读取中',
         'list'            => '列表',
         'create'          => '添加',
-        'batch_delete'    => '批量删除',
+        'bundle_delete'    => '批量删除',
         'view'            => '查看',
         'edit'            => '编辑',
         'delete'          => '删除',
