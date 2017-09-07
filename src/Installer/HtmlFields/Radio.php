@@ -1,5 +1,7 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\HtmlFields\Traits\ComputedCode;
+
 /**
  * Created by PhpStorm.
  * User: zhangwb-pc
@@ -8,6 +10,8 @@
  */
 class Radio extends BaseField
 {
+    use ComputedCode;
+
     public function html()
     {
         $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
@@ -55,16 +59,5 @@ HTML;
     private function getPlaceholder()
     {
         return $this->getOption('placeholder', '请选择' . $this->getLabel());
-    }
-
-    public function getComputedCode()
-    {
-        $options = json_encode($this->getOptions(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $js = <<<JS
-          {$this->getComputedPropertyName()}: function () {
-            return {$options};
-          }
-JS;
-        return $js;
     }
 }

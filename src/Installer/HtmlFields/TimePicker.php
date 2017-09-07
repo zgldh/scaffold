@@ -1,6 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
-use zgldh\Scaffold\Installer\HtmlFields\Search\TimeRangeSearch;
+use zgldh\Scaffold\Installer\HtmlFields\Traits\TimeRangeSearch;
 
 /**
  * Created by PhpStorm.

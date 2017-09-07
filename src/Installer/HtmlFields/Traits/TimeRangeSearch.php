@@ -1,4 +1,4 @@
-<?php namespace zgldh\Scaffold\Installer\HtmlFields\Search;
+<?php namespace zgldh\Scaffold\Installer\HtmlFields\Traits;
 
 /**
  * Created by PhpStorm.

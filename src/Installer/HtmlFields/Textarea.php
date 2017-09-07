@@ -1,6 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
-use zgldh\Scaffold\Installer\HtmlFields\Search\TextSearch;
+use zgldh\Scaffold\Installer\HtmlFields\Traits\TextSearch;
 
 /**
  * Created by PhpStorm.

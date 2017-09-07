@@ -1,6 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
-use zgldh\Scaffold\Installer\HtmlFields\Search\DateRangeSearch;
+use zgldh\Scaffold\Installer\HtmlFields\Traits\DateRangeSearch;
 
 /**
  * Created by PhpStorm.
