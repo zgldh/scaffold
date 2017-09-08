@@ -110,7 +110,7 @@ abstract class BaseField
 
     public function getComputedPropertyName()
     {
-        return '_' . $this->getProperty() . '_list';
+        return '_' . camel_case($this->getProperty()) . 'List';
     }
 
     /**

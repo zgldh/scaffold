@@ -434,19 +434,61 @@ EOT;
     }
 
     /**
-     * 生成 vue 页面需要的 computed 参数
+     * TODO 生成 vue 页面需要的 computed 参数
      */
     public function generateComputes()
     {
-        $computes = [];
+//  To generate something like this:
+//        _category_list: function () {
+//            return this.$store.state._categoryList;
+//        },
+//        _status_list: function () {
+//            return this.$store.state._statusList;
+//        },
+//        _created_by_list: function () {
+//            return this.$store.state._createdByList;
+//        },
+    }
+
+    /**
+     * TODO 生成 vue 页面需要的 methods 参数
+     */
+    public function generateMethods()
+    {
+//  To generate something like this:
+//        _queryCreatedByList(term){
+//            this.$store.dispatch('_queryCreatedByList', term);
+//        }
+    }
+
+    /**
+     * TODO 生成 vue store 需要的 states 参数
+     */
+    public function generateStoreStates()
+    {
+        $states = [];
         foreach ($this->getFields() as $field) {
             $computedCode = $field->getComputedCode();
             if ($computedCode) {
-                $computes[] = $computedCode;
+                $states[] = $computedCode;
             }
         }
 
-        return $computes;
+        return $states;
+    }
+
+    /**
+     * TODO 生成 vue store 需要的 mutations 参数
+     */
+    public function generateStoreMutations()
+    {
+    }
+
+    /**
+     * TODO 生成 vue store 需要的 actions 参数
+     */
+    public function generateStoreActions()
+    {
     }
 
     /**

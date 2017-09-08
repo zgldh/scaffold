@@ -72,59 +72,65 @@ $languageNamespace = $STARTER->getLanguageNamespace();
   import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
 
   export default  {
-  mixins: [
-    mixin,
-    loadModuleLanguage('{{$languageNamespace}}')
-  ],
-  data: function () {
-    return {
-    form: {!! json_encode($MODEL->getDefaultValues(), JSON_PRETTY_PRINT) !!}
-    };
-  },
-  components: {},
-  computed: {
-    resource: function () {
-    var resourceURL = '/{{$route}}';
-    return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
+    mixins: [
+      mixin,
+      loadModuleLanguage('{{$languageNamespace}}')
+    ],
+    data: function () {
+      return {
+        form: {!! json_encode($MODEL->getDefaultValues(), JSON_PRETTY_PRINT) !!}
+      };
     },
+    components: {},
+    computed: {
+      resource: function () {
+        var resourceURL = '/{{$route}}';
+        return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
+      },
 @php
-  $computes = $MODEL->generateComputes();
-  foreach($computes as $compute):
-    echo $compute.",\n";
-  endforeach;
+    $computes = $MODEL->generateComputes();
+    foreach($computes as $compute):
+      echo $compute.",\n";
+    endforeach;
 @endphp
-  },
-  created: function () {
-    this.loading = true;
-    let loads = [];
-    if (this.$route.params.id) {
-    this.form.id = this.$route.params.id;
-    loads.push(axios.get(this.resource));
-    }
+    },
+    created: function () {
+      this.loading = true;
+      let loads = [];
+      if (this.$route.params.id) {
+        this.form.id = this.$route.params.id;
+        loads.push(axios.get(this.resource));
+      }
 
-    Promise.all(loads).then(results => {
-    this.form = results[0].data.data;
-    this.loading = false;
-    }).catch(err => {
-    this.loading = false;
-    });
-  },
-  methods: {
-    onSave: function (event) {
-    this._onSave(event).then(result => {
-      this.$router.replace('/{{$route}}/' + result.data.data.id + '/edit');
-      this.form = result.data.data;
-      this.form.permissions = this.form.permissions.map(permission => permission.id);
-    }).catch(err => {
-    });
+      Promise.all(loads).then(results => {
+        this.form = results[0].data.data;
+        this.loading = false;
+      }).catch(err => {
+        this.loading = false;
+      });
     },
-    onCancel: function (event) {
-    this.$router.back();
-    },
-    onFileChange: function (event) {
-    this.form.file = event.target.files[0];
+    methods: {
+      onSave: function (event) {
+        this._onSave(event).then(result => {
+          this.$router.replace('/{{$route}}/' + result.data.data.id + '/edit');
+          this.form = result.data.data;
+          this.form.permissions = this.form.permissions.map(permission => permission.id);
+        }).catch(err => {
+        });
+      },
+      onCancel: function (event) {
+        this.$router.back();
+      },
+      onFileChange: function (event) {
+        this.form.file = event.target.files[0];
+      },
+@php
+    $actions = $MODEL->generateMethods();
+    foreach($actions as $action):
+      echo $action.",\n";
+    endforeach;
+@endphp
     }
-  }
   };
 </script>
 

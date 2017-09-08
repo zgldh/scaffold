@@ -217,6 +217,12 @@ $languageNamespace = $STARTER->getLanguageNamespace();
           return this.queryTableData();
         });
       },
+      @php
+        $actions = $MODEL->generateMethods();
+        foreach($actions as $action):
+          echo $action.",\n";
+        endforeach;
+      @endphp
     }
   };
 
