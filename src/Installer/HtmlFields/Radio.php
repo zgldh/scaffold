@@ -1,6 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
-use zgldh\Scaffold\Installer\HtmlFields\Traits\ComputedCode;
+use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 
 /**
  * Created by PhpStorm.
@@ -10,7 +10,7 @@ use zgldh\Scaffold\Installer\HtmlFields\Traits\ComputedCode;
  */
 class Radio extends BaseField
 {
-    use ComputedCode;
+    use StoreState;
 
     public function html()
     {

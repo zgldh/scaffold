@@ -438,6 +438,7 @@ EOT;
      */
     public function generateComputes()
     {
+        return [];
 //  To generate something like this:
 //        _category_list: function () {
 //            return this.$store.state._categoryList;
@@ -455,26 +456,11 @@ EOT;
      */
     public function generateMethods()
     {
+        return [];
 //  To generate something like this:
 //        _queryCreatedByList(term){
 //            this.$store.dispatch('_queryCreatedByList', term);
 //        }
-    }
-
-    /**
-     * TODO 生成 vue store 需要的 states 参数
-     */
-    public function generateStoreStates()
-    {
-        $states = [];
-        foreach ($this->getFields() as $field) {
-            $computedCode = $field->getComputedCode();
-            if ($computedCode) {
-                $states[] = $computedCode;
-            }
-        }
-
-        return $states;
     }
 
     /**

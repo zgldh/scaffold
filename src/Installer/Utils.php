@@ -221,4 +221,32 @@ class Utils
         }
         return false;
     }
+
+    public static function generateTargetModelRoute($modelName)
+    {
+        $modulesNamespace = config('zgldh-scaffold.modules');
+        $parts = preg_split('/\\\\/', $modelName);
+        $parts = array_values(array_diff($parts, [$modulesNamespace, 'Models']));
+        $module = $parts[0];
+        $model = $parts[1];
+        if ($module !== $model) {
+            return snake_case($module) . '/' . snake_case($model);
+        }
+        return snake_case($model);
+    }
+
+    public static function getTargetModelSearchColumns($modelName)
+    {
+        $model = new $modelName;
+        $table = $model->table;
+        $tester = ['title', 'name', 'subject', 'label', 'value', 'first_name', 'head_line'];
+        $column = 'id';
+        foreach ($tester as $testColumn) {
+            if (\Schema::hasColumn($table, $testColumn)) {
+                $column = $testColumn;
+                break;
+            }
+        }
+        return [$column];
+    }
 }

@@ -70,12 +70,14 @@ $languageNamespace = $STARTER->getLanguageNamespace();
 <script type="javascript">
   import { mixin } from "resources/assets/js/commons/EditorHelper.js";
   import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
+  import store from './store';
 
   export default  {
     mixins: [
       mixin,
       loadModuleLanguage('{{$languageNamespace}}')
     ],
+    store: store,
     data: function () {
       return {
         form: {!! json_encode($MODEL->getDefaultValues(), JSON_PRETTY_PRINT) !!}
@@ -87,12 +89,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
         var resourceURL = '/{{$route}}';
         return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
       },
-@php
-    $computes = $MODEL->generateComputes();
-    foreach($computes as $compute):
-      echo $compute.",\n";
-    endforeach;
-@endphp
+@include('zgldh.scaffold::raw.resources.assets.segments.computeds',['MODEL'=>$MODEL])
     },
     created: function () {
       this.loading = true;
@@ -124,12 +121,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
       onFileChange: function (event) {
         this.form.file = event.target.files[0];
       },
-@php
-    $actions = $MODEL->generateMethods();
-    foreach($actions as $action):
-      echo $action.",\n";
-    endforeach;
-@endphp
+@include('zgldh.scaffold::raw.resources.assets.segments.actions',['MODEL'=>$MODEL])
     }
   };
 </script>

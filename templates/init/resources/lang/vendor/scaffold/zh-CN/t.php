@@ -34,6 +34,7 @@ return [
         'page_size_items' => '项结果',
         'page_size_all'   => '全部',
         'auto_search'     => '模糊搜索',
+        'input_to_search' => '请输入关键字',
         'search_submit'   => '查询',
         'search_reset'    => '清空',
         'actions'         => '操作',

@@ -159,12 +159,14 @@ $languageNamespace = $STARTER->getLanguageNamespace();
 <script type="javascript">
   import { mixin } from "resources/assets/js/commons/ListHelpers.js";
   import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
+  import store from './store';
 
   export default {
     mixins: [
       mixin,
       loadModuleLanguage('{{$languageNamespace}}')
     ],
+    store: store,
     data: function () {
       let data = {
         resource: '/{!! $MODEL->getRoute() !!}',
@@ -176,12 +178,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
       return data;
     },
     computed:{
-      @php
-        $computes = $MODEL->generateComputes();
-        foreach($computes as $compute):
-          echo $compute.",\n";
-        endforeach;
-      @endphp
+@include('zgldh.scaffold::raw.resources.assets.segments.computeds',['MODEL'=>$MODEL])
     },
     methods: {
       onCreate: function () {
@@ -217,12 +214,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
           return this.queryTableData();
         });
       },
-      @php
-        $actions = $MODEL->generateMethods();
-        foreach($actions as $action):
-          echo $action.",\n";
-        endforeach;
-      @endphp
+@include('zgldh.scaffold::raw.resources.assets.segments.actions',['MODEL'=>$MODEL])
     }
   };
 

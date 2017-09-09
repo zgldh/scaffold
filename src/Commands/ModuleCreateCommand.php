@@ -264,10 +264,13 @@ class ModuleCreateCommand extends Command
 
         $listPageContent = Utils::renderTemplate('raw.resources.assets.ListPage', $variables);
         $editorPageContent = Utils::renderTemplate('raw.resources.assets.EditorPage', $variables);
+        $storeContent = Utils::renderTemplate('raw.resources.assets.store', $variables);
         $listPagePath = $assetsFolder . "ListPage.vue";
         $editorPagePath = $assetsFolder . "EditorPage.vue";
+        $storePath = $assetsFolder . "store.js";
         Utils::writeFile($listPagePath, $listPageContent);
         Utils::writeFile($editorPagePath, $editorPageContent);
+        Utils::writeFile($storePath, $storeContent);
     }
 
     /**

@@ -358,7 +358,7 @@ class FieldDefinition
      */
     public function isRenderFromComputed()
     {
-        return $this->getHtmlType()->getComputedCode() !== null;
+        return $this->getHtmlType()->getStoreState() !== null;
     }
 
     /**
@@ -718,10 +718,10 @@ class FieldDefinition
     /**
      * @return null|string
      */
-    public function getComputedCode()
+    public function getStoreStates()
     {
         $htmlField = $this->getHtmlType();
-        $computedCode = $htmlField->getComputedCode();
+        $computedCode = $htmlField->getStoreState();
         return $computedCode;
     }
 

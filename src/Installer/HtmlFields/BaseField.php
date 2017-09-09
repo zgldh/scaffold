@@ -103,14 +103,29 @@ abstract class BaseField
         return $this;
     }
 
-    public function getComputedCode()
+    public function getStoreState()
     {
         return null;
     }
 
     public function getComputedPropertyName()
     {
+        return $this->getStoreStateName();
+    }
+
+    public function getStoreStateName()
+    {
         return '_' . camel_case($this->getProperty()) . 'List';
+    }
+
+    public function getStoreMutationName()
+    {
+        return '_' . camel_case('set_' . $this->getProperty()) . 'List';
+    }
+
+    public function getStoreActionName()
+    {
+        return '_' . camel_case('query_' . $this->getProperty()) . 'List';
     }
 
     /**

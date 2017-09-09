@@ -5,59 +5,67 @@
 * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
 */
 $modelSnakeCase = $MODEL->getSnakeCase();
-$states = $MODEL->generateStoreStates();
-$mutations = $MODEL->generateStoreMutations();
-$actions = $MODEL->generateStoreActions();
+
 ?>
 import Vuex from 'vuex';
-import {BuildAutoSearchQuery} from 'resources/assets/js/commons/Utils';
+import { BuildAutoSearchQuery } from 'resources/assets/js/commons/Utils';
 
 // Store functions
 const store = new Vuex.Store({
   state: {
+@foreach($MODEL->getFields() as $field)
 @php
-    foreach($computes as $compute):
-      echo $compute.",\n";
-    endforeach;
+        $htmlType = $field->getHtmlType();
 @endphp
-    {{--_categoryList: {--}}
-      {{--"news": "新闻",--}}
-      {{--"sport": "运动",--}}
-    {{--},--}}
-    {{--_statusList: {--}}
-      {{--"1": "草稿",--}}
-      {{--"2": "发布",--}}
-    {{--},--}}
-    {{--_createdByList: {}--}}
+@if($field->getRelationship())
+    {{$htmlType->getComputedPropertyName()}}: function () {
+      return {};
+    },
+@elseif($htmlType->getOptions())
+    {{$htmlType->getComputedPropertyName()}}: function () {
+      return {!! json_encode($htmlType->getOptions(), JSON_UNESCAPED_UNICODE) !!};
+    },
+@else
+@endif
+@endforeach
   },
   mutations: {
+@foreach($MODEL->getFields() as $field)
+@if($field->getRelationship())
 @php
-    foreach($mutations as $mutation):
-      echo $mutation.",\n";
-    endforeach;
+    $htmlType = $field->getHtmlType();
 @endphp
-    {{--_setCreatedByList: function (state, items) {--}}
-      {{--state._createdByList = items;--}}
-    {{--}--}}
+    {{$htmlType->getStoreMutationName()}}: function (state, items) {
+      state.{{$htmlType->getStoreStateName()}} = items;
+    },
+@else
+@endif
+@endforeach
   },
   actions: {
+@foreach($MODEL->getFields() as $field)
+@if($relationship = $field->getRelationship())
 @php
-    foreach($actions as $action):
-      echo $action.",\n";
-    endforeach;
+    $htmlType = $field->getHtmlType();
+    $targetModel = $relationship[0];
+    $relationRoute = \zgldh\Scaffold\Installer\Utils::generateTargetModelRoute($targetModel);
+    $searchColumns = \zgldh\Scaffold\Installer\Utils::getTargetModelSearchColumns($targetModel);
 @endphp
-    {{--_queryCreatedByList: function ({commit}, term) {--}}
-      {{--axios.get('/user?' + BuildAutoSearchQuery('name', term))--}}
-        {{--.then(result => {--}}
-          {{--var data = {};--}}
-          {{--if (result.data && result.data.data) {--}}
-            {{--result.data.data.forEach(item => {--}}
-              {{--data[item.id] = item.name;--}}
-            {{--});--}}
-          {{--}--}}
-          {{--commit('_setCreatedByList', data);--}}
-        {{--});--}}
-    {{--}--}}
+    {{$htmlType->getStoreActionName()}}: function ({commit}, term) {
+      axios.get('/{!! $relationRoute !!}?' + BuildAutoSearchQuery({!! json_encode($searchColumns) !!}, term))
+        .then(result => {
+          var data = {};
+          if (result.data && result.data.data) {
+            result.data.data.forEach(item => {
+              data[item.id] = {!! join("+', '+", array_map(function($column){ return 'item.'.$column; },$searchColumns)) !!};
+            });
+          }
+          commit('_setCreatedByList', data);
+        });
+    },
+@else
+@endif
+@endforeach
   }
 });
 export default store;

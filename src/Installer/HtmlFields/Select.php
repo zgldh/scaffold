@@ -1,6 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
-use zgldh\Scaffold\Installer\HtmlFields\Traits\ComputedCode;
+use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 
 /**
  * Created by PhpStorm.
@@ -10,13 +10,14 @@ use zgldh\Scaffold\Installer\HtmlFields\Traits\ComputedCode;
  */
 class Select extends BaseField
 {
-    use ComputedCode;
+    use StoreState;
 
     public function html()
     {
+        $remote = $this->getRemoteSelectAttributes();
         $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <el-select v-model="form.{$this->getProperty()}">
+              <el-select v-model="form.{$this->getProperty()}" clearable {$remote}>
                 <el-option
                 v-for="(item,index) in {$this->getComputedPropertyName()}"
                 :key="index"
@@ -37,9 +38,10 @@ HTML;
 
     public function searchHtml()
     {
+        $remote = $this->getRemoteSelectAttributes();
         $html = <<<HTML
               <el-form-item :label="{$this->getFieldLang(true)}">
-                <el-select v-model="searchForm.{$this->getProperty()}" clearable column="{$this->getProperty()}" operator="=">
+                <el-select v-model="searchForm.{$this->getProperty()}" clearable {$remote} column="{$this->getProperty()}" operator="=">
                   <el-option
                     v-for="(item,index) in {$this->getComputedPropertyName()}"
                     :key="index"
@@ -51,5 +53,14 @@ HTML;
 HTML;
 
         return $html;
+    }
+
+    private function getRemoteSelectAttributes()
+    {
+        $str = '';
+        if ($this->getField() && $this->getField()->getRelationship()) {
+            $str = 'filterable remote :remote-method="' . $this->getStoreActionName() . '" :placeholder="$t(\'scaffold.terms.input_to_search\')"';
+        }
+        return $str;
     }
 }

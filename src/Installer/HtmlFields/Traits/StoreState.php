@@ -6,16 +6,16 @@
  * Date: 09/07/2017
  * Time: 18:00
  */
-trait ComputedCode
+trait StoreState
 {
-    public function getComputedCode()
+    public function getStoreState()
     {
         if ($this->getField() && $this->getField()->getRelationship()) {
             $code = $this->getAjaxForRelactionship();
         } elseif ($this->getOptions()) {
             $code = $this->getHardCodedList();
         } else {
-            $code = "return []";
+            $code = "return {}";
         }
         $js = <<<JS
           {$this->getComputedPropertyName()}: function () {
