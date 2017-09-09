@@ -1,5 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\HtmlFields\Traits\GetVModel;
 use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 
 /**
@@ -11,13 +12,14 @@ use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 class Select extends BaseField
 {
     use StoreState;
+    use GetVModel;
 
     public function html()
     {
         $remote = $this->getRemoteSelectAttributes();
         $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <el-select v-model="form.{$this->getProperty()}" clearable {$remote}>
+              <el-select {$this->getVmodel('form')} clearable {$remote}>
                 <el-option
                 v-for="(item,index) in {$this->getComputedPropertyName()}"
                 :key="index"
@@ -41,7 +43,7 @@ HTML;
         $remote = $this->getRemoteSelectAttributes();
         $html = <<<HTML
               <el-form-item :label="{$this->getFieldLang(true)}">
-                <el-select v-model="searchForm.{$this->getProperty()}" clearable {$remote} column="{$this->getProperty()}" operator="=">
+                <el-select {$this->getVmodel('searchForm')} clearable {$remote} column="{$this->getProperty()}" operator="=">
                   <el-option
                     v-for="(item,index) in {$this->getComputedPropertyName()}"
                     :key="index"

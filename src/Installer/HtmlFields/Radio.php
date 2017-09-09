@@ -1,5 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\HtmlFields;
 
+use zgldh\Scaffold\Installer\HtmlFields\Traits\GetVModel;
 use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 
 /**
@@ -11,13 +12,14 @@ use zgldh\Scaffold\Installer\HtmlFields\Traits\StoreState;
 class Radio extends BaseField
 {
     use StoreState;
+    use GetVModel;
 
     public function html()
     {
         $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
         $html = <<<HTML
 <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-  <el-radio-group v-model="form.{$this->getProperty()}">
+  <el-radio-group {$this->getVmodel('form')}>
 HTML;
         foreach ($options as $value => $label) {
             if ($this->isPropertyTypeBoolean() || $this->isPropertyTypeFloat() || $this->isPropertyTypeInteger()) {
@@ -41,7 +43,7 @@ HTML;
         $options = $this->getOptions() ?: ['1' => 'foo', '2' => 'bar'];
         $html = <<<HTML
               <el-form-item :label="{$this->getFieldLang(true)}">
-                <el-select v-model="searchForm.{$this->getProperty()}" clearable column="{$this->getProperty()}" operator="=">
+                <el-select {$this->getVmodel('searchForm')} clearable column="{$this->getProperty()}" operator="=">
 HTML;
         foreach ($options as $value => $label) {
             $html .= <<<HTML

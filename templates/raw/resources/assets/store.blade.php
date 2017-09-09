@@ -18,13 +18,9 @@ const store = new Vuex.Store({
         $htmlType = $field->getHtmlType();
 @endphp
 @if($field->getRelationship())
-    {{$htmlType->getComputedPropertyName()}}: function () {
-      return {};
-    },
+    {{$htmlType->getComputedPropertyName()}}: {},
 @elseif($htmlType->getOptions())
-    {{$htmlType->getComputedPropertyName()}}: function () {
-      return {!! json_encode($htmlType->getOptions(), JSON_UNESCAPED_UNICODE) !!};
-    },
+    {{$htmlType->getComputedPropertyName()}}: {!! json_encode($htmlType->getOptions(), JSON_UNESCAPED_UNICODE) !!},
 @else
 @endif
 @endforeach
