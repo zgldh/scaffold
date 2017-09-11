@@ -86,8 +86,11 @@ $languageNamespace = $STARTER->getLanguageNamespace();
     components: {},
     computed: {
       resource: function () {
-        var resourceURL = '/{{$route}}';
-        return (this.form.id ? resourceURL + '/' + this.form.id : resourceURL);// + '?_with=roles,permissions';
+        var resourceURL = '/{{$route}}'+ (this.form.id ? ('/' + this.form.id):'') ;
+@php
+  $relationNames = array_map(function($relation){return camel_case(basename($relation[0]));},$MODEL->getRelations());
+@endphp
+        return resourceURL{!! $relationNames?"+'?_with=".join(',', $relationNames)."'":'' !!};// + '?_with=roles,permissions';
       },
 @include('zgldh.scaffold::raw.resources.assets.segments.computeds',['MODEL'=>$MODEL])
     },

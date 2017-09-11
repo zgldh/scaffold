@@ -358,7 +358,7 @@ class FieldDefinition
      */
     public function isRenderFromComputed()
     {
-        return $this->getHtmlType()->getStoreState() !== null;
+        return count($this->getHtmlType()->getOptions()) > 0;
     }
 
     /**
@@ -713,16 +713,6 @@ class FieldDefinition
 
         $rules = join('|', $rules);
         return $rules;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getStoreStates()
-    {
-        $htmlField = $this->getHtmlType();
-        $computedCode = $htmlField->getStoreState();
-        return $computedCode;
     }
 
     /**

@@ -34,3 +34,20 @@ export function BuildHttpRequestPayload (object) {
 
   return formData;
 }
+
+/**
+ * @return {string}
+ */
+export function BuildAutoSearchQuery (columns, term) {
+  if (columns.constructor !== Array) {
+    columns = [columns];
+  }
+  columns.push('id');
+  let query = 'draw=' + new Date().getTime() + '&start=0&length=25';
+  query += '&search[regex]=false&search[value]=' + encodeURIComponent(term);
+
+  for (let i = 0; i < columns.length; i++) {
+    query += '&columns[' + i + '][name]=' + columns[i] + '&columns[' + i + '][searchable]=true';
+  }
+  return query;
+}

@@ -7,6 +7,7 @@
 $modelSnakeCase = $MODEL->getSnakeCase();
 $route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
+$needWithRelations = $MODEL->getRelations();
 ?>
 <template>
   <div class="admin-list-page">
@@ -104,6 +105,10 @@ $languageNamespace = $STARTER->getLanguageNamespace();
   if (!$field->isInIndex()):
     continue;
   endif;
+  $relationship = $field->getRelationship();
+  if($relationship){
+    $searchColumns = \zgldh\Scaffold\Installer\Utils::getTargetModelSearchColumns($relationship[0]);
+  }
   $prop = $field->getName();
   $label = $field->getFieldLang(true);
   $sortable = $field->isSortable() ? 'sortable="custom"' : ':sortable="false"';
@@ -115,7 +120,16 @@ $languageNamespace = $STARTER->getLanguageNamespace();
                   {!! $sortable !!}
                   {!! $searchable !!}
                   show-overflow-tooltip>
-                @if($field->isRenderFromComputed())
+                @if($relationship)
+                  <template scope="scope">
+                    @foreach($searchColumns as $index=>$searchColumn)
+                    @php
+                      $rowRelation = 'scope.row.'.camel_case(basename($relationship[0]));
+                    @endphp
+                    <span><?php echo "{{{$rowRelation}?{$rowRelation}.{$searchColumn}:''"; ?>}}</span>{{$index!=count($searchColumns)-1?',':''}}
+                    @endforeach
+                  </template>
+                @elseif($field->isRenderFromComputed())
                   <template scope="scope">
                     <span><?php echo '{{'; ?> {{$field->getHtmlType()->getComputedPropertyName()}}[scope.row.{{$prop}}] <?php echo '}}'; ?></span>
                   </template>
@@ -169,7 +183,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
     store: store,
     data: function () {
       let data = {
-        resource: '/{!! $MODEL->getRoute() !!}',
+        resource: '/{!! $MODEL->getRoute(array_map(function($relation){return camel_case(basename($relation[0]));},$needWithRelations)) !!}',
         datatablesParameters: {
           order: [{column: 'created_at', dir: 'desc'}],
         },

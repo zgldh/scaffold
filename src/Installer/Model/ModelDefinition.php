@@ -315,9 +315,13 @@ class ModelDefinition
     /**
      * @return string
      */
-    public function getRoute()
+    public function getRoute($with = [])
     {
-        return $this->route;
+        $route = $this->route;
+        if ($with) {
+            $route .= '?_with=' . join(',', $with);
+        }
+        return $route;
     }
 
     /**
@@ -504,5 +508,22 @@ EOT;
     public function getModuleName(): string
     {
         return $this->moduleName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelations()
+    {
+        $relations = [];
+        foreach ($this->getFields() as $field) {
+            /**
+             * @var FieldDefinition $field
+             */
+            if ($relation = $field->getRelationship()) {
+                $relations[] = $relation;
+            }
+        }
+        return $relations;
     }
 }

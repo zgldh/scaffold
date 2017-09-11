@@ -17,7 +17,7 @@ class ModuleCreateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'zgldh:module:create {starterClass}';
+    protected $signature = 'zgldh:module:create {starterClass} {--only=*}';
 
     /**
      * The console command description.
@@ -38,6 +38,8 @@ class ModuleCreateCommand extends Command
      */
     private $model = null;
 
+    private $onlyGenerators = [];
+
     /**
      * Create a new command instance.
      *
@@ -57,6 +59,11 @@ class ModuleCreateCommand extends Command
         $starterClass = $this->argument('starterClass');
         $starterClass = str_replace('/', '\\', $starterClass) . '\\Starter';
 
+        $this->onlyGenerators = $this->option('only');
+        foreach ($this->onlyGenerators as $key => $only) {
+            $this->onlyGenerators[$key] = snake_case($only);
+        }
+
         if (!$starterClass) {
             $this->error("Please use zgldh:module:create Class\To\Starter");
         } elseif (!class_exists($starterClass)) {
@@ -72,6 +79,19 @@ class ModuleCreateCommand extends Command
     {
         $ref = new \ReflectionClass($className);
         return $ref->isSubclassOf(ModuleStarter::class);
+    }
+
+    private function checkWilling($key)
+    {
+        $key = snake_case($key);
+        if (count($this->onlyGenerators) > 0) {
+            if (in_array($key, $this->onlyGenerators)) {
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -91,11 +111,11 @@ class ModuleCreateCommand extends Command
             $this->model = $model;
             $this->line('Model: ' . $this->model->getTable());
             $this->generateController();
-            $this->generateRequests();
+            $this->generateRequest();
             $this->generateRepository();
             $this->generateModel();
             $this->generateMigration();
-            $this->generateResources();
+            $this->generateResource();
         }
         $this->generateResourceRoutes();
         $this->generateLanguageFiles();
@@ -109,42 +129,14 @@ class ModuleCreateCommand extends Command
         system('composer dumpautoload');
 
         return false;
-//
-//        $this->addServiceProvider('User', 'UserServiceProvider::class');
-//        $this->addRoute('User');
-//        $this->addToVueRoute('User');
-//        $this->updateAuthConfig();
-//        $this->addAdminMenuItem($this->getModuleTemplateContent('menu.blade.php'));
-//        $this->publicFactoryAndSeed(
-//            $this->getModuleTemplatePath('ModuleUserFactory.php'),
-//            $this->getModuleTemplatePath('ModuleUserSeed.php')
-//        );
-//
-//        // Install laravel-permission
-//        App::register(PermissionServiceProvider::class);
-//        Artisan::call('vendor:publish', [
-//            '--provider' => PermissionServiceProvider::class,
-//            '--tag'      => 'migrations']);
-//        Artisan::call('vendor:publish', [
-//            '--provider' => PermissionServiceProvider::class,
-//            '--tag'      => 'config']);
-//
-//        // Publish migrations
-//        $this->publishMigration('AddColumnsToUsersTable', __DIR__ . '/../migrations/add_columns_to_users_table.php');
-//
-//        Artisan::call('migrate');
-//
-//        $this->createBasicAdmin();
-//
-//        exec('composer dumpautoload');
-
-
-        $this->info('Complete.');
     }
 
     private function generateController()
     {
         $this->comment("\tController...");
+        if (!$this->checkWilling('controller')) {
+            return $this->line("\tskip");
+        }
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'MODULE_DIRECTORY_NAME' => $this->moduleDirectoryName,
@@ -160,9 +152,12 @@ class ModuleCreateCommand extends Command
         return;
     }
 
-    private function generateRequests()
+    private function generateRequest()
     {
-        $this->comment("\tRequests...");
+        $this->comment("\tRequest...");
+        if (!$this->checkWilling('request')) {
+            return $this->line("\tskip");
+        }
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
@@ -182,6 +177,9 @@ class ModuleCreateCommand extends Command
     private function generateRepository()
     {
         $this->comment("\tRepository...");
+        if (!$this->checkWilling('repository')) {
+            return $this->line("\tskip");
+        }
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
@@ -199,6 +197,9 @@ class ModuleCreateCommand extends Command
     private function generateModel()
     {
         $this->comment("\tModel...");
+        if (!$this->checkWilling('model')) {
+            return $this->line("\tskip");
+        }
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
@@ -217,6 +218,9 @@ class ModuleCreateCommand extends Command
     private function generateMigration()
     {
         $this->comment("\tMigration File...");
+        if (!$this->checkWilling('migration')) {
+            return $this->line("\tskip");
+        }
 
         $create = "create_{$this->model->getTable()}_table";
         if ($filePath = Utils::isMigrationFileExists($create)) {
@@ -243,9 +247,13 @@ class ModuleCreateCommand extends Command
     /**
      * 生成 resources
      */
-    private function generateResources()
+    private function generateResource()
     {
-        $this->comment("\tResources...");
+        $this->comment("\tResource...");
+        if (!$this->checkWilling('resource')) {
+            return $this->line("\tskip");
+        }
+
         $pascalCase = $this->model->getPascaleCase();
         $variables = [
             'NAME_SPACE' => $this->namespace,
@@ -279,10 +287,13 @@ class ModuleCreateCommand extends Command
     private function generateResourceRoutes()
     {
         $this->comment("Resources routes...");
+        if (!$this->checkWilling('resource')) {
+            return $this->line("\tskip");
+        }
+
         $variables = [
             'STARTER' => $this->starter,
         ];
-
         $resourceFolder = $this->folder . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
         $routesPath = $resourceFolder . "assets" . DIRECTORY_SEPARATOR . "routes.js";
         $routesContent = Utils::renderTemplate('raw.resources.assets.routes', $variables);
@@ -295,6 +306,9 @@ class ModuleCreateCommand extends Command
     private function generateLanguageFiles()
     {
         $this->comment("Language Files...");
+        if (!$this->checkWilling('language')) {
+            return $this->line("\tskip");
+        }
 
         $variables = [
             'STARTER' => $this->starter,
@@ -315,6 +329,10 @@ class ModuleCreateCommand extends Command
     private function generateRoutes()
     {
         $this->comment("Route...");
+        if (!$this->checkWilling('route')) {
+            return $this->line("\tskip");
+        }
+
         $variables = [
             'STARTER' => $this->starter,
         ];
@@ -333,6 +351,10 @@ class ModuleCreateCommand extends Command
     private function generateMenu()
     {
         $this->comment("Menu...");
+        if (!$this->checkWilling('menu')) {
+            return $this->line("\tskip");
+        }
+
         $variables = [
             'STARTER' => $this->starter,
         ];
@@ -344,6 +366,9 @@ class ModuleCreateCommand extends Command
     private function generateServiceProvider()
     {
         $this->comment("Service Provider...");
+        if (!$this->checkWilling('service-provider')) {
+            return $this->line("\tskip");
+        }
 
         // 1. Create file
         $moduleName = $this->starter->getModuleName();
@@ -358,79 +383,6 @@ class ModuleCreateCommand extends Command
 
         // 2. Add to config/app.php
         Utils::addServiceProvider("{$this->namespace}\\{$moduleName}ServiceProvider::class");
-    }
-
-    private $dynamicVariables = [];
-
-
-    private function setupDynamicVariables($folder, $modelName, ConfigParser $config = null)
-    {
-        $folder = str_replace('\\', '/', $folder);
-        $namespace = $config->namespace ?: $this->covertToNameSpace($folder);
-        $this->dynamicVariables['PACKAGE_FOLDER'] = $folder;
-        $this->dynamicVariables['MODEL_IDENTIFIER'] = strtolower(str_replace('/', '.', $folder));
-        $this->dynamicVariables['MODEL_NAME_PRESENTATION'] = $config->name ?: $modelName;
-        $this->dynamicVariables['MODEL_NAME'] = $modelName;
-        $this->dynamicVariables['MODEL_NAME_LOWER'] = strtolower($this->dynamicVariables['MODEL_NAME']);
-        $this->dynamicVariables['MODEL_NAME_PLURAL_LOWER'] = str_plural($this->dynamicVariables['MODEL_NAME_LOWER']);
-        $this->dynamicVariables['TABLE_NAME'] = $config->table ?: $this->dynamicVariables['MODEL_NAME_LOWER'];
-        $this->dynamicVariables['MIDDLEWARE'] = null;
-        $this->dynamicVariables['NAME_SPACE'] = $namespace;
-        $this->dynamicVariables['NAME_SPACE_MODEL'] = $this->dynamicVariables['NAME_SPACE'] . '\Models';
-        $this->dynamicVariables['NAME_SPACE_REPOSITORY'] = $this->dynamicVariables['NAME_SPACE'] . '\Repositories';
-        $this->dynamicVariables['NAME_SPACE_REQUEST'] = $this->dynamicVariables['NAME_SPACE'] . '\Requests';
-        $this->dynamicVariables['NAME_SPACE_CONTROLLER'] = $this->dynamicVariables['NAME_SPACE'] . '\Controllers';
-
-        $this->dynamicVariables['APP_PAGE_EMPTY_ITEMS'] = $config->getAppPageEmptyItem();
-        $this->dynamicVariables['FORM_FIELDS'] = $config->getFormFields();
-        $this->dynamicVariables['DATATABLE_COLUMNS'] = $config->getDatatablesColumns();
-    }
-
-    /**
-     * 生成 model， repository， request， controller， route， resource， ServiceProvider
-     * @param $infyomParameters
-     */
-    private function generateAll($infyomParameters)
-    {
-        $folder = $this->dynamicVariables['PACKAGE_FOLDER'];
-        $parameters = $infyomParameters;
-        // Model
-        \Config::set('infyom.laravel_generator.path.model', $folder . '/Models/');
-        \Config::set('infyom.laravel_generator.namespace.model', $this->dynamicVariables['NAME_SPACE_MODEL']);
-        $this->info('Model...');
-        \Artisan::call('infyom:model', $parameters);
-
-        // Repository
-        \Config::set('infyom.laravel_generator.path.repository', $folder . '/Repositories/');
-        \Config::set('infyom.laravel_generator.namespace.repository', $this->dynamicVariables['NAME_SPACE_REPOSITORY']);
-        $this->info('Repository...');
-        \Artisan::call('infyom:repository', $parameters);
-        $this->adjustRepository();
-
-        // Request
-        \Config::set('infyom.laravel_generator.path.request', $folder . '/Requests/');
-        \Config::set('infyom.laravel_generator.namespace.request', $this->dynamicVariables['NAME_SPACE_REQUEST']);
-        $this->info('Request...');
-        \Artisan::call('infyom.scaffold:requests', $parameters);
-
-        $this->generateController($folder . '/Controllers/');
-        $this->generateRoutes();
-        $this->generateResources($folder . '/resources');
-        $this->generateServiceProvider($folder . '/');
-    }
-
-    private function adjustRepository()
-    {
-        $repositoryFolder = \Config::get('infyom.laravel_generator.path.repository');
-        $repositoryFilePath = $repositoryFolder . $this->dynamicVariables['MODEL_NAME'] . 'Repository.php';
-        $content = file_get_contents($repositoryFilePath);
-        $content = str_replace('InfyOm\Generator\Common\BaseRepository', 'zgldh\Scaffold\BaseRepository', $content);
-        file_put_contents($repositoryFilePath, $content);
-    }
-
-    private function covertToNameSpace($str)
-    {
-        return str_replace('/', '\\', $str);
     }
 
     private function codeFormat()
