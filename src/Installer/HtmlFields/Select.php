@@ -19,7 +19,7 @@ class Select extends BaseField
         if ($this->isRemote()) {
             $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}">
-              <multiselect {$this->getVmodel('form')} label="{$this->getObjectLabel()}" track-by="id"
+              <multiselect {$this->getRelationVmodel('form')} label="{$this->getObjectLabel()}" track-by="id"
                            :placeholder="\$t('scaffold.terms.input_to_search')" open-direction="bottom"
                            :options="{$this->getComputedPropertyName()}" :searchable="true" 
                            @search-change="{$this->getStoreActionName()}">
@@ -53,7 +53,7 @@ HTML;
         if ($this->isRemote()) {
             $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}">
-              <multiselect {$this->getVmodel('form')} label="{$this->getObjectLabel()}" track-by="id"
+              <multiselect {$this->getRelationVmodel('searchForm')} label="{$this->getObjectLabel()}" track-by="id"
                            :placeholder="\$t('scaffold.terms.input_to_search')" open-direction="bottom"
                            :options="{$this->getComputedPropertyName()}" :searchable="true" 
                            @search-change="{$this->getStoreActionName()}">
@@ -103,5 +103,12 @@ HTML;
             return $searchColumns[0];
         }
         return 'id';
+    }
+
+    private function getRelationVmodel($prefix)
+    {
+        $relationship = $this->getField()->getRelationship();
+        $relatedName = camel_case(basename($relationship[0]));
+        return "v-model=\"{$prefix}.{$relatedName}\"";
     }
 }

@@ -65,11 +65,11 @@ class {{$MODEL_NAME}} extends Model
      */
     public static $rules = <?php echo Utils::exportArray($rules);?>;
 <?php
-    foreach($MODEL->getFields() as $field){
+    foreach($MODEL->getFields() as $field):
         $relationship = $field->getRelationship();
-        if(!$relationship){
+        if(!$relationship):
             continue;
-        }
+        endif;
         $relationshipType = $relationship['type'];
         unset($relationship['type']);
         $relationshipClassName = ucfirst(camel_case($relationshipType));
@@ -85,6 +85,5 @@ class {{$MODEL_NAME}} extends Model
     {
         return $this->{{$relationshipType}}({!! $relationParams !!});
     }
-<?php }?>
-
+<?php endforeach;?>
 }
