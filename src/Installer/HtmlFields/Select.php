@@ -24,11 +24,12 @@ class Select extends BaseField
                 v-for="(item,index) in {$this->getComputedPropertyName()}"
                 :key="index"
                 :label="item"
-                :value="index">
+                :value="index + ''">
                 </el-option>
               </el-select>
             </el-form-item>
 HTML;
+        // The :value="index + ''" is a hack for id numeric value. Because the el-select will consider 123 !== '123'
 
         return $html;
     }
@@ -48,11 +49,12 @@ HTML;
                     v-for="(item,index) in {$this->getComputedPropertyName()}"
                     :key="index"
                     :label="item"
-                    :value="index">
+                    :value="index + ''">
                   </el-option>
                 </el-select>
               </el-form-item>
 HTML;
+        // The :value="index + ''" is a hack for id numeric value. Because the el-select will consider 123 !== '123'
 
         return $html;
     }

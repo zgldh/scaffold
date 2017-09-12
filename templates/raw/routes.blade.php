@@ -14,7 +14,7 @@ echo '<?php' ?>
 
 
 @foreach($MODELS as $MODEL)
-Route::post('{{$MODEL->getRoute()}}/bundle','\{{$STARTER->getModuleNameSpace()}}\Controllers\{{$MODEL->getPascaleCase()}}Controller@bundle');
+Route::post('{{$MODEL->getRoute()}}/bundle', '\{{$STARTER->getModuleNameSpace()}}\Controllers\{{$MODEL->getPascaleCase()}}Controller@bundle');
 Route::resource('{{$MODEL->getRoute()}}', '\{{$STARTER->getModuleNameSpace()}}\Controllers\{{$MODEL->getPascaleCase()}}Controller');
 
 @endforeach
