@@ -18,7 +18,7 @@ const store = new Vuex.Store({
         $htmlType = $field->getHtmlType();
 @endphp
 @if($field->getRelationship())
-    {{$htmlType->getComputedPropertyName()}}: {},
+    {{$htmlType->getComputedPropertyName()}}: [],
 @elseif($htmlType->getOptions())
     {{$htmlType->getComputedPropertyName()}}: {!! json_encode($htmlType->getOptions(), JSON_UNESCAPED_UNICODE) !!},
 @else
@@ -50,11 +50,9 @@ const store = new Vuex.Store({
     {{$htmlType->getStoreActionName()}}: function ({commit}, term) {
       axios.get('/{!! $relationRoute !!}?' + BuildAutoSearchQuery({!! json_encode($searchColumns) !!}, term))
         .then(result => {
-          var data = {};
+          var data = [];
           if (result.data && result.data.data) {
-            result.data.data.forEach(item => {
-              data[item.id] = {!! join("+', '+", array_map(function($column){ return 'item.'.$column; },$searchColumns)) !!};
-            });
+            data = result.data.data;
           }
           commit('_setCreatedByList', data);
         });

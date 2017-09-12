@@ -12,8 +12,8 @@ $route = $MODEL->getRoute();
   $htmlType = $field->getHtmlType();
 @endphp
 @if($field->getRelationship())
-      {{$htmlType->getStoreActionName()}}(term) {
+      {{$htmlType->getStoreActionName()}}:_.debounce(function (term) {
         return this.$store.dispatch('{{$htmlType->getStoreActionName()}}', term);
-      },
+      }, 500),
 @endif
 @endforeach

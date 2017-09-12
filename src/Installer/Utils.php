@@ -239,7 +239,7 @@ class Utils
     {
         $model = new $modelName;
         $table = $model->table;
-        $tester = ['title', 'name', 'subject', 'label', 'value', 'first_name', 'head_line'];
+        $tester = ['title', 'name', 'subject', 'label', 'value', 'first_name', 'head_line', 'id'];
         $column = 'id';
         foreach ($tester as $testColumn) {
             if (\Schema::hasColumn($table, $testColumn)) {

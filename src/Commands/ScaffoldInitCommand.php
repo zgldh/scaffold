@@ -120,6 +120,7 @@ class ScaffoldInitCommand extends Command
         $package->setDependencies("babel-polyfill", "^6.23.0");
         $package->setDependencies("little-loader", "^0.1.1");
         $package->setDependencies("element-ui", "~1.3");
+        $package->setDependencies("vue-multiselect", "^2.0.2");
 
         $package->save();
         $this->info('Complete!');

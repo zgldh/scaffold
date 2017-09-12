@@ -44,6 +44,7 @@ Vue.use(require('element-ui'), {
 });
 
 Vue.component('RouterTreeview', require('../components/RouterTreeview.vue'));
+Vue.component('Multiselect', require('vue-multiselect').default);
 
 var routes = [].concat(
 // Modules routes

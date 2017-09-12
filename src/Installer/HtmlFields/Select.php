@@ -16,21 +16,30 @@ class Select extends BaseField
 
     public function html()
     {
-        $remote = $this->getRemoteSelectAttributes();
-        $html = <<<HTML
+        if ($this->isRemote()) {
+            $html = <<<HTML
+            <el-form-item :label="{$this->getFieldLang(true)}">
+              <multiselect {$this->getVmodel('form')} label="{$this->getObjectLabel()}" track-by="id"
+                           :placeholder="\$t('scaffold.terms.input_to_search')" open-direction="bottom"
+                           :options="{$this->getComputedPropertyName()}" :searchable="true" 
+                           @search-change="{$this->getStoreActionName()}">
+              </multiselect>
+            </el-form-item>
+HTML;
+        } else {
+            $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <el-select {$this->getVmodel('form')} clearable {$remote}>
+              <el-select {$this->getVmodel('form')} clearable>
                 <el-option
                 v-for="(item,index) in {$this->getComputedPropertyName()}"
                 :key="index"
                 :label="item"
-                :value="index + ''">
+                :value="index">
                 </el-option>
               </el-select>
             </el-form-item>
 HTML;
-        // The :value="index + ''" is a hack for id numeric value. Because the el-select will consider 123 !== '123'
-
+        }
         return $html;
     }
 
@@ -41,30 +50,58 @@ HTML;
 
     public function searchHtml()
     {
-        $remote = $this->getRemoteSelectAttributes();
-        $html = <<<HTML
+        if ($this->isRemote()) {
+            $html = <<<HTML
+            <el-form-item :label="{$this->getFieldLang(true)}">
+              <multiselect {$this->getVmodel('form')} label="{$this->getObjectLabel()}" track-by="id"
+                           :placeholder="\$t('scaffold.terms.input_to_search')" open-direction="bottom"
+                           :options="{$this->getComputedPropertyName()}" :searchable="true" 
+                           @search-change="{$this->getStoreActionName()}">
+              </multiselect>
+            </el-form-item>
+HTML;
+        } else {
+            $remote = $this->getRemoteSelectAttributes();
+            $html = <<<HTML
               <el-form-item :label="{$this->getFieldLang(true)}">
                 <el-select {$this->getVmodel('searchForm')} clearable {$remote} column="{$this->getProperty()}" operator="=">
                   <el-option
                     v-for="(item,index) in {$this->getComputedPropertyName()}"
                     :key="index"
                     :label="item"
-                    :value="index + ''">
+                    :value="index">
                   </el-option>
                 </el-select>
               </el-form-item>
 HTML;
-        // The :value="index + ''" is a hack for id numeric value. Because the el-select will consider 123 !== '123'
-
+        }
         return $html;
+    }
+
+    private function isRemote()
+    {
+        if ($this->getField() && $this->getField()->getRelationship()) {
+            return true;
+        }
+        return false;
     }
 
     private function getRemoteSelectAttributes()
     {
-        $str = '';
-        if ($this->getField() && $this->getField()->getRelationship()) {
-            $str = 'filterable remote :remote-method="' . $this->getStoreActionName() . '" :placeholder="$t(\'scaffold.terms.input_to_search\')"';
-        }
+        $str = $this->isRemote() ? ('filterable remote :remote-method="' .
+            $this->getStoreActionName() .
+            '" :placeholder="$t(\'scaffold.terms.input_to_search\')"') : '';
         return $str;
+    }
+
+    private function getObjectLabel()
+    {
+        $relationship = @$this->getField()->getRelationship();
+        if ($relationship) {
+            $targetModel = $relationship[0];
+            $searchColumns = \zgldh\Scaffold\Installer\Utils::getTargetModelSearchColumns($targetModel);
+            return $searchColumns[0];
+        }
+        return 'id';
     }
 }

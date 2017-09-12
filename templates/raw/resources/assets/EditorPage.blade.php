@@ -114,16 +114,16 @@ $languageNamespace = $STARTER->getLanguageNamespace();
         this._onSave(event).then(result => {
           this.$router.replace('/{{$route}}/' + result.data.data.id + '/edit');
           this.form = result.data.data;
-          this.form.permissions = this.form.permissions.map(permission => permission.id);
+//          this.form.permissions = this.form.permissions.map(permission => permission.id); // TODO multiple select
         }).catch(err => {
         });
       },
       onCancel: function (event) {
         this.$router.back();
       },
-      onFileChange: function (event) {
-        this.form.file = event.target.files[0];
-      },
+//      onFileChange: function (event) {
+//        this.form.file = event.target.files[0]; // TODO file upload
+//      },
 @include('zgldh.scaffold::raw.resources.assets.segments.actions',['MODEL'=>$MODEL])
     }
   };
