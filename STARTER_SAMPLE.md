@@ -54,9 +54,12 @@ class Starter extends ModuleStarter
         $blog->addField('created_by', 'integer:unsigned')->label('创建者')
             ->nullable()->inIndex()->htmlType('select')
             ->belongsTo(User::class, 'created_by', 'id');
+        $blog->addField('comments')->label('评论')
+            ->hasMany('Modules\Blog\Models\Comment', 'blog_id', 'id');
         $blog->softDelete();
 
         $blog->addSearch('created_at', with(new DateRange())->setLabel('Created At'));
+
 
         return $blog;
     }
@@ -75,6 +78,9 @@ class Starter extends ModuleStarter
         $comment->addField('user_id', 'integer:unsigned')->label('作者')
             ->nullable()->inIndex()->htmlType(new Select())
             ->belongsTo(User::class, 'user_id', 'id');
+        $comment->addField('blog_id', 'integer:unsigned')->label('博客')
+            ->nullable()->inIndex()->htmlType(new Select())
+            ->belongsTo('Modules\Blog\Models\Blog', 'blog_id', 'id');
 
         $comment->addSearch('created_at', with(new DateRange())->setLabel('Created At'));
 
