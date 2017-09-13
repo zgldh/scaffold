@@ -7,7 +7,6 @@
 $modelSnakeCase = $MODEL->getSnakeCase();
 $route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
-$needWithRelations = $MODEL->getRelations();
 ?>
 <template>
   <div class="admin-list-page">
@@ -183,7 +182,7 @@ $needWithRelations = $MODEL->getRelations();
     store: store,
     data: function () {
       let data = {
-        resource: '/{!! $MODEL->getRoute(array_map(function($relation){return camel_case(basename($relation[0]));},$needWithRelations)) !!}',
+        resource: '/{!! $MODEL->getRoute($MODEL->getRelationNames()) !!}',
         datatablesParameters: {
           order: [{column: 'created_at', dir: 'desc'}],
         },

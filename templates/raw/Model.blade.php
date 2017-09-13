@@ -7,12 +7,18 @@
     $fillableFields = [];
     foreach($MODEL->getFields() as $field)
     {
+        if ($field->isNotTableField()){
+            continue;
+        }
         $fillableFields[] = $field->getName();
     }
 
     $casts = [];
     foreach($MODEL->getFields() as $field)
     {
+        if ($field->isNotTableField()){
+            continue;
+        }
         $casts[$field->getName()] = $field->getCastType();
     }
 
@@ -73,7 +79,11 @@ class {{$MODEL_NAME}} extends Model
         $relationshipType = $relationship['type'];
         unset($relationship['type']);
         $relationshipClassName = ucfirst(camel_case($relationshipType));
-        $relatedName = camel_case(basename($relationship[0]));
+        if($field->isRelatingMultiple()):
+            $relatedName = camel_case($field->getName());
+        else:
+            $relatedName = camel_case(basename($relationship[0]));
+        endif;
         $relationParams = array_reduce($relationship, function($carry, $param){
             return $carry?$carry.", '{$param}'":"'{$param}'";
         },null);

@@ -364,6 +364,9 @@ class ModelDefinition
             /**
              * @var FieldDefinition $field
              */
+            if ($field->isNotTableField()) {
+                continue;
+            }
             $schema[] = $field->getSchema();
         }
         if ($this->isSoftDelete()) {
@@ -525,5 +528,27 @@ EOT;
             }
         }
         return $relations;
+    }
+
+    /**
+     * 得到当前 model 各种 relation 的名字
+     * @return array
+     */
+    public function getRelationNames()
+    {
+        $names = [];
+        foreach ($this->getFields() as $field) {
+            /**
+             * @var FieldDefinition $field
+             */
+            if ($relation = $field->getRelationship()) {
+                if ($field->isRelatingMultiple()) {
+                    $names[] = camel_case($field->getName());
+                } else {
+                    $names[] = camel_case(basename($relation[0]));
+                }
+            }
+        }
+        return $names;
     }
 }

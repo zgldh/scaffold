@@ -7,6 +7,7 @@
 $modelSnakeCase = $MODEL->getSnakeCase();
 $route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
+$relationNames = $MODEL->getRelationNames();
 ?>
 <template>
   <div class="admin-editor-page">
@@ -87,9 +88,6 @@ $languageNamespace = $STARTER->getLanguageNamespace();
     computed: {
       resource: function () {
         var resourceURL = '/{{$route}}'+ (this.form.id ? ('/' + this.form.id):'') ;
-@php
-  $relationNames = array_map(function($relation){return camel_case(basename($relation[0]));},$MODEL->getRelations());
-@endphp
         return resourceURL{!! $relationNames?"+'?_with=".join(',', $relationNames)."'":'' !!};// + '?_with=roles,permissions';
       },
 @include('zgldh.scaffold::raw.resources.assets.segments.computeds',['MODEL'=>$MODEL])

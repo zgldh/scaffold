@@ -505,6 +505,39 @@ class FieldDefinition
     }
 
     /**
+     * 是 $relations 的其中之一
+     * @param $relations
+     * @return bool
+     */
+    public function isRelationship($relations)
+    {
+        $relationship = $this->getRelationship();
+        if ($relationship && in_array($relationship['type'], $relations)) {
+            // Don't generate table field.
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 该 field 不必出现在这个模型的数据表字段中
+     * @return bool
+     */
+    public function isNotTableField()
+    {
+        return $this->isRelationship(['hasMany', 'hasManyThrough', 'hasOne', 'morphMany', 'morphOne']);
+    }
+
+    /**
+     * 该 field 对应的关系是不是多个对象？
+     * @return bool
+     */
+    public function isRelatingMultiple()
+    {
+        return $this->isRelationship(['hasMany', 'hasManyThrough', 'morphMany', 'belongsToMany', 'morphToMany', 'morphedByMany']);
+    }
+
+    /**
      * @param mixed $relationship
      * @return FieldDefinition
      */
@@ -525,6 +558,7 @@ class FieldDefinition
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'hasMany';
         $this->relationship = json_encode($args);
@@ -542,6 +576,7 @@ class FieldDefinition
      */
     public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null)
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'hasManyThrough';
         $this->relationship = json_encode($args);
@@ -559,6 +594,7 @@ class FieldDefinition
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphMany';
         $this->relationship = json_encode($args);
@@ -586,6 +622,7 @@ class FieldDefinition
         $relation = null
     )
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'belongsToMany';
         $this->relationship = json_encode($args);
@@ -611,6 +648,7 @@ class FieldDefinition
         $inverse = false
     )
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphToMany';
         $this->relationship = json_encode($args);
@@ -628,6 +666,7 @@ class FieldDefinition
      */
     public function morphedByMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null)
     {
+        $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphedByMany';
         $this->relationship = json_encode($args);

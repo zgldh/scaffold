@@ -212,15 +212,17 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                         if (array_search('', $new_values) !== false) {
                             unset($new_values[array_search('', $new_values)]);
                         }
+                        $model_key = $model->$key($key)->getForeignKeyName();
 
-                        list($temp, $model_key) = explode('.', $model->$key($key)->getForeignKey());
+                        foreach ($new_values as $index => $new_value) {
+                            $new_values[$index] = $new_value['id'];
+                        }
 
                         foreach ($model->$key as $rel) {
                             if (!in_array($rel->id, $new_values)) {
                                 $rel->$model_key = null;
                                 $rel->save();
                             }
-                            unset($new_values[array_search($rel->id, $new_values)]);
                         }
 
                         if (count($new_values) > 0) {

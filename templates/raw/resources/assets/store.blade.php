@@ -54,7 +54,7 @@ const store = new Vuex.Store({
           if (result.data && result.data.data) {
             data = result.data.data;
           }
-          commit('_setCreatedByList', data);
+          commit('{{$htmlType->getStoreMutationName()}}', data);
         });
     },
 @else

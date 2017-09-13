@@ -1,4 +1,4 @@
-import { Loading } from 'element-ui';
+import {Loading} from 'element-ui';
 import _ from 'lodash';
 
 const PARAMS_PAGE_SIZE = 'pageSize';
@@ -271,7 +271,7 @@ export var mixin = {
 
     _onBundle: function (action, resourceUrl, options, items) {
       var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
-      return axios.post(resourceUrl ? resourceUrl : ( this.resource + '/bundle'), {
+      return axios.post(resourceUrl ? resourceUrl : ( this.resource.substr(0, this.resource.indexOf('?')) + '/bundle'), {
         action: action,
         indexes: selectedItems.map((item) => item.id),
         options: options
