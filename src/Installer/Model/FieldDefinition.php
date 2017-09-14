@@ -1,5 +1,6 @@
 <?php namespace zgldh\Scaffold\Installer\Model;
 
+use Modules\Upload\Models\Upload;
 use zgldh\Scaffold\Installer\HtmlFields\BaseField;
 use zgldh\Scaffold\Installer\HtmlFields\Factory;
 
@@ -79,10 +80,15 @@ class FieldDefinition
     private $relationship = null;
 
     /**
+     * 用于 relationship 的 where 过滤
+     * @var null
+     */
+    private $relationshipWhere = null;
+
+    /**
      * @var ModelDefinition
      */
     private $model = null;
-
 
     /**
      * FieldDefinition constructor.
@@ -102,7 +108,7 @@ class FieldDefinition
      */
     public function name($name)
     {
-        $this->name = $name;
+        $this->name = snake_case($name);
         return $this;
     }
 
@@ -505,6 +511,25 @@ class FieldDefinition
     }
 
     /**
+     * @return mixed
+     */
+    public function getRelationshipName()
+    {
+        if ($this->relationship) {
+            $relationship = json_decode($this->relationship, true);
+            if ($this->isRelatingMultiple()) {
+                $relatedName = $this->getName();
+            } elseif ($this->isRelationship(['morphOne', 'morphMany'])) {
+                $relatedName = $this->getName();
+            } else {
+                $relatedName = snake_case(basename($relationship[0]));
+            }
+            return $relatedName;
+        }
+        return null;
+    }
+
+    /**
      * 是 $relations 的其中之一
      * @param $relations
      * @return bool
@@ -525,7 +550,7 @@ class FieldDefinition
      */
     public function isNotTableField()
     {
-        return $this->isRelationship(['hasMany', 'hasManyThrough', 'hasOne', 'morphMany', 'morphOne']);
+        return $this->isRelationship(['hasOne', 'hasMany', 'hasManyThrough', 'morphOne', 'morphMany']);
     }
 
     /**
@@ -534,7 +559,7 @@ class FieldDefinition
      */
     public function isRelatingMultiple()
     {
-        return $this->isRelationship(['hasMany', 'hasManyThrough', 'morphMany', 'belongsToMany', 'morphToMany', 'morphedByMany']);
+        return $this->isRelationship(['hasMany', 'hasManyThrough', 'belongsToMany', 'morphMany', 'morphToMany', 'morphedByMany']);
     }
 
     /**
@@ -793,5 +818,52 @@ class FieldDefinition
     public function getModel(): ModelDefinition
     {
         return $this->model;
+    }
+
+    /**
+     * 当前 field 是一个 relation， morphOne 一个 upload 对象
+     */
+    public function upload()
+    {
+        $this->htmlType('upload');
+        $this->morphOne(Upload::class, 'uploadable');
+        $this->where('uploads.type', $this->getName());
+        return $this;
+    }
+
+    /**
+     * 当前 field 是一个 relation， morphMany 多个 upload 对象
+     */
+    public function uploads()
+    {
+        $this->htmlType('uploads');
+        $this->morphMany(Upload::class, 'uploadable');
+        $this->where('uploads.type', $this->getName());
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param null $operator
+     * @param null $value
+     * @param string $boolean
+     * @return FieldDefinition
+     */
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        $args = func_get_args();
+        $this->relationshipWhere = json_encode($args);
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getWhere()
+    {
+        if ($this->relationshipWhere) {
+            return json_decode($this->relationshipWhere, true);
+        }
+        return null;
     }
 }

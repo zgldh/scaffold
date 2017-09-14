@@ -541,12 +541,9 @@ EOT;
             /**
              * @var FieldDefinition $field
              */
-            if ($relation = $field->getRelationship()) {
-                if ($field->isRelatingMultiple()) {
-                    $names[] = camel_case($field->getName());
-                } else {
-                    $names[] = camel_case(basename($relation[0]));
-                }
+            $relationshipName = $field->getRelationshipName();
+            if ($relationshipName) {
+                $names[] = $relationshipName;
             }
         }
         return $names;

@@ -206,6 +206,22 @@ class Utils
     }
 
     /**
+     * 将数组转换成字符串
+     * @param $arr
+     * @param string $separator 分隔符
+     * @param string $comma     引号包裹
+     * @return mixed
+     */
+    public static function arrayToString($arr, $separator = ',', $comma = '\'')
+    {
+        $result = array_reduce($arr, function ($carry, $param) use ($separator, $comma) {
+            $segment = $comma . $param . $comma;
+            return $carry ? $carry . "{$separator} {$segment}" : "{$segment}";
+        }, null);
+        return $result;
+    }
+
+    /**
      * 数据库迁移文件是否存在
      * @param $className
      * @return bool

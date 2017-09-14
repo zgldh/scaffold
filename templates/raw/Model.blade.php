@@ -79,21 +79,19 @@ class {{$MODEL_NAME}} extends Model
         $relationshipType = $relationship['type'];
         unset($relationship['type']);
         $relationshipClassName = ucfirst(camel_case($relationshipType));
-        if($field->isRelatingMultiple()):
-            $relatedName = camel_case($field->getName());
-        else:
-            $relatedName = camel_case(basename($relationship[0]));
-        endif;
-        $relationParams = array_reduce($relationship, function($carry, $param){
-            return $carry?$carry.", '{$param}'":"'{$param}'";
-        },null);
+        $relatedName = $field->getRelationshipName();
+        $relationParams = Utils::arrayToString($relationship,',',"'");
         ?>
     /**
      * @return \Illuminate\Database\Eloquent\Relations\{{$relationshipClassName}}
      **/
     public function {{$relatedName}}()
     {
+@if($where = $field->getWhere())
+        return $this->{{$relationshipType}}({!! $relationParams !!})->where({!! Utils::arrayToString($where,',',"'"); !!});
+@else
         return $this->{{$relationshipType}}({!! $relationParams !!});
+@endif
     }
 <?php endforeach;?>
 }

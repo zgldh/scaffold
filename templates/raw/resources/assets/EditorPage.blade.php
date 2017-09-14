@@ -112,7 +112,6 @@ $relationNames = $MODEL->getRelationNames();
         this._onSave(event).then(result => {
           this.$router.replace('/{{$route}}/' + result.data.data.id + '/edit');
           this.form = result.data.data;
-//          this.form.permissions = this.form.permissions.map(permission => permission.id); // TODO multiple select
         }).catch(err => {
         });
       },
