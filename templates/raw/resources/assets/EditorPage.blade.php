@@ -84,7 +84,11 @@ $relationNames = $MODEL->getRelationNames();
         form: {!! json_encode($MODEL->getDefaultValues(), JSON_PRETTY_PRINT) !!}
       };
     },
-    components: {},
+    components: {
+@foreach($MODEL->getVueEditorComponents() as $component=>$path)
+      '{!! $component !!}': () => System.import('{!! $path !!}')
+@endforeach
+    },
     computed: {
       resource: function () {
         var resourceURL = '/{{$route}}'+ (this.form.id ? ('/' + this.form.id):'') ;

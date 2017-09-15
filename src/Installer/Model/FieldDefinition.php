@@ -843,6 +843,26 @@ class FieldDefinition
     }
 
     /**
+     * 当前 field 是一个 relation， morphOne 一个 upload 对象
+     * 上传一张图片
+     */
+    public function uploadImage()
+    {
+        $this->upload()->htmlType('uploadImage');
+        return $this;
+    }
+
+    /**
+     * 当前 field 是一个 relation， morphMany 多个 upload 对象
+     * 上传多张图片
+     */
+    public function uploadImages()
+    {
+        $this->upload()->htmlType('uploadImages');
+        return $this;
+    }
+
+    /**
      * @param $column
      * @param null $operator
      * @param null $value

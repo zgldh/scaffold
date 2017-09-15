@@ -8,7 +8,7 @@ use zgldh\Scaffold\Installer\HtmlFields\Traits\TextSearch;
  * Date: 09/14/2017
  * Time: 18:00
  */
-class Uploads extends BaseField
+class UploadImage extends BaseField
 {
     use TextSearch;
 
@@ -17,7 +17,7 @@ class Uploads extends BaseField
         $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
               <el-input v-model="form.{$this->getProperty()}"></el-input>
-              TODO Uploads
+              TODO UploadImage
             </el-form-item>
 HTML;
 

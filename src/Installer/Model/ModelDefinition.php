@@ -548,4 +548,12 @@ EOT;
         }
         return $names;
     }
+
+    /**
+     * TODO getVueEditorComponents
+     */
+    public function getVueEditorComponents()
+    {
+        return [];
+    }
 }
