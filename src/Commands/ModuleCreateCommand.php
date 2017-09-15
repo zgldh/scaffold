@@ -110,10 +110,14 @@ class ModuleCreateCommand extends Command
         foreach ($models as $model) {
             $this->model = $model;
             $this->line('Model: ' . $this->model->getTable());
-            $this->generateController();
-            $this->generateRequest();
-            $this->generateRepository();
             $this->generateModel();
+        }
+        foreach ($models as $model) {
+            $this->model = $model;
+            $this->line('Model: ' . $this->model->getTable());
+            $this->generateRepository();
+            $this->generateRequest();
+            $this->generateController();
             $this->generateMigration();
             $this->generateResource();
         }
