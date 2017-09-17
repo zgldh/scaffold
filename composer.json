@@ -16,7 +16,8 @@
     "barryvdh/laravel-ide-helper": "~2.2",
     "prettus/l5-repository": "~2.6",
     "yajra/laravel-datatables-oracle": "~8.0",
-    "itsgoingd/clockwork": "~1.12"
+    "itsgoingd/clockwork": "~1.12",
+    "zgldh/module-uesr": "~0.5.3"
   },
   "require-dev": {
     "filp/whoops": "~2.1"

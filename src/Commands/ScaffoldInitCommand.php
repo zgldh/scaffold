@@ -73,6 +73,11 @@ class ScaffoldInitCommand extends Command
         //    9. 自动执行 `php artisan vendor:publish`, `php artisan migrate`
         $this->publishVendors();
 
+        
+   system('php artisan zgldh:module:install zgldh/module-activity-log');
+   system('php artisan zgldh:module:install zgldh/module-upload');
+   system('php artisan zgldh:module:install zgldh/module-user');
+
         $this->info('Scaffold is ready. Please run following commands:');
         $this->line('npm install');
         $this->line('gulp watch');
