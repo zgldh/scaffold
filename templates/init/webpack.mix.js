@@ -14,7 +14,7 @@ var path = require('path');
 
 var webpackConfig = {
   output: {
-    publicPath: "/",                              // Fix for laravel-mix 1.4.2
+    publicPath: '/',                              // Fix for laravel-mix 1.4.2
     chunkFilename: 'assets/[name].[chunkhash].js' //
   },
   resolve: {
