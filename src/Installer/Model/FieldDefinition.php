@@ -832,6 +832,7 @@ class FieldDefinition
         $this->htmlType('upload');
         $this->morphOne(Upload::class, 'uploadable');
         $this->where('uploads.type', $this->getName());
+        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -843,6 +844,8 @@ class FieldDefinition
         $this->htmlType('uploads');
         $this->morphMany(Upload::class, 'uploadable');
         $this->where('uploads.type', $this->getName());
+// TODO UploadsComponent
+//        $this->addVueEditorComponent('UploadsComponent','Modules/Upload/resources/assets/Components/Uploads.vue');
         return $this;
     }
 
@@ -852,7 +855,11 @@ class FieldDefinition
      */
     public function uploadImage()
     {
-        $this->upload()->htmlType('uploadImage');
+        $this->htmlType('uploadImage');
+        $this->morphOne(Upload::class, 'uploadable');
+        $this->where('uploads.type', $this->getName());
+// TODO UploadImageComponent
+//        $this->addVueEditorComponent('UploadImageComponent','Modules/Upload/resources/assets/Components/UploadImage.vue');
         return $this;
     }
 
@@ -862,7 +869,11 @@ class FieldDefinition
      */
     public function uploadImages()
     {
-        $this->upload()->htmlType('uploadImages');
+        $this->htmlType('uploadImages');
+        $this->morphMany(Upload::class, 'uploadable');
+        $this->where('uploads.type', $this->getName());
+// TODO UploadImagesComponent
+//        $this->addVueEditorComponent('UploadImagesComponent','Modules/Upload/resources/assets/Components/UploadImages.vue');
         return $this;
     }
 
@@ -889,5 +900,15 @@ class FieldDefinition
             return json_decode($this->relationshipWhere, true);
         }
         return null;
+    }
+
+    /**
+     * 增加一个 Vue Editor 页面要载入的 component
+     * @param $name
+     * @param $path
+     */
+    public function addVueEditorComponent($name, $path)
+    {
+        $this->getModel()->addVueEditorComponents($name, $path);
     }
 }

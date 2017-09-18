@@ -237,6 +237,26 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                         }
                         break;
                 }
+
+                if ($isRelatedUpload) {
+                    switch ($methodClass) {
+                        case 'Illuminate\Database\Eloquent\Relations\MorphOne':
+                            $new_value = array_get($attributes, $key, null);
+                            // TODO
+                            // 1. Check upload obj is uploaded by current user
+                            // 2. Remove old one.
+                            // 3. Update this upload obj to associate to this $model, setup a proper type
+                            break;
+                        case 'Illuminate\Database\Eloquent\Relations\MorphMany':
+                            $new_values = array_get($attributes, $key, []);
+                            // TODO
+                            // 1. Unassociate old uploads to this $model
+                            // 2. Loop
+                            // 2. Remove old one.
+                            // 3. Update this upload obj to associate to this $model, setup a proper type
+                            break;
+                    }
+                }
             }
         }
         // 处理上传

@@ -86,7 +86,7 @@ $relationNames = $MODEL->getRelationNames();
     },
     components: {
 @foreach($MODEL->getVueEditorComponents() as $component=>$path)
-      '{!! $component !!}': () => System.import('{!! $path !!}')
+      '{!! $component !!}': () => System.import('{!! $path !!}'),
 @endforeach
     },
     computed: {

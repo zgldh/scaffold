@@ -26,6 +26,8 @@ class ModelDefinition
     private $camelCase = '';
     private $snake_case = '';
 
+    private $vueEditorComponents = [];
+
     /**
      * ModelDefinition constructor.
      * @param string $name 'some_model_name'
@@ -550,10 +552,28 @@ EOT;
     }
 
     /**
-     * TODO getVueEditorComponents
+     * getVueEditorComponents
      */
     public function getVueEditorComponents()
     {
-        return [];
+        return $this->vueEditorComponents;
+    }
+
+    /**
+     * @param array $vueEditorComponents
+     */
+    public function setVueEditorComponents(array $vueEditorComponents)
+    {
+        $this->vueEditorComponents = $vueEditorComponents;
+    }
+
+    /**
+     * Add a vue editor component
+     * @param $name
+     * @param $path
+     */
+    public function addVueEditorComponents($name, $path)
+    {
+        $this->vueEditorComponents[$name] = $path;
     }
 }
