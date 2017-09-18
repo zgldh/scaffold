@@ -145,7 +145,11 @@ class FieldDefinition
         }
         $defaultValue = $this->getDefaultValue();
         if ($defaultValue !== INF) {
-            $schema[] = "default({$defaultValue})";
+            if (is_string($defaultValue)) {
+                $schema[] = "default('{$defaultValue})'";
+            } else {
+                $schema[] = "default({$defaultValue})";
+            }
         }
         $indexType = $this->getIndexType();
         if ($indexType) {
