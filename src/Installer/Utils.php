@@ -20,7 +20,7 @@ class Utils
         if (ends_with($name, '.stub')) {
             $result = self::fillTemplate($data, file_get_contents(self::template($name)));
         } else {
-            $result = view('zgldh.scaffold::' . $name, $data)->render();
+            $result = view($name, $data)->render();
         }
         return $result;
     }

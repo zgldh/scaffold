@@ -1,14 +1,9 @@
 <?php namespace zgldh\Scaffold\Commands;
 
-use Artisan;
-use Hamcrest\Util;
 use Illuminate\Console\Command;
-use InfyOm\Generator\Utils\FileUtil;
-use zgldh\Scaffold\Installer\ConfigParser;
 use zgldh\Scaffold\Installer\Model\ModelDefinition;
 use zgldh\Scaffold\Installer\ModuleStarter;
 use zgldh\Scaffold\Installer\Utils;
-use zgldh\User\UserCreateCommand;
 
 class ModuleCreateCommand extends Command
 {
@@ -148,7 +143,9 @@ class ModuleCreateCommand extends Command
             'MODEL_NAME'            => $pascalCase,
             'MODEL'                 => $this->model
         ];
-        $content = Utils::renderTemplate('raw.Controller', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.controller', 'zgldh.scaffold::raw.Controller'),
+            $variables);
 
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Controllers';
         Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "{$pascalCase}Controller.php", $content);
@@ -168,8 +165,12 @@ class ModuleCreateCommand extends Command
             'MODEL_NAME' => $pascalCase,
             'MODEL'      => $this->model
         ];
-        $createContent = Utils::renderTemplate('raw.Requests.Create', $variables);
-        $updateContent = Utils::renderTemplate('raw.Requests.Update', $variables);
+        $createContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.request.create', 'zgldh.scaffold::raw.Requests.Create'),
+            $variables);
+        $updateContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.request.update', 'zgldh.scaffold::raw.Requests.Update'),
+            $variables);
 
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Requests';
         Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "Create{$pascalCase}Request.php", $createContent);
@@ -190,7 +191,9 @@ class ModuleCreateCommand extends Command
             'MODEL_NAME' => $pascalCase,
             'MODEL'      => $this->model
         ];
-        $content = Utils::renderTemplate('raw.Repository', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.repository', 'zgldh.scaffold::raw.Repository'),
+            $variables);
 
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Repositories';
         Utils::writeFile($destinationPath . DIRECTORY_SEPARATOR . "{$pascalCase}Repository.php", $content);
@@ -210,7 +213,9 @@ class ModuleCreateCommand extends Command
             'MODEL_NAME' => $pascalCase,
             'MODEL'      => $this->model
         ];
-        $content = Utils::renderTemplate('raw.Model', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.model', 'zgldh.scaffold::raw.Model'),
+            $variables);
 
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . "{$pascalCase}.php";
         Utils::writeFile($destinationPath, $content);
@@ -270,13 +275,21 @@ class ModuleCreateCommand extends Command
         $viewFolder = $resourceFolder . "views" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
         $assetsFolder = $resourceFolder . "assets" . DIRECTORY_SEPARATOR . $pascalCase . DIRECTORY_SEPARATOR;
 
-        $viewContent = Utils::renderTemplate('raw.resources.views.index', $variables);
+        $viewContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.resource.views.index', 'zgldh.scaffold::raw.resources.views.index'),
+            $variables);
         $viewPath = $viewFolder . "index.blade.php";
         Utils::writeFile($viewPath, $viewContent);
 
-        $listPageContent = Utils::renderTemplate('raw.resources.assets.ListPage', $variables);
-        $editorPageContent = Utils::renderTemplate('raw.resources.assets.EditorPage', $variables);
-        $storeContent = Utils::renderTemplate('raw.resources.assets.store', $variables);
+        $listPageContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.resource.vue.list', 'zgldh.scaffold::raw.resources.assets.ListPage'),
+            $variables);
+        $editorPageContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.resource.vue.editor', 'zgldh.scaffold::raw.resources.assets.EditorPage'),
+            $variables);
+        $storeContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.resource.vue.store', 'zgldh.scaffold::raw.resources.assets.store'),
+            $variables);
         $listPagePath = $assetsFolder . "ListPage.vue";
         $editorPagePath = $assetsFolder . "EditorPage.vue";
         $storePath = $assetsFolder . "store.js";
@@ -300,7 +313,9 @@ class ModuleCreateCommand extends Command
         ];
         $resourceFolder = $this->folder . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
         $routesPath = $resourceFolder . "assets" . DIRECTORY_SEPARATOR . "routes.js";
-        $routesContent = Utils::renderTemplate('raw.resources.assets.routes', $variables);
+        $routesContent = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.resource.routes', 'zgldh.scaffold::raw.resources.assets.routes'),
+            $variables);
         Utils::writeFile($routesPath, $routesContent);
 
         $routeLine = "require('{$this->moduleDirectoryName}/{$this->starter->getModuleName()}/resources/assets/routes.js').default";
@@ -317,8 +332,8 @@ class ModuleCreateCommand extends Command
         $variables = [
             'STARTER' => $this->starter,
         ];
-        $enContent = Utils::renderTemplate('raw.lang.en.t', $variables);
-        $zhCnContent = Utils::renderTemplate('raw.lang.zh-CN.t', $variables);
+        $enContent = Utils::renderTemplate('zgldh.scaffold::raw.lang.en.t', $variables);
+        $zhCnContent = Utils::renderTemplate('zgldh.scaffold::raw.lang.zh-CN.t', $variables);
 
         $moduleSnakeCase = snake_case($this->starter->getModuleName());
         $folder = resource_path('lang/vendor/' . $moduleSnakeCase);
@@ -340,7 +355,9 @@ class ModuleCreateCommand extends Command
         $variables = [
             'STARTER' => $this->starter,
         ];
-        $content = Utils::renderTemplate('raw.routes', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.routes', 'zgldh.scaffold::raw.routes'),
+            $variables);
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . "routes.php";
         Utils::writeFile($destinationPath, $content);
 
@@ -362,7 +379,9 @@ class ModuleCreateCommand extends Command
         $variables = [
             'STARTER' => $this->starter,
         ];
-        $content = Utils::renderTemplate('raw.menuItem', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.menu', 'zgldh.scaffold::raw.menuItem'),
+            $variables);
         Utils::addAdminMenuItem($content);
         return;
     }
@@ -381,7 +400,9 @@ class ModuleCreateCommand extends Command
             'STARTER'     => $this->starter,
             'MODULE_NAME' => $moduleName,
         ];
-        $content = Utils::renderTemplate('raw.ServiceProvider', $variables);
+        $content = Utils::renderTemplate(
+            config('zgldh-scaffold.templates.service_provider', 'zgldh.scaffold::raw.ServiceProvider'),
+            $variables);
         $destinationPath = $this->folder . DIRECTORY_SEPARATOR . "{$moduleName}ServiceProvider.php";
         Utils::writeFile($destinationPath, $content);
 
