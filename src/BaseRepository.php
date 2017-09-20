@@ -162,8 +162,8 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
 
     public function updateRelations($model, $attributes)
     {
-        $oldUploadIds = [];
-        $newUploadIds = [];
+        $uploadModelClassName = config('upload.upload_model');
+        $dealWithUpload = false;
         foreach ($attributes as $key => $val) {
             if (isset($model) &&
                 method_exists($model, $key) &&
@@ -172,65 +172,59 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                 $relation = $model->$key($key);
 
                 // 处理上传
-                $uploadModelClassName = config('upload.upload_model');
                 $isRelatedUpload = false;
                 if ($uploadModelClassName && is_a($relation->getRelated(), $uploadModelClassName)) {
                     $isRelatedUpload = true;
+                    $dealWithUpload = true;
                 }
 
                 $methodClass = get_class($relation);
                 switch ($methodClass) {
                     case 'Illuminate\Database\Eloquent\Relations\BelongsToMany':
-                        $new_values = array_get($attributes, $key, []);
-                        $new_values = $new_values ?: [];
-                        if (array_search('', $new_values) !== false) {
-                            unset($new_values[array_search('', $new_values)]);
+                        $newValues = array_get($attributes, $key, []);
+                        $newValues = $newValues ?: [];
+                        if (array_search('', $newValues) !== false) {
+                            unset($newValues[array_search('', $newValues)]);
                         }
-                        $model->$key()->sync(array_values($new_values));
+                        $model->$key()->sync(array_values($newValues));
                         break;
                     case 'Illuminate\Database\Eloquent\Relations\BelongsTo':
-                        $model_key = $model->$key()->getForeignKey();
-//                        $new_value = array_get($attributes, $model_key, null);
-                        $new_value = array_get($attributes, $key, null);
-                        $new_value = $new_value == '' ? null : $new_value;
-                        $new_value = is_array($new_value) ? array_get($new_value, 'id', null) : $new_value;
-                        // 处理上传
-                        if ($isRelatedUpload && $model->$model_key != $new_value) {
-                            $oldUploadIds[] = $model->$model_key;
-                            $newUploadIds[] = $new_value;
-                        }
-
-                        $model->$model_key = $new_value;
+                        $modelKey = $model->$key()->getForeignKey();
+//                        $newValue = array_get($attributes, $modelKey, null);
+                        $newValue = array_get($attributes, $key, null);
+                        $newValue = $newValue == '' ? null : $newValue;
+                        $newValue = is_array($newValue) ? array_get($newValue, 'id', null) : $newValue;
+                        $model->$modelKey = $newValue;
                         break;
                     case 'Illuminate\Database\Eloquent\Relations\HasOne':
                         break;
                     case 'Illuminate\Database\Eloquent\Relations\HasOneOrMany':
                         break;
                     case 'Illuminate\Database\Eloquent\Relations\HasMany':
-                        $new_values = array_get($attributes, $key, []);
-                        $new_values = $new_values ?: [];
-                        if (array_search('', $new_values) !== false) {
-                            unset($new_values[array_search('', $new_values)]);
+                        $newValues = array_get($attributes, $key, []);
+                        $newValues = $newValues ?: [];
+                        if (array_search('', $newValues) !== false) {
+                            unset($newValues[array_search('', $newValues)]);
                         }
-                        $model_key = $model->$key($key)->getForeignKeyName();
+                        $modelKey = $model->$key($key)->getForeignKeyName();
 
-                        foreach ($new_values as $index => $new_value) {
-                            $new_values[$index] = $new_value['id'];
+                        foreach ($newValues as $index => $newValue) {
+                            $newValues[$index] = $newValue['id'];
                         }
 
                         foreach ($model->$key as $rel) {
-                            if (!in_array($rel->id, $new_values)) {
-                                $rel->$model_key = null;
+                            if (!in_array($rel->id, $newValues)) {
+                                $rel->$modelKey = null;
                                 $rel->save();
                             }
                         }
 
-                        if (count($new_values) > 0) {
+                        if (count($newValues) > 0) {
                             $related = get_class($model->$key()->getRelated());
-                            foreach ($new_values as $val) {
+                            foreach ($newValues as $val) {
                                 if (is_string($val) || is_numeric($val)) {
                                     $rel = $related::find($val);
-                                    $rel->$model_key = $model->id;
+                                    $rel->$modelKey = $model->id;
                                     $rel->save();
                                 }
                             }
@@ -239,16 +233,27 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                 }
 
                 if ($isRelatedUpload) {
+                    $userId = \Auth::user()->id;
                     switch ($methodClass) {
                         case 'Illuminate\Database\Eloquent\Relations\MorphOne':
-                            $new_value = array_get($attributes, $key, null);
-                            // TODO
+                            $newValue = array_get($attributes, $key, null);
+                            $uploadId = $newValue['id'];
                             // 1. Check upload obj is uploaded by current user
-                            // 2. Remove old one.
-                            // 3. Update this upload obj to associate to this $model, setup a proper type
+                            $uploadObj = $uploadModelClassName::where('user_id', $userId)->where('id',
+                                $uploadId)->first();
+                            if ($uploadObj) {
+                                $oldUploadObj = $model->$key()->first();
+                                if ($oldUploadObj) {
+                                    // 2. Remove old one.
+                                    $oldUploadObj->delete();
+                                }
+                                // 3. Update this upload obj to associate to this $model, setup a proper type
+                                $uploadObj->type = $key;
+                                $model->$key()->save($uploadObj);
+                            }
                             break;
                         case 'Illuminate\Database\Eloquent\Relations\MorphMany':
-                            $new_values = array_get($attributes, $key, []);
+                            $newValues = array_get($attributes, $key, []);
                             // TODO
                             // 1. Unassociate old uploads to this $model
                             // 2. Loop
@@ -260,43 +265,14 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
             }
         }
         // 处理上传
-        if ($oldUploadIds || $newUploadIds) {
-            $this->cleanUpUpload($model, $newUploadIds, $oldUploadIds);
-        }
-
-        return $model;
-    }
-
-    private function cleanUpUpload($model, $newUploadIds = [], $oldUploadIds = [])
-    {
-        $uploadClassName = config('upload.upload_model');
-        $userId = null;
-        // 1. un associate old upload
-        foreach ($oldUploadIds as $id) {
-            $upload = forward_static_call($uploadClassName . '::find', $id);
-            if ($upload) {
-                $upload->uploadable()->dissociate();
-                $upload->save();
-            }
-        }
-
-        // 2. apply new upload
-        foreach ($newUploadIds as $id) {
-            $upload = forward_static_call($uploadClassName . '::find', $id);
-            if ($upload) {
-                $upload->uploadable()->associate($model);
-                $upload->save();
-                $userId = $upload->user_id;
-            }
-        }
-
-        // 3. remove useless uploads
-        if ($userId) {
-            $query = call_user_func($uploadClassName . '::query');
+        if ($dealWithUpload && $userId) {
+            $query = call_user_func($uploadModelClassName . '::query');
             $uploads = $query->where('user_id', $userId)->whereNull('uploadable_id')->get();
             foreach ($uploads as $upload) {
                 $upload->delete();
             }
         }
+
+        return $model;
     }
 }
