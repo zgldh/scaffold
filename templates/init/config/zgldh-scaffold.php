@@ -25,7 +25,7 @@ return [
             'views'  => [
                 'index' => 'zgldh.scaffold::raw.resources.views.index',
             ],
-            'routes' => 'scaffold_templates.resources.routes'
+            'routes' => 'zgldh.scaffold::raw.resources.assets.routes'
         ],
         'routes'           => 'zgldh.scaffold::raw.routes',
         'menu'             => 'zgldh.scaffold::raw.menuItem',
