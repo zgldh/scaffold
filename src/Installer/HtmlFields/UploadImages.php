@@ -16,7 +16,7 @@ class UploadImages extends BaseField
     {
         $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <el-input v-model="form.{$this->getProperty()}"></el-input>
+              <!--<el-input v-model="form.{$this->getProperty()}"></el-input>-->
               TODO UploadImages
             </el-form-item>
 HTML;

@@ -237,15 +237,15 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                     switch ($methodClass) {
                         case 'Illuminate\Database\Eloquent\Relations\MorphOne':
                             $newValue = array_get($attributes, $key, null);
-                            $uploadId = $newValue['id'];
+                            $uploadId = $this->getUploadId($newValue);
                             // 1. Check upload obj is uploaded by current user
                             $uploadObj = $uploadModelClassName::where('user_id', $userId)->where('id',
                                 $uploadId)->first();
                             if ($uploadObj) {
-                                $oldUploadObj = $model->$key()->first();
-                                if ($oldUploadObj) {
+                                $oldUploadObject = $model->$key()->first();
+                                if ($oldUploadObject) {
                                     // 2. Remove old one.
-                                    $oldUploadObj->delete();
+                                    $oldUploadObject->delete();
                                 }
                                 // 3. Update this upload obj to associate to this $model, setup a proper type
                                 $uploadObj->type = $key;
@@ -254,11 +254,23 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                             break;
                         case 'Illuminate\Database\Eloquent\Relations\MorphMany':
                             $newValues = array_get($attributes, $key, []);
-                            // TODO
                             // 1. Unassociate old uploads to this $model
+                            $oldUploadObjects = $model->$key()->get();
+                            foreach ($oldUploadObjects as $oldUploadObject) {
+                                $oldUploadObject->uploadable()->dessociate();
+                                $oldUploadObject->save();
+                            }
                             // 2. Loop
-                            // 2. Remove old one.
-                            // 3. Update this upload obj to associate to this $model, setup a proper type
+                            foreach ($newValues as $newValue) {
+                                $uploadId = $this->getUploadId($newValue);
+                                $uploadObj = $uploadModelClassName::where('user_id', $userId)->where('id',
+                                    $uploadId)->first();
+                                if ($uploadObj) {
+                                    // 3. Update this upload obj to associate to this $model, setup a proper type
+                                    $uploadObj->type = $key;
+                                    $model->$key()->save($uploadObj);
+                                }
+                            }
                             break;
                     }
                 }
@@ -274,5 +286,19 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         }
 
         return $model;
+    }
+
+    private function getUploadId($item)
+    {
+        if (is_numeric($item)) {
+            return $item;
+        }
+        if (is_array($item)) {
+            return array_get($item, 'id', 0);
+        }
+        if (is_object($item)) {
+            return object_get($item, 'id', 0);
+        }
+        return 0;
     }
 }

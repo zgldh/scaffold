@@ -41,7 +41,24 @@ $languageNamespace = $STARTER->getLanguageNamespace();
         <!-- form start -->
         <div class="box-body datatable-loading-section">
           <div class="search">
-            {!! $MODEL->generateListSearchForm() !!}
+            <el-form :inline="true" :model="searchForm" ref="searchForm">
+@php
+              $searches = $MODEL->getSearches();
+              foreach ($searches as $fieldName => $searchType) {
+                /**
+                * @var $searchType BaseField
+                */
+                $fieldHtml = $searchType->searchHtml();
+                echo $fieldHtml . "\n";
+              }
+@endphp
+              <el-form-item>
+                <el-button-group>
+                  <el-button type="primary" @click="onSubmitSearch">@{{$t('scaffold.terms.search_submit')}}</el-button>
+                  <el-button type="button" @click="onResetSearch">@{{$t('scaffold.terms.search_reset')}}</el-button>
+                </el-button-group>
+              </el-form-item>
+            </el-form>
           </div>
 
           <div class="datatable-container">

@@ -829,8 +829,8 @@ class FieldDefinition
      */
     public function upload()
     {
-        $this->htmlType('upload');
         $this->morphOne(Upload::class, 'uploadable');
+        $this->htmlType('upload');
         $this->where('uploads.type', $this->getName());
         $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
         return $this;
@@ -841,11 +841,10 @@ class FieldDefinition
      */
     public function uploads()
     {
-        $this->htmlType('uploads');
         $this->morphMany(Upload::class, 'uploadable');
+        $this->htmlType('uploads');
         $this->where('uploads.type', $this->getName());
-// TODO UploadsComponent
-//        $this->addVueEditorComponent('UploadsComponent','Modules/Upload/resources/assets/Components/Uploads.vue');
+        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -855,8 +854,8 @@ class FieldDefinition
      */
     public function uploadImage()
     {
-        $this->htmlType('uploadImage');
         $this->morphOne(Upload::class, 'uploadable');
+        $this->htmlType('uploadImage');
         $this->where('uploads.type', $this->getName());
 // TODO UploadImageComponent
 //        $this->addVueEditorComponent('UploadImageComponent','Modules/Upload/resources/assets/Components/UploadImage.vue');
@@ -869,8 +868,8 @@ class FieldDefinition
      */
     public function uploadImages()
     {
-        $this->htmlType('uploadImages');
         $this->morphMany(Upload::class, 'uploadable');
+        $this->htmlType('uploadImages');
         $this->where('uploads.type', $this->getName());
 // TODO UploadImagesComponent
 //        $this->addVueEditorComponent('UploadImagesComponent','Modules/Upload/resources/assets/Components/UploadImages.vue');

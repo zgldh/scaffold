@@ -49,7 +49,26 @@ $relationNames = $MODEL->getRelationNames();
                 :title="errorMessage" type="error" show-icon></el-alert>
 
           <!-- form start -->
-          {!! $MODEL->generateEditorForm() !!}
+          <el-form ref="form" :model="form" label-width="200px" v-loading="loading">
+            <el-form-item :label="$t('scaffold.fields.id')" v-if="form.id">
+              <el-input v-model="form.id" disabled></el-input>
+            </el-form-item>
+@php
+            $fields = $MODEL->getFields();
+            foreach ($fields as $field) {
+                /**
+                * @var $field     FieldDefinition
+                * @var $baseField BaseField
+                */
+                $baseField = $field->getHtmlType();
+                $fieldHtml = $baseField->html();
+                echo $fieldHtml . "\n";
+            }
+@endphp
+            <el-form-item :label="$t('scaffold.fields.created_at')" v-if="form.id">
+              <el-input v-model="form.created_at" disabled></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <!-- /.box-body -->
 
