@@ -16,8 +16,7 @@ class UploadImage extends BaseField
     {
         $html = <<<HTML
             <el-form-item :label="{$this->getFieldLang(true)}" prop="{$this->getProperty()}" :error="errors.{$this->getProperty()}">
-              <!--<el-input v-model="form.{$this->getProperty()}"></el-input>-->
-              TODO UploadImage
+              <upload-component v-model="form.{$this->getProperty()}" list-type="picture" accept="image/*"></upload-component>
             </el-form-item>
 HTML;
 

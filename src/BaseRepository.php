@@ -242,7 +242,7 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                             $uploadObj = $uploadModelClassName::where('user_id', $userId)->where('id',
                                 $uploadId)->first();
                             if ($uploadObj) {
-                                $oldUploadObject = $model->$key()->first();
+                                $oldUploadObject = $model->$key()->where('id', '<>', $uploadId)->first();
                                 if ($oldUploadObject) {
                                     // 2. Remove old one.
                                     $oldUploadObject->delete();

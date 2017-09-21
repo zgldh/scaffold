@@ -857,8 +857,7 @@ class FieldDefinition
         $this->morphOne(Upload::class, 'uploadable');
         $this->htmlType('uploadImage');
         $this->where('uploads.type', $this->getName());
-// TODO UploadImageComponent
-//        $this->addVueEditorComponent('UploadImageComponent','Modules/Upload/resources/assets/Components/UploadImage.vue');
+        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -871,8 +870,7 @@ class FieldDefinition
         $this->morphMany(Upload::class, 'uploadable');
         $this->htmlType('uploadImages');
         $this->where('uploads.type', $this->getName());
-// TODO UploadImagesComponent
-//        $this->addVueEditorComponent('UploadImagesComponent','Modules/Upload/resources/assets/Components/UploadImages.vue');
+        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
