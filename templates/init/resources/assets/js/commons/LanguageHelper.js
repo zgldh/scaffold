@@ -19,14 +19,21 @@ export function loadModuleLanguage (languageModule) {
   }
 };
 
+var loadingPromises = {};
+
 export function loadLanguages (languageModule) {
   var message = i18n.getLocaleMessage(i18n.locale);
   if (!message || !message.hasOwnProperty(languageModule)) {
-    return axios.get('/lang/' + languageModule).then(result => {
-      var langs = {};
-      langs[languageModule] = result.data;
-      i18n.mergeLocaleMessage(i18n.locale, langs);
-    });
+    // Gonna to load language
+    if (!loadingPromises.hasOwnProperty(languageModule)) {
+      loadingPromises[languageModule] = axios.get('/lang/' + languageModule).then(result => {
+        var langs = {};
+        langs[languageModule] = result.data;
+        i18n.mergeLocaleMessage(i18n.locale, langs);
+        loadingPromises[languageModule] = null;
+      });
+    }
+    return loadingPromises[languageModule];
   }
   return Promise.resolve();
 };
