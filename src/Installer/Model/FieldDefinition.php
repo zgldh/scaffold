@@ -832,7 +832,8 @@ class FieldDefinition
         $this->morphOne(Upload::class, 'uploadable');
         $this->htmlType('upload');
         $this->where('uploads.type', $this->getName());
-        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
+        $this->addVueEditorComponent('UploadComponent',
+            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -844,7 +845,8 @@ class FieldDefinition
         $this->morphMany(Upload::class, 'uploadable');
         $this->htmlType('uploads');
         $this->where('uploads.type', $this->getName());
-        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
+        $this->addVueEditorComponent('UploadComponent',
+            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -857,7 +859,8 @@ class FieldDefinition
         $this->morphOne(Upload::class, 'uploadable');
         $this->htmlType('uploadImage');
         $this->where('uploads.type', $this->getName());
-        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
+        $this->addVueEditorComponent('UploadComponent',
+            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -870,7 +873,8 @@ class FieldDefinition
         $this->morphMany(Upload::class, 'uploadable');
         $this->htmlType('uploadImages');
         $this->where('uploads.type', $this->getName());
-        $this->addVueEditorComponent('UploadComponent', 'Modules/Upload/resources/assets/Components/Upload.vue');
+        $this->addVueEditorComponent('UploadComponent',
+            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
