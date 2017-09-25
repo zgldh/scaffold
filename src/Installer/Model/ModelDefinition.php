@@ -30,7 +30,7 @@ class ModelDefinition
 
     /**
      * ModelDefinition constructor.
-     * @param string $name 'some_model_name'
+     * @param string $name 'some_model_name' singular
      * @param array $fields
      */
     public function __construct($name, $fields = [])
