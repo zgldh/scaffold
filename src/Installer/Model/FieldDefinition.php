@@ -554,7 +554,7 @@ class FieldDefinition
      */
     public function isNotTableField()
     {
-        return $this->isRelationship(['hasOne', 'hasMany', 'hasManyThrough', 'morphOne', 'morphMany']);
+        return $this->isRelationship(['hasOne', 'hasMany', 'hasManyThrough', 'morphOne', 'morphMany', 'belongsToMany']);
     }
 
     /**
