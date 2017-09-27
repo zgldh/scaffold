@@ -137,7 +137,7 @@ class FieldDefinition
     public function getSchema()
     {
         if ($this->isRelationship(['morphTo'])) {
-            $schema = "{$this->getName()}able_id:integer:unsigned:nullable,{$this->getName()}able_type:string:nullable";
+            $schema = "{$this->getName()}_id:integer:unsigned:nullable,{$this->getName()}_type:string:nullable";
         } else {
             $schema = [
                 $this->getName(),
