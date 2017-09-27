@@ -186,6 +186,13 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                         if (array_search('', $newValues) !== false) {
                             unset($newValues[array_search('', $newValues)]);
                         }
+
+                        if (count($newValues) && (is_object($newValues[0]) || is_array($newValues[0]))) {
+                            $newValues = array_map(function ($value) {
+                                return is_array($value) ? array_get($value, 'id') : object_get($value, 'id');
+                            }, $newValues);
+                        }
+
                         $model->$key()->sync(array_values($newValues));
                         break;
                     case 'Illuminate\Database\Eloquent\Relations\BelongsTo':
