@@ -324,7 +324,7 @@ class FieldDefinition
      * @param null $indexType 'index','unique'
      * @return FieldDefinition
      */
-    public function index($indexType)
+    public function index($indexType = 'index')
     {
         $this->indexType = $indexType;
         return $this;
