@@ -43,7 +43,10 @@ const store = new Vuex.Store({
 @if($relationship = $field->getRelationship())
 @php
     $htmlType = $field->getHtmlType();
-    $targetModel = $relationship[0];
+    $targetModel = @$relationship[0];
+    if(!$targetModel){
+        continue;
+    }
     $relationRoute = \zgldh\Scaffold\Installer\Utils::generateTargetModelRoute($targetModel);
     $searchColumns = \zgldh\Scaffold\Installer\Utils::getTargetModelSearchColumns($targetModel);
 @endphp

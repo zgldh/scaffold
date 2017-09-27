@@ -136,29 +136,32 @@ class FieldDefinition
      */
     public function getSchema()
     {
-        $schema = [
-            $this->getName(),
-            $this->getDbType()
-        ];
-        if ($this->isNullable()) {
-            $schema[] = 'nullable';
-        }
-        $defaultValue = $this->getDefaultValue();
-        if ($defaultValue !== INF) {
-            if (is_string($defaultValue)) {
-                $schema[] = "default('{$defaultValue})'";
-            } else {
-                $schema[] = "default({$defaultValue})";
+        if ($this->isRelationship(['morphTo'])) {
+            $schema = "{$this->getName()}able_id:integer:unsigned:nullable,{$this->getName()}able_type:string:nullable";
+        } else {
+            $schema = [
+                $this->getName(),
+                $this->getDbType()
+            ];
+            if ($this->isNullable()) {
+                $schema[] = 'nullable';
             }
-        }
-        $indexType = $this->getIndexType();
-        if ($indexType) {
-            $schema[] = $indexType;
-        }
+            $defaultValue = $this->getDefaultValue();
+            if ($defaultValue !== INF) {
+                if (is_string($defaultValue)) {
+                    $schema[] = "default('{$defaultValue})'";
+                } else {
+                    $schema[] = "default({$defaultValue})";
+                }
+            }
+            $indexType = $this->getIndexType();
+            if ($indexType) {
+                $schema[] = $indexType;
+            }
 
-        $schema[] = "comment('{$this->getDbComment()}')";
-
-        $schema = join(':', $schema);
+            $schema[] = "comment('{$this->getDbComment()}')";
+            $schema = join(':', $schema);
+        }
         return $schema;
     }
 
@@ -523,7 +526,7 @@ class FieldDefinition
             $relationship = json_decode($this->relationship, true);
             if ($this->isRelatingMultiple()) {
                 $relatedName = $this->getName();
-            } elseif ($this->isRelationship(['morphOne', 'morphMany'])) {
+            } elseif ($this->isRelationship(['morphTo', 'morphOne', 'morphMany'])) {
                 $relatedName = $this->getName();
             } else {
                 $relatedName = snake_case(basename($relationship[0]));
