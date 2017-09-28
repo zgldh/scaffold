@@ -149,7 +149,7 @@ class FieldDefinition
             $defaultValue = $this->getDefaultValue();
             if ($defaultValue !== INF) {
                 if (is_string($defaultValue)) {
-                    $schema[] = "default('{$defaultValue})'";
+                    $schema[] = "default('{$defaultValue}')";
                 } else {
                     $schema[] = "default({$defaultValue})";
                 }
