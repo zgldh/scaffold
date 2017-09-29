@@ -593,7 +593,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'hasMany';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -611,7 +611,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'hasManyThrough';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -629,7 +629,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphMany';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -657,7 +657,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'belongsToMany';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -683,7 +683,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphToMany';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -701,7 +701,7 @@ class FieldDefinition
         $this->htmlType('select');
         $args = func_get_args();
         $args['type'] = 'morphedByMany';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
 
@@ -717,7 +717,7 @@ class FieldDefinition
     {
         $args = func_get_args();
         $args['type'] = 'hasOne';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -734,7 +734,7 @@ class FieldDefinition
     {
         $args = func_get_args();
         $args['type'] = 'morphOne';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -750,7 +750,7 @@ class FieldDefinition
     {
         $args = func_get_args();
         $args['type'] = 'belongsTo';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
@@ -765,7 +765,7 @@ class FieldDefinition
     {
         $args = func_get_args();
         $args['type'] = 'morphTo';
-        $this->relationship = json_encode($args);
+        return $this->setRelationship(json_encode($args));
     }
 
     /**
