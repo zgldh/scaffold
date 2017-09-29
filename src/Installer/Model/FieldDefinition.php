@@ -520,7 +520,7 @@ class FieldDefinition
     /**
      * @return mixed
      */
-    public function getRelationshipName()
+    public function getRelationshipName($existedRelationNames = [])
     {
         if ($this->relationship) {
             $relationship = json_decode($this->relationship, true);
@@ -531,6 +531,14 @@ class FieldDefinition
             } else {
                 $relatedName = snake_case(basename($relationship[0]));
             }
+
+            $tempRelatedName = $relatedName;
+            $count = 1;
+            while (in_array($tempRelatedName, $existedRelationNames)) {
+                $tempRelatedName = $relatedName . '_' . $count;
+                $count++;
+            }
+            $relatedName = $tempRelatedName;
             return $relatedName;
         }
         return null;
@@ -604,9 +612,10 @@ class FieldDefinition
      * @param  string|null $firstKey
      * @param  string|null $secondKey
      * @param  string|null $localKey
+     * @param null $secondLocalKey
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null)
+    public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null, $secondLocalKey = null)
     {
         $this->htmlType('select');
         $args = func_get_args();
@@ -666,7 +675,9 @@ class FieldDefinition
      * @param  string $related
      * @param  string $name
      * @param  string $table
-     * @param  string $foreignKey
+     * @param null $foreignPivotKey
+     * @param null $relatedPivotKey
+     * @param null $parentKey
      * @param  string $relatedKey
      * @param  bool $inverse
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
@@ -675,7 +686,9 @@ class FieldDefinition
         $related,
         $name,
         $table = null,
-        $foreignKey = null,
+        $foreignPivotKey = null,
+        $relatedPivotKey = null,
+        $parentKey = null,
         $relatedKey = null,
         $inverse = false
     )
@@ -692,11 +705,20 @@ class FieldDefinition
      * @param  string $related
      * @param  string $name
      * @param  string $table
-     * @param  string $foreignKey
+     * @param null $foreignPivotKey
+     * @param null $relatedPivotKey
+     * @param null $parentKey
      * @param  string $relatedKey
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function morphedByMany($related, $name, $table = null, $foreignKey = null, $relatedKey = null)
+    public function morphedByMany(
+        $related,
+        $name,
+        $table = null,
+        $foreignPivotKey = null,
+        $relatedPivotKey = null,
+        $parentKey = null,
+        $relatedKey = null)
     {
         $this->htmlType('select');
         $args = func_get_args();

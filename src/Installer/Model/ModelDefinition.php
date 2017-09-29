@@ -435,7 +435,7 @@ class ModelDefinition
             /**
              * @var FieldDefinition $field
              */
-            $relationshipName = $field->getRelationshipName();
+            $relationshipName = $field->getRelationshipName($names);
             if ($relationshipName) {
                 $names[] = $relationshipName;
             }

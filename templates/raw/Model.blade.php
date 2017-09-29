@@ -71,6 +71,7 @@ class {{$MODEL_NAME}} extends Model
      */
     public static $rules = <?php echo Utils::exportArray($rules);?>;
 <?php
+    $existedRelationNames = [];
     foreach($MODEL->getFields() as $field):
         $relationship = $field->getRelationship();
         if(!$relationship):
@@ -79,7 +80,8 @@ class {{$MODEL_NAME}} extends Model
         $relationshipType = $relationship['type'];
         unset($relationship['type']);
         $relationshipClassName = ucfirst(camel_case($relationshipType));
-        $relatedName = $field->getRelationshipName();
+        $relatedName = $field->getRelationshipName($existedRelationNames);
+        $existedRelationNames[] = $relatedName;
         $relationParams = Utils::arrayToString($relationship,',',"'");
         ?>
     /**
