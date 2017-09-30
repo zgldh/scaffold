@@ -24,9 +24,14 @@ class HomeController extends Controller
         return view('app');
     }
 
-    public function getLanguage(Request $request, $module = 'scaffold')
+    public function getLanguage(Request $request, $modules = 'scaffold')
     {
-        $languages = __($module . '::t');
-        return $languages;
+        $modules = preg_split('/,/', $modules);
+        $result = [];
+        foreach ($modules as $module) {
+            $languages = __($module . '::t');
+            $result[$module] = $languages;
+        }
+        return $result;
     }
 }
