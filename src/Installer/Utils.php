@@ -17,6 +17,9 @@ class Utils
 
     public static function renderTemplate($name, $data)
     {
+        if (is_array($name)) {
+            $name = $name[0];
+        }
         if (ends_with($name, '.stub')) {
             $result = self::fillTemplate($data, file_get_contents(self::template($name)));
         } else {

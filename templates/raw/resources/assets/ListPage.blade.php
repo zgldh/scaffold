@@ -5,6 +5,7 @@
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$modelCamelCase = $MODEL->getCamelCase();
 $route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
 ?>
@@ -196,7 +197,9 @@ $languageNamespace = $STARTER->getLanguageNamespace();
       mixin,
       loadModuleLanguage('{{$languageNamespace}}')
     ],
-    store: store,
+    beforeCreate: function(){
+      this.$store.registerModule('{{$modelCamelCase}}',store);
+    },
     data: function () {
       let data = {
         resource: '/{!! $MODEL->getRoute($MODEL->getRelationNames()) !!}',

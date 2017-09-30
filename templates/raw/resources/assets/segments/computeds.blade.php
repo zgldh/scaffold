@@ -5,6 +5,7 @@
  * @var $field  \zgldh\Scaffold\Installer\Model\FieldDefinition
  */
 $modelSnakeCase = $MODEL->getSnakeCase();
+$modelCamelCase = $MODEL->getCamelCase();
 $route = $MODEL->getRoute();
 ?>
 @foreach($MODEL->getFields() as $field)
@@ -13,7 +14,7 @@ $route = $MODEL->getRoute();
 @endphp
 @if($field->getRelationship() ||  $htmlType->getOptions())
       {{$htmlType->getComputedPropertyName()}}() {
-        return this.$store.state.{{$htmlType->getComputedPropertyName()}};
+        return this.$store.state.{{$modelCamelCase}}.{{$htmlType->getComputedPropertyName()}};
       },
 @endif
 @endforeach

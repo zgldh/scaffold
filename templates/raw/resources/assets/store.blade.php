@@ -7,11 +7,10 @@
 $modelSnakeCase = $MODEL->getSnakeCase();
 
 ?>
-import Vuex from 'vuex';
 import { BuildAutoSearchQuery } from 'resources/assets/js/commons/Utils';
 
 // Store functions
-const store = new Vuex.Store({
+const store = {
   state: {
 @foreach($MODEL->getFields() as $field)
 @php
@@ -64,5 +63,5 @@ const store = new Vuex.Store({
 @endif
 @endforeach
   }
-});
+};
 export default store;
