@@ -22,7 +22,7 @@
     7. 自动执行 `composer dumpautoload`
 4. 安装其他 Module
    1. 如果要安装基础的用户、日志、上传 Module
-   2. `composer require zgldh/module-uesr` 
+   2. `composer require zgldh/module-user` 
    3. `php artisan zgldh:module:install zgldh/module-activity-log`
    4. `php artisan zgldh:module:install zgldh/module-upload`
    5. `php artisan zgldh:module:install zgldh/module-user`
