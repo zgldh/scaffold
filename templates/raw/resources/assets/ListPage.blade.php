@@ -138,7 +138,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
                   {!! $searchable !!}
                   show-overflow-tooltip>
                 @if($relationship)
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     @foreach($searchColumns as $index=>$searchColumn)
                     @php
                       $rowRelation = 'scope.row.'.camel_case(basename($relationship[0]));
@@ -147,7 +147,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
                     @endforeach
                   </template>
                 @elseif($field->isRenderFromComputed())
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <span><?php echo '{{'; ?> {{$field->getHtmlType()->getComputedPropertyName()}}[scope.row.{{$prop}}] <?php echo '}}'; ?></span>
                   </template>
                 @endif
@@ -160,7 +160,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
                   fixed="right"
                   :label="$t('scaffold.terms.actions')"
                   width="120">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <el-button-group>
                     <el-button @click="onEditClick(scope.row,scope.column,scope.$index,scope.store)" type="default"
                            size="small" icon="edit" :title="$t('scaffold.terms.edit')"></el-button>
