@@ -51,3 +51,9 @@ export function BuildAutoSearchQuery (columns, term) {
   }
   return query;
 }
+
+export function RegisterStore(vue, storeName, store){
+  if(!vue.$store._modules.get([storeName]){
+    return vue.$store.registerModule(storeName, store);
+  }
+}

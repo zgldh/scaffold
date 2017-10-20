@@ -98,8 +98,8 @@ $relationNames = $MODEL->getRelationNames();
       mixin,
       loadModuleLanguage('{{$languageNamespace}}')
     ],
-    beforeCreate: function(){
-      this.$store.registerModule('{{$modelCamelCase}}',store);
+    created: function(){
+      this.registerStore('{{$modelCamelCase}}',store);
     },
     data: function () {
       return {
@@ -118,7 +118,7 @@ $relationNames = $MODEL->getRelationNames();
       },
 @include('zgldh.scaffold::raw.resources.assets.segments.computeds',['MODEL'=>$MODEL])
     },
-    created: function () {
+    mounted: function () {
       this.loading = true;
       let loads = [];
       if (this.$route.params.id) {

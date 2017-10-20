@@ -197,8 +197,8 @@ $languageNamespace = $STARTER->getLanguageNamespace();
       mixin,
       loadModuleLanguage('{{$languageNamespace}}')
     ],
-    beforeCreate: function(){
-      this.$store.registerModule('{{$modelCamelCase}}',store);
+    created: function(){
+      this.registerStore('{{$modelCamelCase}}',store);
     },
     data: function () {
       let data = {

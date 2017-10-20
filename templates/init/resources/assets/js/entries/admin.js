@@ -34,12 +34,21 @@ window.axios.interceptors.response.use(function (response) {
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import {i18n} from 'resources/assets/js/commons/LanguageHelper';
+import {RegisterStore} from 'resources/assets/js/commons/Utils';
 
 Vue.use(VueRouter);
 Vue.use(require('element-ui'), {
   i18n: function (path, options) {
     // ...
     return i18n.t(path, null, options);
+  }
+});
+
+Vue.mixin({
+  methods: {
+    registerStore: function(path, store){
+      RegisterStore(this, path, store);
+    }
   }
 });
 
