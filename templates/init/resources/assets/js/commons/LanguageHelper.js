@@ -20,6 +20,26 @@ export function loadModuleLanguage (languageModule) {
   }
 }
 
+var loadingModules = {}
+
+function isModuleLoading (module) {
+  if (loadingModules.hasOwnProperty(module)) {
+    return true
+  }
+  return false
+}
+function getModuleLoadingPromise (module) {
+  return loadingModules[module]
+}
+function setModuleLoading (module, promise) {
+  loadingModules[module] = promise
+}
+function setModuleLoaded (module) {
+  if (loadingModules.hasOwnProperty(module)) {
+    delete loadingModules[module]
+  }
+}
+
 export function loadLanguages (languageModules) {
   if (languageModules.constructor === String) {
     languageModules = arguments
@@ -28,16 +48,24 @@ export function loadLanguages (languageModules) {
   var loads = []
   _.forEach(languageModules, module => {
     if (!message || !message.hasOwnProperty(module)) {
-      loads.push(axios.get('/lang/' + module))
+      if (isModuleLoading(module)) {
+        loads.push(getModuleLoadingPromise(module))
+      }
+      else {
+        var loadingPromise = axios.get('/lang/' + module)
+        setModuleLoading(module, loadingPromise)
+        loads.push(loadingPromise)
+      }
     }
   })
 
   if (loads.length) {
     return Promise.all(loads).then(results => {
       _.forEach(results, function (result) {
-        _.forEach(result.data, function (value, key) {
+        _.forEach(result.data, function (lauguageData, module) {
+          setModuleLoaded(module)
           var langs = {}
-          langs[key] = value
+          langs[module] = lauguageData
           i18n.mergeLocaleMessage(i18n.locale, langs)
         })
       })
