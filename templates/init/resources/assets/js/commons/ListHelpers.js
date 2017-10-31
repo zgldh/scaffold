@@ -1,12 +1,13 @@
-import {Loading} from 'element-ui';
-import _ from 'lodash';
+import { Loading } from 'element-ui'
+import _ from 'lodash'
+import { ShowDeleteConfirmDialog } from './Utils'
 
-const PARAMS_PAGE_SIZE = 'pageSize';
-const PARAMS_PAGE = 'page';
-const PARAMS_SEARCH_TERM = 'term';
-const PARAMS_SEARCH_PREFIX = 's--';
-const PARAMS_SORT_COLUMN = 'sort';
-const PARAMS_SORT_DIRECTION = 'dir';
+const PARAMS_PAGE_SIZE = 'pageSize'
+const PARAMS_PAGE = 'page'
+const PARAMS_SEARCH_TERM = 'term'
+const PARAMS_SEARCH_PREFIX = 's--'
+const PARAMS_SORT_COLUMN = 'sort'
+const PARAMS_SORT_DIRECTION = 'dir'
 
 export var mixin = {
   data: function () {
@@ -57,38 +58,38 @@ export var mixin = {
 
       loading: null,
       _draw: null,
-    };
+    }
   },
   beforeMount: function () {
     if (this.pagination.$enableAddressBar) {
-      this.pagination.currentPage = this.$route.query.hasOwnProperty(PARAMS_PAGE) ? parseInt(this.$route.query[PARAMS_PAGE]) : 1;
-      this.pagination.pageSize = this.$route.query.hasOwnProperty(PARAMS_PAGE_SIZE) ? parseInt(this.$route.query[PARAMS_PAGE_SIZE]) : 25;
+      this.pagination.currentPage = this.$route.query.hasOwnProperty(PARAMS_PAGE) ? parseInt(this.$route.query[PARAMS_PAGE]) : 1
+      this.pagination.pageSize = this.$route.query.hasOwnProperty(PARAMS_PAGE_SIZE) ? parseInt(this.$route.query[PARAMS_PAGE_SIZE]) : 25
       if (this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN)) {
         this.defaultSort = {
           prop: this.$route.query[PARAMS_SORT_COLUMN],
           order: this.$route.query[PARAMS_SORT_DIRECTION]
-        };
+        }
       }
     }
   },
   mounted: function () {
-    this.initializeDataTablesParameters();
+    this.initializeDataTablesParameters()
     if (!this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN)) {
-      this.queryTableData();
+      this.queryTableData()
     }
   },
   methods: {
     initializeDataTablesParameters: function () {
-      let hasCreatedAt = false;
+      let hasCreatedAt = false
       this.$refs.table.$children.forEach((column, index, columns) => {
-        if (column.$options._componentTag !== "el-table-column") {
-          return;
+        if (column.$options._componentTag !== 'el-table-column') {
+          return
         }
         if (!column.columnConfig.property) {
-          return;
+          return
         }
         if (!hasCreatedAt && column.columnConfig.property === 'created_at') {
-          hasCreatedAt = true;
+          hasCreatedAt = true
         }
         this.datatablesParameters.columns.push({
           data: column.columnConfig.property,
@@ -100,8 +101,8 @@ export var mixin = {
             regex: false,
             advance: {}
           },
-        });
-      });
+        })
+      })
 
       if (!hasCreatedAt) {
         this.datatablesParameters.columns.push({
@@ -114,24 +115,24 @@ export var mixin = {
             regex: false,
             advance: {}
           },
-        });
+        })
       }
 
       if (this.pagination.$enableAddressBar) {
-        let hasSearchParams = false;
+        let hasSearchParams = false
         _.forEach(this.$route.query, (value, key) => {
           if (key.indexOf(PARAMS_SEARCH_PREFIX) !== -1) {
-            this.searchForm[key.substr(PARAMS_SEARCH_PREFIX.length)] = value;
-            hasSearchParams = true;
+            this.searchForm[key.substr(PARAMS_SEARCH_PREFIX.length)] = value
+            hasSearchParams = true
           }
-        });
+        })
         if (hasSearchParams) {
-          this.buildSearchParameters();
+          this.buildSearchParameters()
         }
-        this.datatablesParameters.search.value = this.$route.query.hasOwnProperty(PARAMS_SEARCH_TERM) ? this.$route.query[PARAMS_SEARCH_TERM] : null;
+        this.datatablesParameters.search.value = this.$route.query.hasOwnProperty(PARAMS_SEARCH_TERM) ? this.$route.query[PARAMS_SEARCH_TERM] : null
       }
-      this.datatablesParameters.length = this.pagination.pageSize;
-      this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
+      this.datatablesParameters.length = this.pagination.pageSize
+      this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize
     },
     showLoading: function (target) {
       this.loading = Loading.service({
@@ -139,313 +140,297 @@ export var mixin = {
         fullscreen: false,
         lock: false,
         text: this.$i18n.t('scaffold.terms.loading') + '...'
-      });
+      })
     },
     hideLoading: function () {
-      this.loading.close();
+      this.loading.close()
     },
     queryTableData: function () {
       if (this.loading && this.loading.visible) {
-        return false;
+        return false
       }
-      this.showLoading('.datatable-loading-section');
+      this.showLoading('.datatable-loading-section')
       axios.get(this.resource, {
         params: this.buildDataTablesParameters(),
         paramsSerializer: SerializerDatatablesParameters
       }).then(result => {
         if (this._draw == result.data.draw) {
-          this.tableData = result.data.data;
-          this.pagination.totalCount = result.data.recordsFiltered;
-          this.hideLoading();
+          this.tableData = result.data.data
+          this.pagination.totalCount = result.data.recordsFiltered
+          this.hideLoading()
         }
       }).catch(result => {
-        this.hideLoading();
-      });
+        this.hideLoading()
+      })
     },
     updateAddressBarParams: function () {
       if (this.pagination.$enableAddressBar) {
-        let payload = JSON.parse(JSON.stringify(this.$route.query));
-        let queries = {};
+        let payload = JSON.parse(JSON.stringify(this.$route.query))
+        let queries = {}
         if (arguments.length === 2) {
-          queries[arguments[0]] = arguments[1];
+          queries[arguments[0]] = arguments[1]
         }
         else {
-          queries = arguments[0];
+          queries = arguments[0]
         }
         _.forEach(queries, function (data, key) {
           if (data === null) {
-            delete payload[key];
+            delete payload[key]
           }
           else {
-            payload[key] = data;
+            payload[key] = data
           }
-        });
+        })
         this.$router.push({
           path: this.$route.path,
           query: payload
-        });
+        })
       }
     },
     clearSearchFormAddressBarParams: function (searchPrefix) {
-      let payload = JSON.parse(JSON.stringify(this.$route.query));
+      let payload = JSON.parse(JSON.stringify(this.$route.query))
       _.forEach(payload, function (data, key) {
         if (key.indexOf(searchPrefix) !== -1) {
-          delete payload[key];
+          delete payload[key]
         }
-      });
+      })
       this.$router.push({
         path: this.$route.path,
         query: payload
-      });
+      })
     },
     onPageSizeChange: function () {
-      this.datatablesParameters.length = this.pagination.pageSize;
-      this.queryTableData();
-      this.updateAddressBarParams(PARAMS_PAGE_SIZE, this.pagination.pageSize);
+      this.datatablesParameters.length = this.pagination.pageSize
+      this.queryTableData()
+      this.updateAddressBarParams(PARAMS_PAGE_SIZE, this.pagination.pageSize)
     },
     onPageChange: function (page) {
-      this.pagination.currentPage = page;
-      this.datatablesParameters.start = (page - 1) * this.pagination.pageSize;
-      this.queryTableData();
-      this.updateAddressBarParams(PARAMS_PAGE, this.pagination.currentPage);
+      this.pagination.currentPage = page
+      this.datatablesParameters.start = (page - 1) * this.pagination.pageSize
+      this.queryTableData()
+      this.updateAddressBarParams(PARAMS_PAGE, this.pagination.currentPage)
     },
     onSortChange: function ({column, prop, order}) {
       if (order === null) {
-        this.datatablesParameters.order = [];
+        this.datatablesParameters.order = []
       }
       else {
-        this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}];
+        this.datatablesParameters.order = [{'column': prop, 'dir': (order == 'ascending' ? 'asc' : 'desc')}]
       }
-      this.queryTableData();
+      this.queryTableData()
       this.updateAddressBarParams({
         'sort': prop,
         'dir': order
-      });
+      })
     },
     onAutoSearchChanged: _.debounce(function (newValue) {
-      this.queryTableData();
-      this.updateAddressBarParams(PARAMS_SEARCH_TERM, this.datatablesParameters.search.value);
+      this.queryTableData()
+      this.updateAddressBarParams(PARAMS_SEARCH_TERM, this.datatablesParameters.search.value)
     }, 500),
     onAutoSearchIconClick: function (newValue) {
       if (this.datatablesParameters.search.value) {
-        this.datatablesParameters.search.value = null;
-        this.queryTableData();
-        this.updateAddressBarParams(PARAMS_SEARCH_TERM, null);
+        this.datatablesParameters.search.value = null
+        this.queryTableData()
+        this.updateAddressBarParams(PARAMS_SEARCH_TERM, null)
       }
     },
     onSubmitSearch: function () {
-      this.buildSearchParameters();
-      this.queryTableData();
-      this.updateAddressBarParams(PrefixObject(this.searchForm, PARAMS_SEARCH_PREFIX));
+      this.buildSearchParameters()
+      this.queryTableData()
+      this.updateAddressBarParams(PrefixObject(this.searchForm, PARAMS_SEARCH_PREFIX))
     },
     onResetSearch: function () {
-      this.searchForm = {};
-      this.$nextTick(this.onSubmitSearch);
-      this.clearSearchFormAddressBarParams(PARAMS_SEARCH_PREFIX);
+      this.searchForm = {}
+      this.$nextTick(this.onSubmitSearch)
+      this.clearSearchFormAddressBarParams(PARAMS_SEARCH_PREFIX)
     },
     onSelectionChange: function (selection) {
-      this.selectedItems = selection;
+      this.selectedItems = selection
     },
     _onDeleteClick: function ({url, data, confirmText, messageText}) {
-      data = data ? data : {};
-      data._method = 'delete';
-      return this.$confirm(confirmText, this.$i18n.t('scaffold.terms.alert'), {
-        confirmButtonText: this.$i18n.t('scaffold.terms.confirm'),
-        cancelButtonText: this.$i18n.t('scaffold.terms.cancel'),
-        type: 'warning'
-      }).then(() => {
-        return axios.post(url, data)
-      }).then(result => {
-        this.$message({
-          type: 'success',
-          message: messageText
-        });
-        return result.data;
-      }, ({response}) => {
-        this.$message({
-          type: 'error',
-          message: response.data.message
-        });
-      });
+      return ShowDeleteConfirmDialog(this, url, data, confirmText, messageText)
     },
 
     _onBundle: function (action, resourceUrl, options, items) {
-      var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems));
+      var selectedItems = JSON.parse(JSON.stringify(items ? items : this.selectedItems))
       return axios.post(resourceUrl ? resourceUrl : ( this.resource.substr(0, this.resource.indexOf('?')) + '/bundle'), {
         action: action,
         indexes: selectedItems.map((item) => item.id),
         options: options
       }).then(response => {
         if (response && response.status == 200) {
-          return response;
+          return response
         }
         else {
-          throw new Error(response.data);
+          throw new Error(response.data)
         }
       }).catch(({response}) => {
         this.$message({
           type: 'error',
           message: response.data.message
-        });
-        throw response;
-      });
+        })
+        throw response
+      })
     },
     buildDataTablesParameters: function () {
-      this.datatablesParameters.draw++;
-      this._draw = this.datatablesParameters.draw;
-      this.datatablesParameters._ = new Date().getTime();
-      return this.datatablesParameters;
+      this.datatablesParameters.draw++
+      this._draw = this.datatablesParameters.draw
+      this.datatablesParameters._ = new Date().getTime()
+      return this.datatablesParameters
     },
     buildSearchParameters: function () {
-      var searchComponents = FindSearchComponents(this.$refs.searchForm);
+      var searchComponents = FindSearchComponents(this.$refs.searchForm)
       searchComponents.forEach(item => {
         // console.log('search',item.);
-        var columnName = item.$el.getAttribute('column');
-        var operator = item.$el.getAttribute('operator') ? item.$el.getAttribute('operator') : '=';
-        var value = this.searchForm[columnName];
+        var columnName = item.$el.getAttribute('column')
+        var operator = item.$el.getAttribute('operator') ? item.$el.getAttribute('operator') : '='
+        var value = this.searchForm[columnName]
         if (value === '' || value === null || value === undefined) {
-          this.clearAdvanceSearchToColumn(columnName, operator);
+          this.clearAdvanceSearchToColumn(columnName, operator)
         }
         else {
           switch (operator) {
             case 'range':
               if (value[0]) {
-                this.applyAdvanceSearchToColumn(columnName, '>=', UnifiedValue(value[0]));
+                this.applyAdvanceSearchToColumn(columnName, '>=', UnifiedValue(value[0]))
               }
               else {
-                this.clearAdvanceSearchToColumn(columnName, '>=');
+                this.clearAdvanceSearchToColumn(columnName, '>=')
               }
               if (value[1]) {
-                this.applyAdvanceSearchToColumn(columnName, '<=', UnifiedValue(value[1], true));
+                this.applyAdvanceSearchToColumn(columnName, '<=', UnifiedValue(value[1], true))
               }
               else {
-                this.clearAdvanceSearchToColumn(columnName, '<=');
+                this.clearAdvanceSearchToColumn(columnName, '<=')
               }
-              break;
+              break
             case 'like':
-              this.applyAdvanceSearchToColumn(columnName, operator, '%' + UnifiedValue(value) + '%');
-              break;
+              this.applyAdvanceSearchToColumn(columnName, operator, '%' + UnifiedValue(value) + '%')
+              break
             default:
               // >, >=, =, <=, <
-              this.applyAdvanceSearchToColumn(columnName, operator, UnifiedValue(value));
-              break;
+              this.applyAdvanceSearchToColumn(columnName, operator, UnifiedValue(value))
+              break
           }
         }
-      });
+      })
     },
     applyAdvanceSearchToColumn: function (columnName, operator, value) {
-      var column = FindColumnConfigByName(this.datatablesParameters.columns, columnName);
-      column.search.advance[operator] = value;
+      var column = FindColumnConfigByName(this.datatablesParameters.columns, columnName)
+      if (!column.hasOwnProperty('search')) {
+        column.search = {advance: {}}
+      }
+      column.search.advance[operator] = value
     },
     clearAdvanceSearchToColumn: function (columnName, operator) {
-      var column = FindColumnConfigByName(this.datatablesParameters.columns, columnName);
+      var column = FindColumnConfigByName(this.datatablesParameters.columns, columnName)
       if (operator) {
-        delete column.search.advance[operator];
+        delete column.search.advance[operator]
       }
       else {
-        column.search.advance = {};
+        column.search.advance = {}
       }
     }
   }
-};
+}
 
 function UnifiedValue (value, dayEnd) {
-  var result = value;
+  var result = value
   if (_.isDate(value)) {
-    result = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+    result = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate()
     if (dayEnd) {
-      result += ' 23:59:59';
+      result += ' 23:59:59'
     }
     else {
-      result += ' ' + value.getHours() + ':' + value.getMinutes() + ':' + value.getSeconds();
+      result += ' ' + value.getHours() + ':' + value.getMinutes() + ':' + value.getSeconds()
     }
   }
-  return result;
+  return result
 }
 
 function FindSearchComponents (inputComponent) {
   const CONTROLLERS = [
-    'el-input', 'el-select', 'el-date-picker', 'el-time-picker'
-  ];
-  var components = [];
+    'el-input', 'el-select', 'el-date-picker', 'el-time-picker', 'b-form-input'
+  ]
+  var components = []
   inputComponent.$children.forEach(component => {
     if (component.$el.hasAttribute('manual-search')) {
       // 当一个控件含有 manual-search 属性时， 不自动处理参数。 需要在 onSubmitSearch 函数中手工处理
       // Ignore.
     }
     else if (CONTROLLERS.indexOf(component.$options._componentTag) !== -1) {
-      components.push(component);
+      components.push(component)
     }
     else if (component.hasOwnProperty('$children')) {
-      [].push.apply(components, FindSearchComponents(component));
+      [].push.apply(components, FindSearchComponents(component))
     }
     else {
       // Ignore
     }
-  });
-  return components;
+  })
+  return components
 }
 
 function FindColumnConfigByName (columns, columnName) {
   var column = columns.find(column => {
-    return column.name === columnName;
-  });
+    return column.name === columnName
+  })
   if (!column) {
-    throw new Error("Can't find column named '" + columnName + "'");
+    throw new Error('Can\'t find column named \'' + columnName + '\'')
   }
-  return column;
+  return column
 }
 
 function PrefixObject (params, prefix) {
-  var result = {};
+  var result = {}
   _.forEach(params, function (val, key) {
-    result[prefix + key] = val;
-  });
-  return result;
+    result[prefix + key] = val
+  })
+  return result
 }
 
 function SerializerDatatablesParameters (params) {
-  var parameters = JSON.parse(JSON.stringify(params));
-  delete parameters.order;
-  delete parameters.columns;
-  delete parameters.search;
+  var parameters = JSON.parse(JSON.stringify(params))
+  delete parameters.order
+  delete parameters.columns
+  delete parameters.search
   params.columns.forEach((element, index) => {
     if (!element.data) {
-      return;
+      return
     }
-    parameters['columns[' + index + '][data]'] = element.data;
-    parameters['columns[' + index + '][name]'] = element.name;
-    parameters['columns[' + index + '][searchable]'] = element.searchable;
-    parameters['columns[' + index + '][orderable]'] = element.orderable;
-    parameters['columns[' + index + '][search][value]'] = element.search.value ? element.search.value : null;
-    parameters['columns[' + index + '][search][regex]'] = element.search.regex ? element.search.regex : false;
-    if (element.search.hasOwnProperty('advance')) {
+    parameters['columns[' + index + '][data]'] = element.data
+    parameters['columns[' + index + '][name]'] = element.name
+    parameters['columns[' + index + '][searchable]'] = element.searchable
+    parameters['columns[' + index + '][orderable]'] = element.orderable
+    parameters['columns[' + index + '][search][value]'] = (element.search && element.search.value) ? element.search.value : null
+    parameters['columns[' + index + '][search][regex]'] = (element.search && element.search.regex) ? element.search.regex : false
+    if (element.search && element.search.hasOwnProperty('advance')) {
       for (var operator in element.search.advance) {
         if (element.search.advance.hasOwnProperty(operator)) {
-          parameters['columns[' + index + '][search][advance][' + operator + ']'] = element.search.advance[operator];
+          parameters['columns[' + index + '][search][advance][' + operator + ']'] = element.search.advance[operator]
         }
       }
     }
-  });
+  })
   params.order.forEach(function (element, index) {
     parameters['order[' + index + '][column]'] = isNaN(element.column) ? params.columns.findIndex(column => {
-      return column.data === element.column;
-    }) : parseInt(element.column);
-    parameters['order[' + index + '][dir]'] = element.dir ? element.dir : 'asc';
-  });
-  parameters['search[value]'] = params.search.value !== undefined ? params.search.value : null;
-  parameters['search[regex]'] = params.search.regex ? params.search.regex : false;
-  var parameterString = [];
+      return column.data === element.column
+    }) : parseInt(element.column)
+    parameters['order[' + index + '][dir]'] = element.dir ? element.dir : 'asc'
+  })
+  parameters['search[value]'] = params.search.value !== undefined ? params.search.value : null
+  parameters['search[regex]'] = params.search.regex ? params.search.regex : false
+  var parameterString = []
   for (var key in parameters) {
     if (parameters.hasOwnProperty(key)) {
       if ([undefined, null, ''].indexOf(parameters[key]) === -1) {
-        parameterString.push(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]));
+        parameterString.push(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]))
       }
       else {
-        parameterString.push(encodeURIComponent(key) + '=');
+        parameterString.push(encodeURIComponent(key) + '=')
       }
     }
   }
-  parameterString = parameterString.join('&');
-  return parameterString;
+  parameterString = parameterString.join('&')
+  return parameterString
 }

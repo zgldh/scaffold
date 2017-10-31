@@ -1,5 +1,6 @@
 <?php namespace zgldh\Scaffold;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,8 @@ use Illuminate\Database\Query\Builder;
  */
 abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepository
 {
+    private $uploadFileExpireHours = 12;
+
     public function __construct(Application $app)
     {
         parent::__construct($app);
@@ -285,8 +288,12 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         }
         // 处理上传
         if ($dealWithUpload && $userId) {
+            $expireTime = Carbon::now()->addHours(-$this->uploadFileExpireHours);
             $query = call_user_func($uploadModelClassName . '::query');
-            $uploads = $query->where('user_id', $userId)->whereNull('uploadable_id')->get();
+            $uploads = $query
+                ->where('user_id', $userId)
+                ->whereNull('uploadable_id')
+                ->where('created_at', '<', $expireTime)->get();
             foreach ($uploads as $upload) {
                 $upload->delete();
             }
