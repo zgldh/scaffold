@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
+import deepmerge from 'deepmerge'
+
 Vue.use(VueI18n)
 
 export const i18n = new VueI18n({
@@ -40,6 +42,14 @@ function setModuleLoaded (module) {
   }
 }
 
+function getCurrentMessages (locale, module) {
+  var messages = i18n.getLocaleMessage(locale)
+  if (messages.hasOwnProperty(module)) {
+    return messages[module]
+  }
+  return {}
+}
+
 export function loadLanguages (languageModules) {
   if (languageModules.constructor === String) {
     languageModules = arguments
@@ -65,7 +75,7 @@ export function loadLanguages (languageModules) {
         _.forEach(result.data, function (lauguageData, module) {
           setModuleLoaded(module)
           var langs = {}
-          langs[module] = lauguageData
+          langs[module] = deepmerge(getCurrentMessages(i18n.locale, module), lauguageData)
           i18n.mergeLocaleMessage(i18n.locale, langs)
         })
       })
