@@ -1,6 +1,7 @@
 ## zgldh/Scaffold
 
 仍然处在开发阶段，不稳定。
+打算正式版的时候，全盘转入token认证。也就是laravel里面的 auth:api
 
 ## 开发路线：
 
