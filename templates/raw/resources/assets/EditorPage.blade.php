@@ -11,7 +11,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
 $relationNames = $MODEL->getRelationNames();
 ?>
 <template>
-  <div class="admin-editor-page">
+  <div class="{{$modelSnakeCase}}-editor-page admin-editor-page">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?>
@@ -88,7 +88,7 @@ $relationNames = $MODEL->getRelationNames();
   </div>
 </template>
 
-<script type="javascript">
+<script type="text/javascript">
   import { mixin } from "resources/assets/js/commons/EditorHelper.js";
   import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
   import store from './store';
@@ -152,6 +152,8 @@ $relationNames = $MODEL->getRelationNames();
   };
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+  .{{$modelSnakeCase}}-editor-page{
+  
+  }
 </style>

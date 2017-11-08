@@ -8,9 +8,10 @@ $modelSnakeCase = $MODEL->getSnakeCase();
 $modelCamelCase = $MODEL->getCamelCase();
 $route = $MODEL->getRoute();
 $languageNamespace = $STARTER->getLanguageNamespace();
+
 ?>
 <template>
-  <div class="admin-list-page">
+  <div class="{{$modelSnakeCase}}-list-page admin-list-page">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1><?php echo "{{\$t('".$languageNamespace.".models.".$modelSnakeCase.".title')}}"; ?>
@@ -187,7 +188,7 @@ $languageNamespace = $STARTER->getLanguageNamespace();
   </div>
 </template>
 
-<script type="javascript">
+<script type="text/javascript">
   import { mixin } from "resources/assets/js/commons/ListHelpers.js";
   import { loadModuleLanguage } from 'resources/assets/js/commons/LanguageHelper';
   import store from './store';
@@ -253,6 +254,8 @@ $languageNamespace = $STARTER->getLanguageNamespace();
 
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+  .{{$modelSnakeCase}}-list-page{
+  
+  }
 </style>

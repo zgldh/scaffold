@@ -320,7 +320,7 @@ class ModuleCreateCommand extends Command
         $variables = [
             'STARTER' => $this->starter,
         ];
-        $routesPath = $this->getDestinationPath('resource.vue.store');
+        $routesPath = $this->getDestinationPath('resource.routes');
         $routesContent = Utils::renderTemplate(
             config('zgldh-scaffold.templates.resource.routes', 'zgldh.scaffold::raw.resources.assets.routes'),
             $variables);

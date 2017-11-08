@@ -121,6 +121,7 @@ class ScaffoldInitCommand extends Command
         $package->setDependencies("little-loader", "^0.1.1");
         $package->setDependencies("element-ui", "~1.4");
         $package->setDependencies("vue-multiselect", "^2.0.2");
+        $package->setDependencies("deepmerge", "^2.0.1");
 
         $package->save();
         $this->info('Complete!');
