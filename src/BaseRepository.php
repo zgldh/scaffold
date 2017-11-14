@@ -107,9 +107,11 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         if (sizeof($columnNames) == 1) {
             $columnName = $columnNames[0];
             if (is_array($value)) {
-                foreach ($value as $valueItem) {
-                    $query->orWhere($columnName, $operator, $valueItem);
-                }
+                $query->where(function ($q) use ($columnName, $operator, $value) {
+                    foreach ($value as $valueItem) {
+                        $q->orWhere($columnName, $operator, $valueItem);
+                    }
+                });
             } else {
                 $query->where($columnName, $operator, $value);
             }

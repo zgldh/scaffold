@@ -58,6 +58,8 @@ export var mixin = {
 
       loading: null,
       _draw: null,
+
+      autoload: true
     }
   },
   beforeMount: function () {
@@ -74,7 +76,7 @@ export var mixin = {
   },
   mounted: function () {
     this.initializeDataTablesParameters()
-    if (!this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN)) {
+    if (!this.$route.query.hasOwnProperty(PARAMS_SORT_COLUMN) && this.autoload) {
       this.queryTableData()
     }
   },
@@ -407,7 +409,14 @@ function SerializerDatatablesParameters (params) {
     if (element.search && element.search.hasOwnProperty('advance')) {
       for (var operator in element.search.advance) {
         if (element.search.advance.hasOwnProperty(operator)) {
-          parameters['columns[' + index + '][search][advance][' + operator + ']'] = element.search.advance[operator]
+          var value = element.search.advance[operator]
+          if (Array.isArray(value)) {
+            for (var valueIndex = 0; valueIndex < value.length; valueIndex++) {
+              parameters['columns[' + index + '][search][advance][' + operator + '][' + valueIndex + ']'] = value[valueIndex]
+            }
+          } else {
+            parameters['columns[' + index + '][search][advance][' + operator + ']'] = element.search.advance[operator]
+          }
         }
       }
     }
