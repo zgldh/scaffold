@@ -52,8 +52,36 @@ export function BuildAutoSearchQuery (columns, term) {
   return query;
 }
 
-export function RegisterStore(vue, storeName, store){
-  if(!vue.$store._modules.get([storeName]){
+export function RegisterStore (vue, storeName, store) {
+  if (!vue.$store._modules.get([storeName])) {
     return vue.$store.registerModule(storeName, store);
   }
+}
+
+/**
+ * @return {string}
+ */
+export function ShowDeleteConfirmDialog (vue, url, data, confirmText, messageText) {
+  data = data ? data : {}
+  data._method = 'delete'
+  confirmText = confirmText ? confirmText : vue.$i18n.t('global.delete_confirm.confirm_text')
+  messageText = messageText ? messageText : vue.$i18n.t('global.delete_confirm.complete_text')
+  return vue.$confirm(confirmText, vue.$i18n.t('global.terms.alert'), {
+    confirmButtonText: vue.$i18n.t('global.terms.confirm'),
+    cancelButtonText: vue.$i18n.t('global.terms.cancel'),
+    type: 'warning'
+  }).then(() => {
+    return axios.post(url, data)
+  }).then(result => {
+    vue.$message({
+      type: 'success',
+      message: messageText
+    })
+    return result.data
+  }, ({response}) => {
+    vue.$message({
+      type: 'error',
+      message: response.data.message
+    })
+  })
 }
