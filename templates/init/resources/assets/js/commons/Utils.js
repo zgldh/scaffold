@@ -40,16 +40,18 @@ export function BuildHttpRequestPayload (object) {
  */
 export function BuildAutoSearchQuery (columns, term) {
   if (columns.constructor !== Array) {
-    columns = [columns];
+    columns = [columns]
   }
-  columns.push('id');
-  let query = 'draw=' + new Date().getTime() + '&start=0&length=25';
-  query += '&search[regex]=false&search[value]=' + encodeURIComponent(term);
+  columns.push('id')
+  let query = 'draw=' + new Date().getTime() + '&start=0&length=25'
+  if (term) {
+    query += '&search[regex]=false&search[value]=' + encodeURIComponent(term)
+  }
 
   for (let i = 0; i < columns.length; i++) {
-    query += '&columns[' + i + '][name]=' + columns[i] + '&columns[' + i + '][searchable]=true';
+    query += '&columns[' + i + '][name]=' + columns[i] + '&columns[' + i + '][searchable]=true'
   }
-  return query;
+  return query
 }
 
 export function RegisterStore (vue, storeName, store) {
