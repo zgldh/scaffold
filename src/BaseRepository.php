@@ -81,7 +81,6 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                 if (is_callable($filter)) {
                     $filter($query);
                 }
-
                 foreach ($columns as $column) {
                     $advanceSearches = array_get($column, 'search.advance');
                     if ($advanceSearches) {
@@ -107,11 +106,20 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         if (sizeof($columnNames) == 1) {
             $columnName = $columnNames[0];
             if (is_array($value)) {
-                $query->where(function ($q) use ($columnName, $operator, $value) {
-                    foreach ($value as $valueItem) {
-                        $q->orWhere($columnName, $operator, $valueItem);
-                    }
-                });
+                switch($operator) {
+                    case '!=':
+                        $query->whereNotIn($columnName, $value);
+                        break;
+                    case '=':
+                        $query->whereIn($columnName, $value);
+                        break;
+                    default:
+                        $query->where(function ($q) use ($columnName, $operator, $value) {
+                            foreach ($value as $valueItem) {
+                                $q->orWhere($columnName, $operator, $valueItem);
+                            }
+                        });
+                }
             } else {
                 $query->where($columnName, $operator, $value);
             }
