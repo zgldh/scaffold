@@ -396,10 +396,12 @@ function SerializerDatatablesParameters (params) {
   delete parameters.order
   delete parameters.columns
   delete parameters.search
+  var columnMaxIndex = 0;
   params.columns.forEach((element, index) => {
     if (!element.data) {
       return
     }
+    columnMaxIndex++;
     parameters['columns[' + index + '][data]'] = element.data
     parameters['columns[' + index + '][name]'] = element.name
     parameters['columns[' + index + '][searchable]'] = element.searchable
@@ -422,9 +424,18 @@ function SerializerDatatablesParameters (params) {
     }
   })
   params.order.forEach(function (element, index) {
-    parameters['order[' + index + '][column]'] = isNaN(element.column) ? params.columns.findIndex(column => {
-      return column.data === element.column
+    var columnIndex = isNaN(element.column) ? params.columns.findIndex(column => {
+        return column.data === element.column
     }) : parseInt(element.column)
+    if(columnIndex === -1)
+    {
+      parameters['columns[' + columnMaxIndex + '][data]'] = element.column
+      parameters['columns[' + columnMaxIndex + '][name]'] = element.column
+      parameters['columns[' + columnMaxIndex + '][orderable]'] = true
+      columnIndex = columnMaxIndex;
+      columnMaxIndex++;
+    }
+    parameters['order[' + index + '][column]'] = columnIndex;
     parameters['order[' + index + '][dir]'] = element.dir ? element.dir : 'asc'
   })
   parameters['search[value]'] = params.search.value !== undefined ? params.search.value : null
