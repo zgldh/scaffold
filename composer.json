@@ -1,7 +1,6 @@
 {
   "name": "zgldh/scaffold",
   "description": "Scaffold for Laravel.",
-  "version": "0.9.3",
   "keywords": [
     "laravel",
     "scaffold"
