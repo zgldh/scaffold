@@ -154,9 +154,12 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         $model->save();
 
         $result = $this->parserResult($model);
+
+
         $primaryKey = $model->getKey();
-        $model = forward_static_call_array([$this->model(), 'withoutGlobalScopes'], []);
-        $model = forward_static_call_array([$model, 'find'], [$primaryKey]);
+        $query = $model->newQuery();
+        $query->withoutGlobalScopes();
+        $model = $query->find($primaryKey);
         return $model;
     }
 
