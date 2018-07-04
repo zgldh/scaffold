@@ -1,0 +1,4 @@
+vueAdminTemplate/build/*.js
+vueAdminTemplate/config/*.js
+vueAdminTemplate/src/assets
+vueAdminTemplate/src/lang/languages.js
