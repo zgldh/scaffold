@@ -20,7 +20,11 @@ class UserController extends AppBaseController
         $this->repository = $userRepo;
         $this->middleware("auth:api");
         $this->middleware("permission.auto")->except([
-            'current'
+            'current',
+            'putMobile',
+            'putGender',
+            'putPassword',
+            'postAvatar',
         ]);
     }
 
@@ -115,6 +119,10 @@ class UserController extends AppBaseController
         return $this->sendResponse($user, 'User deleted successfully.');
     }
 
+    /**
+     * @no-permission
+     * @return JsonResponse
+     */
     public function current()
     {
         $user = \Auth::user();
@@ -127,6 +135,7 @@ class UserController extends AppBaseController
 
     /**
      *
+     * @no-permission
      * @param      \Modules\User\Requests\PutMobileRequest $request
      * @return    JsonResponse
      */
@@ -143,6 +152,7 @@ class UserController extends AppBaseController
 
     /**
      *
+     * @no-permission
      * @param      \Modules\User\Requests\PutGenderRequest $request
      * @return    JsonResponse
      */
@@ -159,6 +169,7 @@ class UserController extends AppBaseController
 
     /**
      *
+     * @no-permission
      * @param      \Modules\User\Requests\PutPasswordRequest $request
      * @return    JsonResponse
      */
@@ -179,6 +190,7 @@ class UserController extends AppBaseController
 
     /**
      *
+     * @no-permission
      * @param CreateUploadRequest $request
      * @param UploadRepository $repository
      * @return JsonResponse
