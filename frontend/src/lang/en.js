@@ -38,6 +38,13 @@ export default {
         edit_permission: 'Edit Permission',
         copy_complete_text: 'Copy complete. Do you want to edit the new role?'
       }
+    },
+    my_profile: {
+      basic: 'Basic Information',
+      change_password: 'Change Password',
+      old_password: 'Old Password',
+      new_password: 'New Password',
+      repeat: 'Repeat'
     }
   },
   components: {

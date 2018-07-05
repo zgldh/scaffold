@@ -38,6 +38,13 @@ export default {
         edit_permission: '编辑权限',
         copy_complete_text: '复制完毕，要立即编辑该角色么？'
       }
+    },
+    my_profile: {
+      basic: '基本信息',
+      change_password: '修改密码',
+      old_password: '旧密码',
+      new_password: '新密码',
+      repeat: '重复新密码'
     }
   },
   components: {

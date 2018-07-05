@@ -2,37 +2,42 @@
   <el-row class="my-profile-container">
     <el-col :span="11">
       <el-form ref="form" :model="form" label-width="120px">
-        <h4>基本信息</h4>
-        <form-item label="用户名">{{$store.state.currentUser.name}}</form-item>
-        <form-item label="电子邮箱">{{$store.state.currentUser.email}}</form-item>
-        <form-item label="手机">
+        <h4>{{$t('pages.my_profile.basic')}}</h4>
+        <form-item :label="$t('user.fields.name')">{{$store.state.currentUser.name}}
+        </form-item>
+        <form-item :label="$t('user.fields.email')">{{$store.state.currentUser.email}}
+        </form-item>
+        <form-item :label="$t('user.fields.mobile')">
           <inline-editor v-model="form.mobile" @change="onMobileChange"></inline-editor>
         </form-item>
-        <form-item label="性别">
+        <form-item :label="$t('user.fields.gender')">
           <el-radio-group v-model="form.gender" @change="onGenderChange">
-            <el-radio label="male">男</el-radio>
-            <el-radio label="female">女</el-radio>
+            <el-radio label="male">{{$t('user.terms.male')}}</el-radio>
+            <el-radio label="female">{{$t('user.terms.female')}}</el-radio>
           </el-radio-group>
         </form-item>
-        <form-item label="注册时间">{{$store.state.currentUser.createdAt}}</form-item>
+        <form-item :label="$t('global.fields.created_at')">
+          {{$store.state.currentUser.createdAt}}
+        </form-item>
       </el-form>
       <el-form ref="passwordForm" :model="passwordForm" :rules="passwordRules"
                label-width="120px">
-        <h4>修改密码</h4>
-        <form-item prop="oldPassword" label="旧密码">
+        <h4>{{$t('pages.my_profile.change_password')}}</h4>
+        <form-item prop="oldPassword" :label="$t('pages.my_profile.old_password')">
           <el-input name="oldPassword" type="password"
                     v-model="passwordForm.oldPassword"></el-input>
         </form-item>
-        <form-item prop="password" label="新密码">
+        <form-item prop="password" :label="$t('pages.my_profile.new_password')">
           <el-input name="password" type="password"
                     v-model="passwordForm.password"></el-input>
         </form-item>
-        <form-item prop="passwordRepeat" label="重复新密码">
+        <form-item prop="passwordRepeat" :label="$t('pages.my_profile.repeat')">
           <el-input name="passwordRepeat" type="password"
                     v-model="passwordForm.passwordRepeat"></el-input>
         </form-item>
         <form-item>
-          <el-button @click="onPasswordChange" :loading="passwordForm.loading">提交修改
+          <el-button @click="onPasswordChange" :loading="passwordForm.loading">
+            {{$t('global.terms.submit')}}
           </el-button>
         </form-item>
       </el-form>
@@ -52,6 +57,7 @@
   import { isvalidPassword } from '@/utils/validate'
   import { SuccessMessage } from '@/utils/message'
   import { getToken } from '@/utils/auth'
+  import store from '@/store'
 
   export default {
     components: {
@@ -64,16 +70,48 @@
         roles: state => state.currentUser.roles,
         permissions: state => state.currentUser.permissions,
       }),
-    },
-    data (){
-      const validatePasswordRepeat = (rule, value, callback) => {
-        return callback();
-        if (this.passwordForm.password !== value) {
-          callback(new Error('两次输入密码不一致'))
-        } else {
-          callback()
+      passwordRules() {
+        return {
+          oldPassword: [
+            {
+              required: true,
+              trigger: 'blur',
+              message: this.$t('validation.required', { attribute: this.$t('pages.my_profile.old_password') })
+            },
+            {
+              min: 5, trigger: 'blur',
+              message: this.$t('validation.min.string', {
+                attribute: this.$t('pages.my_profile.old_password'),
+                min: 5
+              })
+            }
+          ],
+          password: [
+            {
+              required: true,
+              trigger: 'blur',
+              message: this.$t('validation.required', { attribute: this.$t('pages.my_profile.new_password') })
+            },
+            {
+              min: 5, trigger: 'blur',
+              message: this.$t('validation.min.string', {
+                attribute: this.$t('pages.my_profile.new_password'),
+                min: 5
+              })
+            }
+          ],
+          passwordRepeat: [
+            {
+              required: true, trigger: 'blur',
+              message: this.$t('validation.confirmed', {
+                attribute: this.$t('user.fields.password')
+              })
+            }
+          ]
         }
       }
+    },
+    data (){
       return {
         form: {
           gender: '',
@@ -85,23 +123,6 @@
           passwordRepeat: '',
           loading: false
         },
-        passwordRules: {
-          oldPassword: [
-            { required: true, trigger: 'blur', message: '请填写密码' },
-            { min: 5, trigger: 'blur', message: '密码不能小于5位' }
-          ],
-          password: [
-            { required: true, trigger: 'blur', message: '请填写新密码' },
-            { min: 5, trigger: 'blur', message: '新密码不能小于5位' }
-          ],
-          passwordRepeat: [
-            { required: true, trigger: 'blur', message: '请重复新密码以加深记忆' },
-            {
-              required: true,
-              trigger: 'blur',
-              validator: validatePasswordRepeat.bind(this)
-            }]
-        }
       };
     },
     mounted(){
@@ -109,29 +130,25 @@
       this.form.gender = this.$store.state.currentUser.gender;
     },
     methods: {
-      onMobileChange(newMobile){
-        this.$store.dispatch('currentUser/UpdateCurrentUserMobile', newMobile)
-                .then(SuccessMessage('手机更新完毕'))
-                .catch(() => {
-                })
+      async onMobileChange(newMobile){
+        await store.dispatch('currentUser/UpdateCurrentUserMobile', newMobile)
+        SuccessMessage(this.$t('user.fields.mobile') + ' ' + this.$t('global.terms.save_completed'))()
       },
-      onGenderChange(gender){
-        this.$store.dispatch('currentUser/UpdateCurrentUserGender', gender)
-                .then(SuccessMessage('性别更新完毕'))
-                .catch(() => {
-                })
+      async onGenderChange(gender){
+        await store.dispatch('currentUser/UpdateCurrentUserGender', gender)
+        SuccessMessage(this.$t('user.fields.gender') + ' ' + this.$t('global.terms.save_completed'))()
       },
       onPasswordChange(){
         this.$refs.passwordForm.validate(valid => {
                   if (valid) {
                     this.passwordForm.loading = true;
-                    this.$store.dispatch('currentUser/UpdateCurrentUserPassword', this.passwordForm)
+                    store.dispatch('currentUser/UpdateCurrentUserPassword', this.passwordForm)
                             .then((response) => {
                               this.passwordForm.loading = false;
                               this.passwordForm.oldPassword = '';
                               this.passwordForm.password = '';
                               this.passwordForm.passwordRepeat = '';
-                              SuccessMessage('密码更新完毕')();
+                              SuccessMessage(this.$t('user.fields.password') + ' ' + this.$t('global.terms.save_completed'))()
                             })
                             .catch(() => {
                               this.passwordForm.loading = false;

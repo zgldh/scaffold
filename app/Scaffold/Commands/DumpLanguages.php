@@ -59,10 +59,24 @@ class DumpLanguages extends Command
             if (is_dir($item)) {
                 $data[$basename] = $this->gatherLocaleLanguageData($item);
             } else {
-                $data[$basename] = require($item);
+                $data[$basename] = $this->convertToVueI18N(require($item));
             }
         }
         return $data;
+    }
+
+    private function convertToVueI18N($input)
+    {
+        $regexp = '/:(\w+)/';
+        if (is_string($input)) {
+            return preg_replace($regexp, '{$1}', $input);
+        }
+        if (is_array($input)) {
+            foreach ($input as $key => $item) {
+                $input[$key] = $this->convertToVueI18N($item);
+            }
+        }
+        return $input;
     }
 
     private function dumpLanguageFile($data, $path = null)
