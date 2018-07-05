@@ -25,9 +25,7 @@ class PermissionSeeder extends Seeder
         }
 
         $permissions = \Modules\User\Models\Permission::all();
-        foreach ($permissions as $permission) {
-            $superAdminRole->givePermissionTo($permission);
-        }
+        $superAdminRole->syncPermissions($permissions);
 
         $ordinaryRole = \Modules\User\Models\Role::firstOrNew(['name' => 'ordinary-user']);
         $ordinaryRole->label = '普通用户';

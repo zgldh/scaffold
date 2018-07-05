@@ -48,8 +48,8 @@ class ScaffoldInit extends Command
         } catch (\Exception $e) {
             //
         }
-        $this->call('db:seed', ['--class' => 'ScaffoldInitialSeeder']);
         $this->call('scaffold:update-permissions');
+        $this->call('db:seed', ['--class' => 'ScaffoldInitialSeeder']);
         $this->call('lang:dump');
         $this->info('Complete');
     }
