@@ -15,7 +15,7 @@
 开始使用
 =============
 
-1. `composer create-project zgldh/scaffold`
+1. `composer create-project zgldh/scaffold your-project-dir`
 2. 配置好 `.env` 数据库相关 
 3. `php artisan scaffold:init`
   
@@ -149,7 +149,7 @@ API 生成
    
 权限生成 
 ----------
-`scaffold:update-permissions {type=api : set guard name}
+`scaffold:update-permissions {type=api : set guard name}`
 
 遍历 `Modules` 下所有的 `controller` 和 `repository`。 根据其公共函数生成一系列权限，并自动赋予超级管理员。
  
