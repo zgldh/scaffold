@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'app_name' => 'Wind Generator Monitor',
+    'app_name' => 'Administration System',
 
     'terms'    => [
         'management'      => 'Management',

@@ -1,9 +1,11 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
+  "name": "zgldh/scaffold",
+  "description": "SPA administration system scaffold made with Laravel, VueJS, ElementUI, vueAdmin-template.",
   "keywords": [
     "framework",
-    "laravel"
+    "laravel",
+    "spa",
+    "scaffold"
   ],
   "license": "MIT",
   "type": "project",
@@ -53,7 +55,8 @@
   },
   "scripts": {
     "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+      "@php -r \"file_exists('frontend/config/dev.env.js') || copy('frontend/config/dev.env.js.example', 'frontend/config/dev.env.js');\""
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate"

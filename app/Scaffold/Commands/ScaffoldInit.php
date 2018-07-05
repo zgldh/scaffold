@@ -51,6 +51,7 @@ class ScaffoldInit extends Command
         }
         $this->call('db:seed', ['--class' => 'ScaffoldInitialSeeder']);
         $this->call('scaffold:update-permissions');
+        $this->call('lang:dump');
         $this->info('Complete');
     }
 }

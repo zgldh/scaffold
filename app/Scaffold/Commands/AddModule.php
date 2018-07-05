@@ -146,18 +146,6 @@ class AddModule extends Command
         return $storeFilePath;
     }
 
-    private function appendStore($moduleName)
-    {
-        $storeIndexFile = base_path('frontend/src/store/index.js');
-        $content = file_get_contents($storeIndexFile);
-        $content = "import {$moduleName} from './modules/{$moduleName}'\n" . $content;
-        $key = '// Append More Stores. Don\'t remove me';
-        $content = Utils::fillTemplate([
-            $key => $key . "\n    {$moduleName},"], $content, '');
-
-        file_put_contents($storeIndexFile, $content);
-    }
-
     private function generateStoreContent($moduleName)
     {
         $line = view('scaffold::frontend.store', [
@@ -174,6 +162,18 @@ class AddModule extends Command
             'moduleName'      => $this->moduleName,
         ])->render();
         return $line;
+    }
+
+    private function appendStore($moduleName)
+    {
+        $storeIndexFile = base_path('frontend/src/store/index.js');
+        $content = file_get_contents($storeIndexFile);
+        $content = "import {$moduleName} from './modules/{$moduleName}'\n" . $content;
+        $key = '// Append More Stores. Don\'t remove me';
+        $content = Utils::fillTemplate([
+            $key => $key . "\n    {$moduleName},"], $content, '');
+
+        file_put_contents($storeIndexFile, $content);
     }
 
     private function appendRoute()
