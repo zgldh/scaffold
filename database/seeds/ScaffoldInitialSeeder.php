@@ -11,7 +11,7 @@ class ScaffoldInitialSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(AdminSeeder::class);
+        $this->call(PermissionSeeder::class);
 //        $this->call(UploadsTableSeeder::class);
     }
 }

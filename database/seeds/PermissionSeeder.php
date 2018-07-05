@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Modules\User\Models\User;
 
-class AdminSeeder extends Seeder
+class PermissionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -32,5 +32,16 @@ class AdminSeeder extends Seeder
         $ordinaryRole = \Modules\User\Models\Role::firstOrNew(['name' => 'ordinary-user']);
         $ordinaryRole->label = '普通用户';
         $ordinaryRole->save();
+
+        $ordinaryRole->syncPermissions([
+            'Permission@index',
+            'Permission@show',
+            'Role@index',
+            'Role@show',
+            'Upload@index',
+            'Upload@show',
+            'User@index',
+            'User@show'
+        ]);
     }
 }
