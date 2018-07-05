@@ -23,6 +23,12 @@ class NotificationRepository extends BaseRepository
         return Notification::class;
     }
 
+    /**
+     * @no-permission
+     * @param $notifiableUser
+     * @param $lastCreatedAt
+     * @return array
+     */
     public function getLatest($notifiableUser, $lastCreatedAt)
     {
         $items = $notifiableUser->notifications()->where('created_at', '>', $lastCreatedAt)->get();
@@ -34,6 +40,13 @@ class NotificationRepository extends BaseRepository
         return [$items, $unreadCount];
     }
 
+    /**
+     * @no-permission
+     * @param $notifiableUser
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     */
     public function getItems($notifiableUser, $page = 1, $pageSize = 20)
     {
         $items = $notifiableUser->notifications()->skip(($page - 1) * $pageSize)->take($pageSize)->get();
