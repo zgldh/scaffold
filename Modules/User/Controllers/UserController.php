@@ -19,7 +19,9 @@ class UserController extends AppBaseController
     {
         $this->repository = $userRepo;
         $this->middleware("auth:api");
-        $this->middleware("permission.auto");
+        $this->middleware("permission.auto")->except([
+            'current'
+        ]);
     }
 
     /**
@@ -188,7 +190,7 @@ class UserController extends AppBaseController
         $user = $request->user();
 
         if ($request->has('user_id')) {
-            if (!$user->hasPermissionTo('manage-user','api')) {
+            if (!$user->hasPermissionTo('manage-user', 'api')) {
                 throw new AuthorizationException();
             }
             $user = User::find($input['user_id']);
