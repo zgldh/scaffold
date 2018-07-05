@@ -42,7 +42,6 @@ class ScaffoldInit extends Command
     public function handle()
     {
         $this->info('Scaffold running...');
-        $this->call('notifications:table');
         $this->call('migrate');
         try {
             $this->call('storage:link');
