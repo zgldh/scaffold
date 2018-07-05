@@ -1,6 +1,6 @@
 {
-  "name": "zgldh/scaffold",
-  "version": "1.0.2",
+  "name": "zgldh-scaffold",
+  "version": "1.0.4",
   "license": "MIT",
   "private": true,
   "scripts": {
