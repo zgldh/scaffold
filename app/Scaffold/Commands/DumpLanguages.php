@@ -68,7 +68,7 @@ class DumpLanguages extends Command
     private function dumpLanguageFile($data, $path = null)
     {
         if (!$path) {
-            $path = base_path(config('scaffold.frontend_folder', 'vueAdminTemplate') .
+            $path = base_path(config('scaffold.frontend_folder', 'frontend') .
                 '/src/lang/languages.js');
         }
         $content = "export default " . json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

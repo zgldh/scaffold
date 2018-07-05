@@ -5,7 +5,7 @@ return [
 
     'default_middleware' => 'auth:api',
 
-    'frontend_folder' => 'vueAdminTemplate',
+    'frontend_folder' => 'frontend',
 
     /**
      * Templates to create a new module from a starter.
@@ -44,16 +44,16 @@ return [
             'pages'  => [
                 'list'   => [
                     'scaffold::frontend.List',
-                    base_path('vueAdminTemplate/src/views/$MODULE_NAME$/$MODEL_NAME$/List.vue')
+                    base_path('frontend/src/views/$MODULE_NAME$/$MODEL_NAME$/List.vue')
                 ],
                 'editor' => [
                     'scaffold::frontend.Editor',
-                    base_path('vueAdminTemplate/src/views/$MODULE_NAME$/$MODEL_NAME$/Editor.vue')
+                    base_path('frontend/src/views/$MODULE_NAME$/$MODEL_NAME$/Editor.vue')
                 ]
             ],
             'routes' => [
                 'scaffold::frontend.routes',
-                base_path('vueAdminTemplate/src/router/dynamicRouterMap.js')
+                base_path('frontend/src/router/dynamicRouterMap.js')
             ],
         ],
         'service_provider' => 'scaffold::raw.ServiceProvider',

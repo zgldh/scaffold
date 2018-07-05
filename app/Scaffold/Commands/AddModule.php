@@ -45,7 +45,7 @@ class AddModule extends Command
         $this->isForce = $this->option('force');
 
         $this->moduleDirectory = $this->makeModuleDirectory($this->moduleName);
-        $this->frontendStoreDirectory = base_path("vueAdminTemplate/src/store/modules");
+        $this->frontendStoreDirectory = base_path("frontend/src/store/modules");
 
         $routePath = $this->createRouteFile();
         $serviceProviderPath = $this->createServiceProvider();
@@ -148,7 +148,7 @@ class AddModule extends Command
 
     private function appendStore($moduleName)
     {
-        $storeIndexFile = base_path('vueAdminTemplate/src/store/index.js');
+        $storeIndexFile = base_path('frontend/src/store/index.js');
         $content = file_get_contents($storeIndexFile);
         $content = "import {$moduleName} from './modules/{$moduleName}'\n" . $content;
         $key = '// Append More Stores. Don\'t remove me';

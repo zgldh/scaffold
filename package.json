@@ -4,10 +4,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config vueAdminTemplate/build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config frontend/build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node vueAdminTemplate/build/build.js",
-    "build:report": "npm_config_report=true node vueAdminTemplate/build/build.js",
+    "build": "node frontend/build/build.js",
+    "build:report": "npm_config_report=true node frontend/build/build.js",
     "lint": "eslint --ext .js,.vue src",
     "test": "npm run lint"
   },

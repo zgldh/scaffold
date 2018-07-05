@@ -239,7 +239,7 @@ class AddAPI extends Command
 
     private function createFrontEndAPI($method, $route)
     {
-        $apiPath = base_path(config('scaffold.frontend_folder', 'vueAdminTemplate')
+        $apiPath = base_path(config('scaffold.frontend_folder', 'frontend')
             . '/src/api/' . strtolower($this->moduleName) . '.js');
         if (!file_exists($apiPath)) {
             $this->info("API file doesn't exists. Generating.");

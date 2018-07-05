@@ -21,26 +21,18 @@
 
 ### 开始使用
 
-1. git clone
-2. `php artisan scaffold:init`
-
-- It will run 
-  - migrate
-  - storage:link
-  - db:seed --class=ScaffoldInitialSeeder
-
-`php artisan scaffold:make TableName1 TableName2 TableName3 --module=ModuleName --version=V2`
-
-- TODO It will generate
-
-`php artisan scaffold:api:add PUT user/{user_id}/mobile ModuleName`
-
-- It will generate PHP route/Request/Controller and Vue API
-
-
-仍然处在开发阶段，不稳定。
-打算正式版的时候，全盘转入token认证。也就是laravel里面的 auth:api
-
+1. composer create-project zgldh/scaffold
+2. 配置好 .env
+3. `php artisan scaffold:init`
+  
+   会自动执行以下命令 
+   
+   - migrate
+   - storage:link
+   - db:seed --class=ScaffoldInitialSeeder
+  
+4. npm install
+5. npm run start
 
 ### 感谢
 

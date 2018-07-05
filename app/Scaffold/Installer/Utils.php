@@ -320,7 +320,7 @@ class Utils
      */
     public static function createFrontEndAPI($actionName, $method, $route, $modelName)
     {
-        $apiPath = base_path(config('scaffold.frontend_folder', 'vueAdminTemplate')
+        $apiPath = base_path(config('scaffold.frontend_folder', 'frontend')
             . '/src/api/' . $modelName . '.js');
         if (!file_exists($apiPath)) {
             Utils::writeFile($apiPath, view('scaffold::frontend.api.file')->render());
