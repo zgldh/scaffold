@@ -1,44 +1,74 @@
 {
   "name": "zgldh/scaffold",
-  "description": "Scaffold for Laravel.",
+  "description": "SPA administration system scaffold made with Laravel, VueJS, ElementUI, vueAdmin-template.",
   "keywords": [
+    "framework",
     "laravel",
+    "spa",
     "scaffold"
   ],
   "license": "MIT",
+  "type": "project",
   "require": {
     "php": ">=7.0.0",
+    "barryvdh/laravel-cors": "^0.9.3",
+    "dingo/api": "2.0.0-alpha1",
+    "fideloper/proxy": "~3.3",
     "laravel/framework": "5.5.*",
-    "doctrine/dbal": "~2.3",
-    "zgldh/laracasts-generators": "1.2.1",
-    "laravel/passport": "~2.0",
-    "barryvdh/laravel-ide-helper": "~2.2",
-    "prettus/l5-repository": "~2.6",
+    "laravel/tinker": "~1.0",
+    "league/csv": "^9.1",
+    "prettus/l5-repository": "^2.6",
+    "spatie/laravel-activitylog": "^2.5",
+    "spatie/laravel-permission": "^2.9",
+    "tymon/jwt-auth": "1.0.0-rc.2",
     "yajra/laravel-datatables-oracle": "~8.0",
-    "itsgoingd/clockwork": "~2.0"
+    "zgldh/laravel-upload-manager": "^0.4.5"
   },
   "require-dev": {
-    "filp/whoops": "~2.1"
+    "filp/whoops": "~2.0",
+    "fzaninotto/faker": "~1.4",
+    "laracasts/generators": "^1.1",
+    "mockery/mockery": "~1.0",
+    "phpunit/phpunit": "~6.0",
+    "symfony/thanks": "^1.0"
   },
   "autoload": {
     "classmap": [
+      "database/seeds",
+      "database/factories"
     ],
     "psr-4": {
-      "zgldh\\Scaffold\\": "src/"
+      "App\\": "app/",
+      "Modules\\": "Modules/"
     }
   },
   "autoload-dev": {
-    "classmap": [
-    ]
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+      ]
+    }
   },
   "scripts": {
     "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+      "@php -r \"file_exists('frontend/config/dev.env.js') || copy('frontend/config/dev.env.js.example', 'frontend/config/dev.env.js');\""
     ],
     "post-create-project-cmd": [
+      "@php artisan key:generate"
     ],
-    "post-install-cmd": [
-    ],
-    "post-update-cmd": [
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover"
     ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
   }
 }

@@ -1,0 +1,4 @@
+frontend/build/*.js
+frontend/config/*.js
+frontend/src/assets
+frontend/src/lang/languages.js
