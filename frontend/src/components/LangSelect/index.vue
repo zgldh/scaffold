@@ -1,5 +1,6 @@
 <template>
-  <el-dropdown trigger="click" class='international' @command="handleSetLanguage">
+  <el-dropdown trigger="click" class='lang-select' :class="theme"
+               @command="handleSetLanguage">
     <div>
       <svg-icon class-name='international-icon' icon-class="language"/>
     </div>
@@ -14,6 +15,12 @@
 
 <script type="javascript">
   export default {
+    props: {
+      theme: { // dark or light
+        type: String,
+        default: 'dark'
+      }
+    },
     computed: {
       language() {
         return this.$store.getters.language
@@ -35,10 +42,17 @@
 <style lang="scss">
   @import "../../styles/variables.scss";
 
-  .international-icon {
-    font-size: 20px;
-    cursor: pointer;
-    vertical-align: -5px !important;
+  .lang-select {
+    &.light {
+      .international-icon {
+        color: white;
+      }
+    }
+    .international-icon {
+      font-size: 20px;
+      cursor: pointer;
+      vertical-align: -5px !important;
+    }
   }
 
   .international-menu {

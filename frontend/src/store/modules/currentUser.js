@@ -32,6 +32,9 @@ const currentUser = {
         return item === permission
       })
       return index >= 0
+    },
+    isLogin: (state) => {
+      return !!state.token
     }
   },
   mutations: {

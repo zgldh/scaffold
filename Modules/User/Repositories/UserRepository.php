@@ -24,6 +24,16 @@ class UserRepository extends BaseRepository
         return User::class;
     }
 
+    public function create(array $attributes)
+    {
+        $user = parent::create($attributes);
+        if (count($attributes['roles']) > 0) {
+            $newRoles = Role::whereIn('id', $attributes['roles'])->get();
+            $user->syncRoles($newRoles);
+        }
+        return $user;
+    }
+
     public function update(array $attributes, $id)
     {
         if (!(isset($attributes['password']) && strlen($attributes['password']) > 0)) {

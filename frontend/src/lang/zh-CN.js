@@ -4,12 +4,6 @@
 
 export default {
   app_name: '管理平台',
-  sign_in: '登录',
-  password: {
-    send: '发送',
-    reset_password: '重置密码',
-    send_email_success: '重置密码邮件发送成功！请查询邮件重置密码'
-  },
   navbar: {
     my_profile: '个人页面',
     log_out: '退出登录',
@@ -33,6 +27,15 @@ export default {
     export_file_name: '导出-{title}-{timestamp}'
   },
   pages: {
+    login: {
+      sign_in: '登录',
+      forget_password: '忘记密码了？'
+    },
+    password: {
+      send: '发送',
+      reset_password: '重置密码',
+      send_email_success: '重置密码邮件发送成功！请查询邮件重置密码'
+    },
     role: {
       terms: {
         edit_permission: '编辑权限',

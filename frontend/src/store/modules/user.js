@@ -64,8 +64,10 @@ const user = {
     },
     setLanguage: {
       root: true,
-      handler: ({ dispatch }, payload) => {
-        dispatch('LoadPermissions', true)
+      handler: (store, payload) => {
+        if (store.rootGetters['currentUser/isLogin']) {
+          store.dispatch('LoadPermissions', true)
+        }
       }
     }
   }

@@ -35,7 +35,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(_.trimEnd(to.path, '/')) !== -1) {
       next()
     } else {
       next({

@@ -10,24 +10,40 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import SimpleLayout from '../views/layout/Simple'
 
 import dynamicRouterMap from './dynamicRouterMap'
 export const constantRouterMap = [
   {
     path: '/login',
-    name: 'login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    component: SimpleLayout,
+    hidden: true,
+    children: [
+      {
+        name: 'login',
+        path: '',
+        component: () => import('@/views/login/index'),
+        hidden: true
+      }
+    ]
   },
   {
-    path: '/password/forget',
-    component: () => import('@/views/password/forget'),
-    hidden: true
-  },
-  {
-    path: '/password/reset',
-    component: () => import('@/views/password/reset'),
-    hidden: true
+    path: '/password/',
+    name: 'password pages',
+    component: SimpleLayout,
+    hidden: true,
+    children: [
+      {
+        path: 'forget',
+        component: () => import('@/views/password/forget'),
+        hidden: true
+      },
+      {
+        path: 'reset',
+        component: () => import('@/views/password/reset'),
+        hidden: true
+      }
+    ]
   },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
   {

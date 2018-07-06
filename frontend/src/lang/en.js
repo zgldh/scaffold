@@ -4,12 +4,6 @@
 
 export default {
   app_name: 'Backend Manager',
-  sign_in: 'Sign In',
-  password: {
-    send: 'send',
-    reset_password: 'reset password',
-    send_email_success: 'Reset password mail sent successfully! Please check the email to reset the password'
-  },
   navbar: {
     my_profile: 'My Profile',
     log_out: 'Log Out',
@@ -33,6 +27,15 @@ export default {
     export_file_name: 'Export-{title}-{timestamp}'
   },
   pages: {
+    login: {
+      sign_in: 'Sign In',
+      forget_password: 'Forgot password?'
+    },
+    password: {
+      send: 'send',
+      reset_password: 'reset password',
+      send_email_success: 'Reset password mail sent successfully! Please check the email to reset the password'
+    },
     role: {
       terms: {
         edit_permission: 'Edit Permission',
