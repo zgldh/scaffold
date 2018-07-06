@@ -5,7 +5,11 @@
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
                    @change="handleCheckAllChange">{{modelNameI18N}} : {{permission.label}}
       </el-checkbox>
-      <el-tag size="mini" type="info">{{permission.name}}</el-tag>
+      <el-tooltip placement="right" :content="$t('global.terms.copy')">
+        <el-button class="copy-button" size="small" plain @click="copyPermissionName">
+          {{permission.name}}
+        </el-button>
+      </el-tooltip>
       <span class="flex"></span>
       <cell-action :target="permission" :actions="actions"></cell-action>
     </el-row>
@@ -26,6 +30,10 @@
   import PermissionLabel  from '@/components/Permission/PermissionLabel'
   import RoleLabel  from '@/components/Permission/RoleLabel'
   import { ModelLang } from '@/utils/permission'
+  import {
+    SuccessMessage,
+    TextCopyDialog,
+  } from '@/utils/message'
 
   export default {
     name: 'permission-row',
@@ -146,6 +154,11 @@
             this.isModelLast = true;
           }
         })
+      },
+      copyPermissionName(){
+        this.$copyText(this.permission.name).then(SuccessMessage(this.$t('messages.text_copy.complete')), (e) => {
+          return TextCopyDialog(message)
+        })
       }
     }
   }
@@ -179,6 +192,11 @@
     &:hover {
       background-color: white;
       border-left-color: adjust_color($borderL1, $lightness: -50%);
+    }
+
+    .copy-button {
+      padding: 2px 8px;
+      height: 22px;
     }
 
     .cell-actions {
