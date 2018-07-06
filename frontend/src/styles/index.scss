@@ -66,6 +66,11 @@ a:hover {
   border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
+.flex {
+  flex: 1;
+}
+
+// Scrollbar start
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -81,3 +86,5 @@ a:hover {
   background: $borderL3;
   border-left: solid 1px $borderL1;
 }
+
+// Scrollbar end

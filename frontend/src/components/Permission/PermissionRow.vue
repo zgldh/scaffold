@@ -1,10 +1,12 @@
 <template>
   <div class="permission-row" :model-name="'model-'+modelName"
        :class="{last:isModelLast}">
-    <el-row justify="space-between" type="flex">
+    <el-row justify="start" type="flex">
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
                    @change="handleCheckAllChange">{{modelNameI18N}} : {{permission.label}}
       </el-checkbox>
+      <el-tag size="mini" type="info">{{permission.name}}</el-tag>
+      <span class="flex"></span>
       <cell-action :target="permission" :actions="actions"></cell-action>
     </el-row>
     <el-checkbox-group v-model="checkedRoleIds"

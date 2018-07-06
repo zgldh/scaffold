@@ -48,6 +48,7 @@
   import ListMixin from '@/mixins/List'
   import { mapState } from 'vuex'
   import { RoleCopyDialog } from '@/utils/permission'
+  import store from '@/store/index'
 
   export default {
     components: {},
@@ -63,7 +64,8 @@
         actions: [
           {
             Title: () => this.$i18n.t('global.terms.edit'),
-            Handle: this.handleEdit
+            Handle: this.handleEdit,
+            IsVisible: () => this.$store.getters.hasPermission('Role@edit')
           },
           {
             Title: () => this.$i18n.t('global.terms.copy'),
@@ -71,7 +73,8 @@
           },
           {
             Title: () => this.$i18n.t('global.terms.delete'),
-            Handle: this.handleDelete
+            Handle: this.handleDelete,
+            IsVisible: () => this.$store.getters.hasPermission('Role@destroy')
           },
           150
         ],
@@ -114,27 +117,30 @@
         this.$router.push({ path: `/user/role/${item.id}/edit` })
       },
       handleCopy(item){
-        RoleCopyDialog(item).then(({ value }) => {
+        RoleCopyDialog(item).then(async ({ value }) => {
           this.loading = true
-          return RoleCopy({
-            id: item.id,
-            name: value
-          })
-        }).then(result => {
-          this.loading = false
-          this.$refs.table.loadSource()
-        }).catch(err => {
-          this.loading = false
-          Error422(err)
+          try {
+            await RoleCopy({
+              id: item.id,
+              name: value
+            })
+            this.$refs.table.loadSource()
+          } catch (e) {
+            Error422(err)
+          } finally {
+            this.loading = false
+          }
         });
       },
       handleDelete(item){
-        DeleteConfirm(item.label, () => {
+        DeleteConfirm(item.label, async () => {
           this.loading = true
-          return RoleDestroy(item.id)
-        }).then(() => {
-          this.loading = false
-          this.$refs.table.removeItem(item)
+          try {
+            await RoleDestroy(item.id)
+            this.$refs.table.removeItem(item)
+          } finally {
+            this.loading = false
+          }
         })
       },
       editPermission(item){

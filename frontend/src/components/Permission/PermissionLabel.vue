@@ -1,5 +1,5 @@
 <template>
-  <span class="permissoin-label">{{renderLabel}}</span>
+  <span class="permissoin-label" :title="permissionName">{{renderLabel}}</span>
 </template>
 
 <script type="javascript">

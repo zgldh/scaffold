@@ -122,13 +122,19 @@
           store.dispatch('user/removePermission', permission.id)
         }).then(result => {
           this.loadingId = null
+        }).catch(result => {
+          this.loadingId = null
         });
       },
-      onChanged({ permission, roles }){
+      async onChanged({ permission, roles }){
         this.loadingId = permission.id;
-        PermissionSyncRoles(permission.id, { roleIds: roles.map(role => role.id) })
-                .then(result => console.log(result))
-                .then(res => this.loadingId = null);
+        try {
+          var result = await PermissionSyncRoles(permission.id, { roleIds: roles.map(role => role.id) })
+        } catch (e) {
+          this.selectedRoles[permission.id] = this.selectedRoles[permission.id].slice(0)
+        } finally {
+          this.loadingId = null
+        }
       },
       findRolesByPermission(permission){
         return this.roles.filter(role => role.permissions.findIndex(perm => perm.id === permission.id) >= 0)
