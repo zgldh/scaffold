@@ -50,11 +50,13 @@
         actions: [
           {
             Title: () => this.$i18n.t('global.terms.edit'),
-            Handle: this.handleEdit
+            Handle: this.handleEdit,
+            IsVisible: () => store.getters.hasPermission('Permission@edit')
           },
           {
             Title: () => this.$i18n.t('global.terms.delete'),
-            Handle: this.handleDelete
+            Handle: this.handleDelete,
+            IsVisible: () => store.getters.hasPermission('Permission@destroy')
           },
         ]
       }

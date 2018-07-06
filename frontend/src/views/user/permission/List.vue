@@ -117,13 +117,13 @@
         this.$refs.editor.show(permission).then(result => store.commit('user/SET_PERMISSION', result))
       },
       onDelete({ permission, roles }){
-        DeleteConfirm(PermissionFullLang(permission.name), () => {
+        DeleteConfirm(PermissionFullLang(permission.name), async () => {
           this.loadingId = permission.id
-          store.dispatch('user/removePermission', permission.id)
-        }).then(result => {
-          this.loadingId = null
-        }).catch(result => {
-          this.loadingId = null
+          try {
+            await store.dispatch('user/removePermission', permission.id)
+          } finally {
+            this.loadingId = null
+          }
         });
       },
       async onChanged({ permission, roles }){

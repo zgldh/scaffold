@@ -65,16 +65,17 @@
           {
             Title: () => this.$i18n.t('global.terms.edit'),
             Handle: this.handleEdit,
-            IsVisible: () => this.$store.getters.hasPermission('Role@edit')
+            IsVisible: () => store.getters.hasPermission('Role@edit')
           },
           {
             Title: () => this.$i18n.t('global.terms.copy'),
-            Handle: this.handleCopy
+            Handle: this.handleCopy,
+            IsVisible: () => store.getters.hasPermission('Role@copy')
           },
           {
             Title: () => this.$i18n.t('global.terms.delete'),
             Handle: this.handleDelete,
-            IsVisible: () => this.$store.getters.hasPermission('Role@destroy')
+            IsVisible: () => store.getters.hasPermission('Role@destroy')
           },
           150
         ],
