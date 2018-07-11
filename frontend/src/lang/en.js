@@ -32,9 +32,13 @@ export default {
       forget_password: 'Forgot password?'
     },
     password: {
-      send: 'send',
-      reset_password: 'reset password',
-      send_email_success: 'Reset password mail sent successfully! Please check the email to reset the password'
+      forget_title: 'Reset your password',
+      reset_title: 'Reset your password',
+      forget_note: 'Please input your registered email, we will send you an reset password email',
+      forget_send: 'Send',
+      reset_password: 'Reset password',
+      send_email_success: 'Reset password mail sent successfully! Please check the email to reset the password',
+      back_to_login: 'Back to Login'
     },
     role: {
       terms: {

@@ -32,9 +32,13 @@ export default {
       forget_password: '忘记密码了？'
     },
     password: {
-      send: '发送',
+      forget_title: '发送重置密码邮件',
+      reset_title: '重置我的密码',
+      forget_note: '请输入您的注册邮箱，您将收到重置密码邮件',
+      forget_send: '发送',
       reset_password: '重置密码',
-      send_email_success: '重置密码邮件发送成功！请查询邮件重置密码'
+      send_email_success: '重置密码邮件发送成功！请查询邮件重置密码',
+      back_to_login: '返回登录'
     },
     role: {
       terms: {

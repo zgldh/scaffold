@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" class="auto-icon">
+  <div :class="className" class="auto-icon" @click="onClick">
     <svg-icon v-if="iconType === TYPE_SVGICON" :icon-class="iconClass"></svg-icon>
     <i v-if="iconType === TYPE_FONTAWESOME" :class="iconClass+' fa'"></i>
     <i v-if="iconType === TYPE_IONICON" :class="iconClass+' icon'"></i>
@@ -45,6 +45,11 @@
         }
         return TYPE_SVGICON;
       },
+    },
+    methods: {
+      onClick(e){
+        this.$emit('click', e)
+      }
     }
   }
 

@@ -4,43 +4,51 @@
              ref="forgetPassword"
              label-position="left" label-width="0px"
              class="card-box main-form">
-      <h3 class="title">{{$t('app_name')}}</h3>
+      <h3 class="title">{{$t('pages.password.forget_title')}}</h3>
 
-      <div class="tips">
-        请输入您的注册邮箱，您将收到重置密码邮件。
-      </div>
+      <div class="tips">{{$t('pages.password.forget_note')}}</div>
       <form-item prop="email">
         <i class="fa fa-envelope"></i>
         <el-input name="email" type="text" v-model="forgetPassword.email"
                   autoComplete="on" placeholder="email"/>
       </form-item>
 
-      <form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading"
-                   @click.native.prevent="sendResetEmail">
-          {{$t('pages.password.send')}}
-        </el-button>
-        <el-button class="back-button" type="text"
-                   @click="()=>{$router.push({name:'login'})}">
-          {{$t('global.terms.back')}}
-        </el-button>
-      </form-item>
       <div class="tips" v-if="isSend">
         <span style="margin-right:20px;">{{$t('pages.password.send_email_success')}}</span>
       </div>
+
+      <form-item>
+        <el-button type="primary" style="width:100%;" :loading="loading"
+                   @click.native.prevent="sendResetEmail">
+          {{$t('pages.password.forget_send')}}
+        </el-button>
+      </form-item>
+      <el-row>
+        <el-col :span="24">
+          <el-button class="back-button tips" type="text" size="mini"
+                     @click="()=>{$router.push({name:'login'})}">
+            {{$t('pages.password.back_to_login')}}
+          </el-button>
+          <lang-select theme="light"/>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script type="javascript">
+  import LangSelect from '@/components/LangSelect'
   import { isvalidEmail } from '@/utils/validate'
 
   export default {
-    name: 'login',
+    name: 'forget-page',
+    components: {
+      LangSelect
+    },
     data() {
       const validateEmail = (rule, value, callback) => {
         if (!isvalidEmail(value)) {
-          callback(new Error('请输入正确的Email'))
+          callback(new Error(this.$t('validation.email', { attribute: value })))
         } else {
           callback()
         }
@@ -99,6 +107,11 @@
       display: block;
       margin: 0 auto;
       color: $borderL4;
+    }
+    .lang-select {
+      position: absolute;
+      right: 0;
+      top: 4px;
     }
   }
 </style>

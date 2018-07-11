@@ -13,11 +13,10 @@
         <span class="svg-container">
           <svg-icon icon-class="password"></svg-icon>
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin"
-                  v-model="loginForm.password" autoComplete="on"
-                  :placeholder="$t('user.fields.password')"></el-input>
-        <span class="show-pwd" @click="showPwd"><auto-icon
-                :icon-class="passwordIcon"/></span>
+        <password-input name="password"
+                        v-model="loginForm.password"
+                        :placeholder="$t('user.fields.password')"
+                        @keyup.enter.native="handleLogin"></password-input>
       </form-item>
       <form-item>
         <el-button type="primary" style="width:100%;" :loading="loading"
@@ -42,16 +41,18 @@
 <script type="javascript">
   import { isvalidEmail, isvalidPassword } from '@/utils/validate'
   import LangSelect from '@/components/LangSelect'
+  import PasswordInput from '@/components/PasswordInput'
 
   export default {
     name: 'login',
     components: {
-      LangSelect
+      LangSelect,
+      PasswordInput
     },
     data() {
       const validateEmail = (rule, value, callback) => {
         if (!isvalidEmail(value)) {
-          callback(new Error(this.$t('validation.email', { attribute: value })))
+          callback(new Error(this.$t('validation.email', { attribute: this.$t('user.fields.email') })))
         } else {
           callback()
         }
@@ -75,23 +76,11 @@
           email: [{ required: true, trigger: 'blur', validator: validateEmail }],
           password: [{ required: true, trigger: 'blur', validator: validatePass }]
         },
-        loading: false,
-        pwdType: 'password'
+        loading: false
       }
     },
-    computed: {
-      passwordIcon(){
-        return this.pwdType === 'password' ? 'ion-md-eye' : 'ion-md-eye-off';
-      }
-    },
+    computed: {},
     methods: {
-      showPwd() {
-        if (this.pwdType === 'password') {
-          this.pwdType = ''
-        } else {
-          this.pwdType = 'password'
-        }
-      },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {

@@ -3,30 +3,23 @@
     <el-form autoComplete="on" :model="resetForm" :rules="resetRules" ref="resetForm"
              label-position="left" label-width="0px"
              class="card-box main-form">
-      <h3 class="title">{{$t('app_name')}}</h3>
-      <el-input name="token" type="hidden"
-                v-model="resetForm.token"></el-input>
-      <el-input name="email" type="hidden"
-                v-model="resetForm.email"></el-input>
+      <h3 class="title">{{$t('pages.password.reset_title')}}</h3>
       <form-item prop="password">
                 <span class="svg-container">
                   <svg-icon icon-class="password"></svg-icon>
                 </span>
-        <el-input name="password" :type="pwdType"
-                  v-model="resetForm.password" autoComplete="on"
-                  placeholder="new password"></el-input>
-        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye"/></span>
+        <password-input name="password" v-model="resetForm.password"
+                        :placeholder="$t('pages.my_profile.new_password')"></password-input>
       </form-item>
 
       <form-item prop="password_confirmation">
                 <span class="svg-container">
                   <svg-icon icon-class="password"></svg-icon>
                 </span>
-        <el-input name="password_confirmation" :type="pwdType"
-                  @keyup.enter.native="handleReset"
-                  v-model="resetForm.password_confirmation" autoComplete="on"
-                  placeholder="confirm password"></el-input>
-        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye"/></span>
+        <password-input name="password_confirmation"
+                        v-model="resetForm.password_confirmation"
+                        :placeholder="$t('pages.my_profile.repeat')"
+                        @keyup.enter.native="handleReset"></password-input>
       </form-item>
 
       <form-item>
@@ -35,18 +28,36 @@
           {{$t('pages.password.reset_password')}}
         </el-button>
       </form-item>
+      <el-row>
+        <el-col :span="24">
+          <el-button class="back-button tips" type="text" size="mini"
+                     @click="()=>{$router.push({name:'login'})}">
+            {{$t('pages.password.back_to_login')}}
+          </el-button>
+          <lang-select theme="light"/>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script type="javascript">
+  import LangSelect from '@/components/LangSelect'
+  import PasswordInput from '@/components/PasswordInput'
 
   export default {
-    name: 'reset',
+    name: 'reset-page',
+    components: {
+      LangSelect,
+      PasswordInput
+    },
     data() {
       const validatePass = (rule, value, callback) => {
         if (value.length < 5) {
-          callback(new Error('密码不能小于5位'))
+          callback(new Error(this.$t('validation.min.string', {
+            attribute: this.$t('pages.my_profile.new_password'),
+            min: 5
+          })))
         } else {
           if (this.resetForm.password_confirmation !== '') {
             this.$refs.resetForm.validateField('password_confirmation');
@@ -56,9 +67,11 @@
       };
       const validatePass2 = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
+          callback(new Error(this.$t('validation.required', { attribute: this.$t('pages.my_profile.repeat') })));
         } else if (value !== this.resetForm.password) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error(this.$t('validation.confirmed', {
+            attribute: this.$t('user.fields.password')
+          })));
         } else {
           callback();
         }
@@ -82,18 +95,6 @@
         pwdType: 'password'
       }
     },
-    // beforeRouteEnter (to, from, next) {
-    //     console.log(to,from);
-    //     next(vm => {
-    //       vm.token = to.query.reset_token;
-    //       vm.email = to.query.email;
-    //     });
-    // },
-    created () {
-      console.log(this.$route);
-      this.resetForm.token = this.$route.query.reset_token;
-      this.resetForm.email = window.atob(this.$route.query.email);
-    },
     methods: {
       showPwd() {
         if (this.pwdType === 'password') {
@@ -103,22 +104,25 @@
         }
       },
       handleReset() {
-        this.$refs.resetForm.validate(valid => {
+        this.$refs.resetForm.validate(async valid => {
           if (valid) {
             this.loading = true;
-            this.$store.dispatch('currentUser/Reset', this.resetForm).then(() => {
-              this.loading = false;
+            this.resetForm.token = this.$route.query.reset_token;
+            this.resetForm.email = this.$route.query.email;
+            try {
+              await this.$store.dispatch('currentUser/Reset', this.resetForm)
               this.$message({
                 message: '重置成功!现在跳转至登陆页',
                 type: 'success'
               });
-              this.$router.push({ name: 'login' })
-            }).catch(() => {
+            } finally {
               this.loading = false
-            })
-          } else {
-            console.log('error submit!!');
-            return false
+            }
+            this.$message({
+              message: '重置成功!现在跳转至登陆页',
+              type: 'success'
+            });
+            this.$router.push({ name: 'login' })
           }
         })
       }
@@ -129,6 +133,18 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+  @import "../../styles/variables";
+
   .reset-password-page {
+    .back-button {
+      display: block;
+      margin: 0 auto;
+      color: $borderL4;
+    }
+    .lang-select {
+      position: absolute;
+      right: 0;
+      top: 4px;
+    }
   }
 </style>

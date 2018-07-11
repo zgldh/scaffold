@@ -32,17 +32,13 @@
       -webkit-text-fill-color: $borderL4 !important;
     }
     input {
-      background: transparent;
-      border: 0px;
+      background-color: lighten($subMenuBg, 10%);
       -webkit-appearance: none;
-      border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: $borderL3;
-      height: 47px;
     }
     .el-input {
       display: inline-block;
-      height: 47px;
       width: 85%;
     }
     .tips {
@@ -59,7 +55,6 @@
     }
     .title {
       font-size: 26px;
-      font-weight: 400;
       color: $borderL3;
       margin: 0px auto 40px auto;
       text-align: center;
@@ -76,7 +71,6 @@
     .form-item {
       border: 1px solid $borderL4;
       background: $borderL1;
-      border-radius: 5px;
       color: $textPrimary;
     }
     .show-pwd {
