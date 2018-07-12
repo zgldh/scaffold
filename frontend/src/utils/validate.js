@@ -13,7 +13,7 @@ export function isvalidEmail(str) {
 }
 
 export function isvalidPassword(str) {
-  if (str.length < 5) {
+  if (str.length < 6) {
     return false
   }
   return true

@@ -1,39 +1,44 @@
 <template>
-  <div class="send-password-reset-email-page">
-    <el-form autoComplete="on" :model="forgetPassword" :rules="formRules"
-             ref="forgetPassword"
-             label-position="left" label-width="0px"
-             class="card-box main-form">
-      <h3 class="title">{{$t('pages.password.forget_title')}}</h3>
+    <div class="send-password-reset-email-page">
+        <el-form autoComplete="on" :model="forgetPassword" :rules="formRules"
+                 ref="forgetPassword"
+                 @submit.native.prevent="sendResetEmail"
+                 label-position="left" label-width="0px"
+                 class="card-box main-form">
+            <h3 class="title">{{$t('pages.password.forget_title')}}</h3>
 
-      <div class="tips">{{$t('pages.password.forget_note')}}</div>
-      <form-item prop="email">
-        <i class="fa fa-envelope"></i>
-        <el-input name="email" type="text" v-model="forgetPassword.email"
-                  autoComplete="on" placeholder="email"/>
-      </form-item>
+            <div class="tips">{{$t('pages.password.forget_note')}}</div>
 
-      <div class="tips" v-if="isSend">
-        <span style="margin-right:20px;">{{$t('pages.password.send_email_success')}}</span>
-      </div>
+            <form-item prop="email">
+                <i class="fa fa-envelope"></i>
+                <el-input name="email" type="text" v-model="forgetPassword.email"
+                          :autofocus="true" autoComplete="on" placeholder="email"/>
+            </form-item>
 
-      <form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading"
-                   @click.native.prevent="sendResetEmail">
-          {{$t('pages.password.forget_send')}}
-        </el-button>
-      </form-item>
-      <el-row>
-        <el-col :span="24">
-          <el-button class="back-button tips" type="text" size="mini"
-                     @click="()=>{$router.push({name:'login'})}">
-            {{$t('pages.password.back_to_login')}}
-          </el-button>
-          <lang-select theme="light"/>
-        </el-col>
-      </el-row>
-    </el-form>
-  </div>
+
+            <form-item>
+                <el-alert v-if="isSend" :title="$t('pages.password.send_email_success')"
+                          type="success"
+                          :closable="false"
+                          show-icon>
+                </el-alert>
+                <el-button v-else type="primary" style="width:100%;"
+                           :loading="loading"
+                           @click.native.prevent="sendResetEmail">
+                    {{$t('pages.password.forget_send')}}
+                </el-button>
+            </form-item>
+            <el-row>
+                <el-col :span="24">
+                    <el-button class="back-button tips" type="text" size="mini"
+                               @click="()=>{$router.push({name:'login'})}">
+                        {{$t('pages.password.back_to_login')}}
+                    </el-button>
+                    <lang-select theme="light"/>
+                </el-col>
+            </el-row>
+        </el-form>
+    </div>
 </template>
 
 <script type="javascript">
@@ -82,10 +87,6 @@
             this.$store.dispatch('currentUser/Forget', this.forgetPassword).then(() => {
               this.loading = false;
               this.isSend = true;
-              this.$message({
-                message: '重置邮件发送成功！',
-                type: 'success'
-              });
             }).catch(() => {
               this.loading = false
             })
@@ -100,18 +101,18 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  @import "../../styles/variables";
+    @import "../../styles/variables";
 
-  .send-password-reset-email-page {
-    .back-button {
-      display: block;
-      margin: 0 auto;
-      color: $borderL4;
+    .send-password-reset-email-page {
+        .back-button {
+            display: block;
+            margin: 0 auto;
+            color: $borderL4;
+        }
+        .lang-select {
+            position: absolute;
+            right: 0;
+            top: 4px;
+        }
     }
-    .lang-select {
-      position: absolute;
-      right: 0;
-      top: 4px;
-    }
-  }
 </style>

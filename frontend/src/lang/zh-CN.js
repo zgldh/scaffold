@@ -38,6 +38,8 @@ export default {
       forget_send: '发送',
       reset_password: '重置密码',
       send_email_success: '重置密码邮件发送成功！请查询邮件重置密码',
+      reset_success: '密码修改成功！请使用新密码登录',
+      reset_error: 'Token 已过期，请重新获取重置密码邮件',
       back_to_login: '返回登录'
     },
     role: {

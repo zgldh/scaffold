@@ -38,6 +38,8 @@ export default {
       forget_send: 'Send',
       reset_password: 'Reset password',
       send_email_success: 'Reset password mail sent successfully! Please check the email to reset the password',
+      reset_success: 'Password has been updated. Please login with your new password',
+      reset_error: 'Token expired, please try to get another reset password email',
       back_to_login: 'Back to Login'
     },
     role: {

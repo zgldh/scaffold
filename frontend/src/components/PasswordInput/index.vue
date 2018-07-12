@@ -1,8 +1,8 @@
 <template>
-  <el-input class="password-input" :type="type" auto-complete="off"
-            :placeholder="placeholder" v-model="password">
-    <auto-icon slot="suffix" :icon-class="iconClass" @click="onToggleButtonClick"/>
-  </el-input>
+    <el-input class="password-input" :type="type" auto-complete="off"
+              :placeholder="placeholder" v-model="password" :autofocus="autofocus">
+        <auto-icon slot="suffix" :icon-class="iconClass" @click="onToggleButtonClick"/>
+    </el-input>
 </template>
 
 <script type="javascript">
@@ -23,27 +23,31 @@
       },
       placeholder: {
         type: String
+      },
+      autofocus: {
+        type: Boolean,
+        default: false
       }
     },
-    data(){
+    data() {
       return {
         password: '',
         type: 'password'
       }
     },
     computed: {
-      iconClass(){
+      iconClass() {
         return this.type === 'password' ? 'ion-md-eye' : 'ion-md-eye-off';
       }
     },
-    mounted(){
+    mounted() {
       this.password = this.value;
     },
     watch: {
-      value(newValue){
+      value(newValue) {
         this.password = newValue;
       },
-      password(newValue){
+      password(newValue) {
         this.$emit('input', newValue);
       }
     },
@@ -56,6 +60,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .password-input {
-  }
+    .password-input {
+    }
 </style>

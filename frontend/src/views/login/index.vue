@@ -1,41 +1,43 @@
 <template>
-  <div class="login-page">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
-             label-position="left" label-width="0px"
-             class="card-box main-form">
-      <h3 class="title">{{$t('app_name')}}</h3>
-      <form-item prop="email">
-        <i class="fa fa-envelope"></i>
-        <el-input name="email" type="text" v-model="loginForm.email"
-                  autoComplete="on" :placeholder="$t('user.fields.email')"/>
-      </form-item>
-      <form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
-        </span>
-        <password-input name="password"
-                        v-model="loginForm.password"
-                        :placeholder="$t('user.fields.password')"
-                        @keyup.enter.native="handleLogin"></password-input>
-      </form-item>
-      <form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading"
-                   @click.native.prevent="handleLogin">
-          {{$t('pages.login.sign_in')}}
-        </el-button>
-      </form-item>
-      <el-row>
-        <el-col :span="12">
-          <el-button class="tips" type="text" size="mini" @click="forgetPassword">
-            {{$t('pages.login.forget_password')}}
-          </el-button>
-        </el-col>
-        <el-col :span="12">
-          <lang-select class="pull-right" theme="light"/>
-        </el-col>
-      </el-row>
-    </el-form>
-  </div>
+    <div class="login-page">
+        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
+                 label-position="left" label-width="0px"
+                 class="card-box main-form">
+            <h3 class="title">{{$t('app_name')}}</h3>
+            <form-item prop="email">
+                <i class="fa fa-envelope"></i>
+                <el-input name="email" type="text" v-model="loginForm.email"
+                          :autofocus="true" autoComplete="on"
+                          :placeholder="$t('user.fields.email')"/>
+            </form-item>
+            <form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password"></svg-icon>
+                </span>
+                <password-input name="password"
+                                v-model="loginForm.password"
+                                :placeholder="$t('user.fields.password')"
+                                @keyup.enter.native="handleLogin"></password-input>
+            </form-item>
+            <form-item>
+                <el-button type="primary" style="width:100%;" :loading="loading"
+                           @click.native.prevent="handleLogin">
+                    {{$t('pages.login.sign_in')}}
+                </el-button>
+            </form-item>
+            <el-row>
+                <el-col :span="12">
+                    <el-button class="tips" type="text" size="mini"
+                               @click="forgetPassword">
+                        {{$t('pages.login.forget_password')}}
+                    </el-button>
+                </el-col>
+                <el-col :span="12">
+                    <lang-select class="pull-right" theme="light"/>
+                </el-col>
+            </el-row>
+        </el-form>
+    </div>
 </template>
 
 <script type="javascript">
@@ -61,7 +63,7 @@
         if (!isvalidPassword(value)) {
           callback(new Error(this.$t('validation.min.string', {
             attribute: this.$t('user.fields.password'),
-            min: 5
+            min: 6
           })))
         } else {
           callback()
@@ -97,7 +99,7 @@
           }
         })
       },
-      forgetPassword () {
+      forgetPassword() {
         this.$router.push({ path: '/password/forget' })
       }
     }
@@ -107,6 +109,6 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .login-page {
-  }
+    .login-page {
+    }
 </style>
