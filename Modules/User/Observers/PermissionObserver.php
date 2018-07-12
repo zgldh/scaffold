@@ -27,7 +27,7 @@ class PermissionObserver
             if ($permission->name != $oldPermission->name) {
                 $this->updateLanguageTerm($oldPermission, $permission);
             }
-        } else {
+        } elseif ($permission->is_default_action === false) {
             $this->createLanguageTerm($permission->model, $permission->action);
         }
     }

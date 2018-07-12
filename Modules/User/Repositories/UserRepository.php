@@ -24,6 +24,11 @@ class UserRepository extends BaseRepository
         return User::class;
     }
 
+    /**
+     * @no-permission
+     * @param array $attributes
+     * @return mixed
+     */
     public function create(array $attributes)
     {
         $user = parent::create($attributes);
@@ -34,6 +39,12 @@ class UserRepository extends BaseRepository
         return $user;
     }
 
+    /**
+     * @no-permission
+     * @param array $attributes
+     * @param $id
+     * @return mixed
+     */
     public function update(array $attributes, $id)
     {
         if (!(isset($attributes['password']) && strlen($attributes['password']) > 0)) {
