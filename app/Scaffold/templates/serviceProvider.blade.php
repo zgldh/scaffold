@@ -28,5 +28,7 @@ class {{$moduleName}}ServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views',
+        '{{$moduleNameSpace}}');
     }
 }

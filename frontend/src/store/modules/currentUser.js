@@ -21,7 +21,8 @@ const currentUser = {
     createdAt: '',
     roles: [],
     permissions: [],
-    superAdmin: 'super-admin'
+    superAdmin: 'super-admin',
+    tokenLoading: false
   },
   getters: {
     hasPermission: (state) => (permission) => {
@@ -116,11 +117,18 @@ const currentUser = {
       })
     },
     // 刷新 Token
-    async RefreshToken({ commit }) {
-      const response = await refreshToken()
-      setToken(response.token)
-      commit('SET_TOKEN', response.token)
-      return response
+    async RefreshToken({ commit, store }) {
+      store.tokenLoading = true
+      try {
+        const response = await refreshToken()
+        setToken(response.token)
+        commit('SET_TOKEN', response.token)
+        return response
+      } catch (e) {
+        throw e
+      } finally {
+        store.tokenLoading = false
+      }
     },
     // 获取用户信息
     GetInfo(store) {
@@ -185,6 +193,13 @@ const currentUser = {
       }).catch(error => {
         throw error
       })
+    },
+
+    async PromiseTokenIsLoaded({ commit, dispatch, state }) {
+      while (state.tokenLoading) {
+        // waiting
+      }
+      return true
     }
   }
 }

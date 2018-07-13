@@ -57,9 +57,6 @@ class ScaffoldServiceProvider extends ServiceProvider
         $this->app->singleton('lang.dump', function ($app) {
             return new DumpLanguages();
         });
-        $this->app->singleton('update.permissions', function ($app) {
-            return new UpdatePermissions();
-        });
 
         $this->commands([
             'scaffold.init',
@@ -67,7 +64,6 @@ class ScaffoldServiceProvider extends ServiceProvider
             'scaffold.module',
             'scaffold.model',
             'lang.dump',
-            'update.permissions',
         ]);
     }
 }

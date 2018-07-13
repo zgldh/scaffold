@@ -15,7 +15,9 @@ const service = axios.create({
 })
 
 // request拦截器
-service.interceptors.request.use(config => {
+service.interceptors.request.use(async config => {
+  await store.dispatch('currentUser/PromiseTokenIsLoaded')
+
   NProgress.start()
 
   // Language setting

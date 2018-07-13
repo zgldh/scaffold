@@ -1,6 +1,5 @@
-<?php namespace App\Scaffold\Commands;
+<?php namespace Modules\User\Commands;
 
-use App\Scaffold\Installer\Utils;
 use Illuminate\Console\Command;
 use Modules\User\Models\Permission;
 use Modules\User\Repositories\PermissionRepository;
@@ -13,14 +12,14 @@ class UpdatePermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'scaffold:update-permissions {type=api : set guard name}';
+    protected $signature = 'permission:auto-refresh {type=api : set guard name}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update permissions data';
+    protected $description = 'Auto refresh permissions data';
 
     /**
      * Create a new command instance.

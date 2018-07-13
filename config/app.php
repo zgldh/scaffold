@@ -184,7 +184,6 @@ return [
         \Modules\User\UserServiceProvider::class,
         \Modules\Upload\UploadServiceProvider::class,
         \Modules\ActivityLog\ActivityLogServiceProvider::class,
-        \Modules\Post\PostServiceProvider::class,
         \Modules\Notification\NotificationServiceProvider::class,
     ],
 

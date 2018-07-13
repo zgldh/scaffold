@@ -39,7 +39,8 @@
 |模块初始化 | `scaffold:module {moduleName} {--force}` |
 |模型初始化 | `scaffold:model {modelStarterClass} {--only=*} {--force}` |
 |API 生成 | `scaffold:api {method} {route} {moduleName} {--controller=} {--action=}`|
-|权限生成|`scaffold:update-permissions {type=api : set guard name}`
+|权限生成|`permission:auto-refresh {type=api : set guard name}`
+|通知生成|`notifications:create {moduleName} {notificationName}`
 |语言文件导出|`lang:dump`|
 
 模块初始化 
@@ -149,7 +150,7 @@ API 生成
    
 权限生成 
 ----------
-`scaffold:update-permissions {type=api : set guard name}`
+`permission:auto-refresh {type=api : set guard name}`
 
 遍历 `Modules` 下所有的 `controller` 和 `repository`。 根据其公共函数生成一系列权限，并自动赋予超级管理员。
  
@@ -157,11 +158,18 @@ API 生成
  
  **Example**
  
- `scaffold:update-permissions`
+ `permission:auto-refresh`
   
   将自动修改对应 `model` 的语言文件的 `permissions` 数组，并创建一系列权限。
   
   会自动跳过重复权限。
+
+通知生成
+---------
+`notifications:create {moduleName} {notificationName}`
+
+创建一个 Notification 类。
+
   
 语言文件导出
 -----------

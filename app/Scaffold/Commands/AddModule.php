@@ -69,11 +69,13 @@ class AddModule extends Command
         $moduleDirectory = base_path("Modules/{$moduleName}");
         if (!is_dir($moduleDirectory)) {
             mkdir($moduleDirectory);
-            mkdir($moduleDirectory . '/Controllers');
-            mkdir($moduleDirectory . '/Models');
-            mkdir($moduleDirectory . '/Repositories');
-            mkdir($moduleDirectory . '/Requests');
         }
+        @mkdir($moduleDirectory . '/Controllers');
+        @mkdir($moduleDirectory . '/Models');
+        @mkdir($moduleDirectory . '/Repositories');
+        @mkdir($moduleDirectory . '/Requests');
+        @mkdir($moduleDirectory . '/resources/views', 0777, true);
+        file_put_contents($moduleDirectory . '/resources/views/.gitkeep', '');
         return $moduleDirectory;
     }
 
