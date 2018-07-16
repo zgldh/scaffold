@@ -23,8 +23,8 @@
    
    - `migrate`
    - `storage:link`
+   - `permission:auto-refresh`
    - `db:seed --class=ScaffoldInitialSeeder`
-   - `scaffold:update-permissions`
    - `lang:dump`
   
 4. 配置好 `frontend/config/dev.env.js` 的 `BASE_API `
