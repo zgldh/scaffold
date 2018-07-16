@@ -2,7 +2,7 @@
 
 use Illuminate\Console\Command;
 
-class UpdatePermissions extends Command
+class CreateNotification extends Command
 {
     /**
      * The name and signature of the console command.

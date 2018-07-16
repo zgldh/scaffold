@@ -41,7 +41,9 @@ class PermissionObserver
     public function created(Permission $permission)
     {
         $superAdminRole = RoleRepository::GET_SUPER_ADMIN();
-        $superAdminRole->givePermissionTo($permission);
+        if ($superAdminRole) {
+            $superAdminRole->givePermissionTo($permission);
+        }
         //
         if ($permission->is_default_action === false) {
             $this->createLanguageTerm($permission->model, $permission->action);

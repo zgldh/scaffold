@@ -29,7 +29,7 @@ class RoleRepository extends BaseRepository
      */
     public static function GET_SUPER_ADMIN()
     {
-        return (app(self::class))->firstOrNew(['name' => 'super-admin']);
+        return (app(self::class))->findWhere(['name' => self::ROLE_SUPER_ADMIN])->first();
     }
 
     /**

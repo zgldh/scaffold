@@ -48,7 +48,7 @@ class ScaffoldInit extends Command
         } catch (\Exception $e) {
             //
         }
-        $this->call('scaffold:update-permissions');
+        $this->call('permission:auto-refresh');
         $this->call('db:seed', ['--class' => 'ScaffoldInitialSeeder']);
         $this->call('lang:dump');
         $this->info('Complete');
