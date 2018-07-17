@@ -117,8 +117,8 @@ const currentUser = {
       })
     },
     // 刷新 Token
-    async RefreshToken({ commit, store }) {
-      store.tokenLoading = true
+    async RefreshToken({ commit, state }) {
+      state.tokenLoading = true
       try {
         const response = await refreshToken()
         setToken(response.token)
@@ -127,7 +127,7 @@ const currentUser = {
       } catch (e) {
         throw e
       } finally {
-        store.tokenLoading = false
+        state.tokenLoading = false
       }
     },
     // 获取用户信息
@@ -195,9 +195,13 @@ const currentUser = {
       })
     },
 
-    async PromiseTokenIsLoaded({ commit, dispatch, state }) {
-      while (state.tokenLoading) {
-        // waiting
+    async PromiseTokenIsLoaded({ commit, dispatch, state }, url) {
+      return true;
+      // FIXME 
+      if (url !== '/auth/refresh') {
+        while (state.tokenLoading) {
+          // waiting
+        }
       }
       return true
     }

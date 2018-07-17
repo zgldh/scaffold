@@ -16,7 +16,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(async config => {
-  await store.dispatch('currentUser/PromiseTokenIsLoaded')
+  await store.dispatch('currentUser/PromiseTokenIsLoaded', config.url)
 
   NProgress.start()
 
