@@ -31,6 +31,8 @@
 5. `npm install`
 6. `npm run start`
 
+初始帐号密码： admin@email.com 123456
+
 生成器
 ==========
 
@@ -168,9 +170,17 @@ API 生成
 ---------
 `notifications:create {moduleName} {notificationName}`
 
-创建一个 Notification 类。
+创建一个 Notification 类，和 markdown 邮件模板。
 
-  
+ **Example**
+
+ `notifications:create post newPost`
+
+  将创建好如下目录和文件:
+
+   - `Modules/Post/Notifications/NewPost.php`
+   - `Modules/Post/resources/views/newPost.blade.php`
+
 语言文件导出
 -----------
 `lang:dump`

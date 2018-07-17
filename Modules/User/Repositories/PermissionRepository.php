@@ -33,6 +33,7 @@ class PermissionRepository extends BaseRepository
     }
 
     /**
+     * @no-permission
      * @param $id
      * @param $roleIds
      * @internal Permission $permission
