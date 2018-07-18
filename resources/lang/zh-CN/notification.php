@@ -11,4 +11,9 @@ return [
     'permissions' =>
         [
         ],
+    'types'       =>
+        [
+            'Modules\\Notification\\Notifications\\Bar' => 'Bar标题',
+            'Modules\\Notification\\Notifications\\Foo' => 'Foo标题',
+        ],
 ];

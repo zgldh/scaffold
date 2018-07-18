@@ -1,5 +1,6 @@
 <?php namespace Modules\Notification\Commands;
 
+use App\Scaffold\Installer\Utils;
 use Illuminate\Console\Command;
 
 class CreateNotification extends Command
@@ -35,6 +36,12 @@ class CreateNotification extends Command
 
         $this->saveClass($module, $name, $namespace, $classPath, $mailTemplateName);
         $this->saveMailTemplate($viewPath);
+        $this->saveLanguage($namespace, $name);
+
+        $this->line($classPath);
+        $this->line($viewPath);
+
+        $this->info('Complete');
     }
 
     private function getNamespace($module)
@@ -84,4 +91,21 @@ class CreateNotification extends Command
         file_put_contents($viewPath, $viewContent);
     }
 
+    private function saveLanguage($namespace, $name)
+    {
+        $typeKey = $namespace . '\\' . $name;
+
+        $folder = resource_path("lang/*/notification.php");
+        foreach (glob($folder) as $langFile) {
+            $langFileContent = require $langFile;
+            if (!isset($langFileContent['types'])) {
+                $langFileContent['types'] = [];
+            }
+            if (!isset($langFileContent['types'][$typeKey])) {
+                $langFileContent['types'][$typeKey] = $name;
+                $langContent = "<?php\n\nreturn " . Utils::exportArray($langFileContent) . ";\n";
+                file_put_contents($langFile, $langContent);
+            }
+        }
+    }
 }

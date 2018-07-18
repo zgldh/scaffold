@@ -181,6 +181,10 @@ API 生成
    - `Modules/Post/Notifications/NewPost.php`
    - `Modules/Post/resources/views/newPost.blade.php`
 
+  并自动修改好语言文件，请记着调整后手动执行 lang:dump：
+
+   - `resources/lang/*/notification.php`
+
 语言文件导出
 -----------
 `lang:dump`

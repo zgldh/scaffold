@@ -1,24 +1,28 @@
 <?php
 
-namespace DummyNamespace;
+namespace Modules\Notification\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Modules\User\Models\User;
 
-class DummyClass extends Notification
+class Bar extends Notification
 {
     use Queueable;
+
+    private $notifier = null;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $notifier = null)
     {
         //
+        $this->notifier = $notifier;
     }
 
     /**
@@ -40,7 +44,7 @@ class DummyClass extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->markdown('DummyView');
+        return (new MailMessage)->markdown('Modules\Notification::bar');
     }
 
     /**
@@ -52,10 +56,10 @@ class DummyClass extends Notification
     public function toArray($notifiable)
     {
         return [
-            'url_title'   => 'abcdefg',
-            'url'         => '/post/233/comments/998',
-            'notifier_id' => 1234, //user ID, null is system
-            'content'     => '<html></html>'
+            'url_title'   => 'You got a Bar',
+            'url'         => '/upload/list',
+            'notifier_id' => $this->notifier ? $this->notifier->id : null, //user ID, null is system
+            'content'     => '<p>Bar <b>content</b></p>'
         ];
     }
 }

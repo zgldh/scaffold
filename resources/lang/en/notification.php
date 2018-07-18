@@ -11,4 +11,9 @@ return [
     'permissions' =>
         [
         ],
+    'types'       =>
+        [
+            'Modules\\Notification\\Notifications\\Bar' => 'Bar Title',
+            'Modules\\Notification\\Notifications\\Foo' => 'Foo Title',
+        ],
 ];
