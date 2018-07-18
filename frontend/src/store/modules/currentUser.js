@@ -196,11 +196,16 @@ const currentUser = {
     },
 
     async PromiseTokenIsLoaded({ commit, dispatch, state }, url) {
-      return true;
-      // FIXME 
       if (url !== '/auth/refresh') {
-        while (state.tokenLoading) {
-          // waiting
+        if (state.tokenLoading === true) {
+          return new Promise(resolve => {
+            const timer = setInterval(() => {
+              if (state.tokenLoading === false) {
+                clearInterval(timer)
+                resolve()
+              }
+            }, 1000)
+          })
         }
       }
       return true
