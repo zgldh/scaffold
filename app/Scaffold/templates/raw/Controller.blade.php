@@ -66,11 +66,10 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
     public function show($id, ShowRequest $request)
     {
         $item = $this->repository->findWithoutFail($id);
-        $item->load($request->getWith());
-
         if (empty($item)) {
             return $this->sendError('{{$MODEL_NAME}} not found');
         }
+        $item->load($request->getWith());
 
         return $this->sendResponse($item, '');
     }
