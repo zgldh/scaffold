@@ -195,7 +195,39 @@ API 生成
 
 
 组件说明
-===========
+====
+
+
+内置了一些常用组件。
+
+数据表格 zgldh-datatables
+---------------------
+改造自 `ElementUI` 的 `table` 组件。
+
+参数：
+
+参数名|类型|必填|默认值|说明
+------|---|----|----|---
+source|[Array, Function]|true|null|数据源。通常定义为一个函数。后台请实现 [datatables 协议](https://www.datatables.net/manual/server-side)
+title|String|false|null|用于数据导出的文件标题
+autoLoad|Boolean|false|true|是否初始化完毕就立即执行载入
+columnSelection|Boolean|false|false| 暂时没用。 Show the column selection button
+enableSelection|Boolean|false|true| 允许选择行
+enableAddressBar|Boolean|false|true| 允许在地址栏储存请求条件
+actions|Array|false| [] | 行动作按钮。 <pre> [{Title: () => this.$i18n.t('global.terms.download'),<br>    Handle: this.handleDownload  },<br>  {    Title: () => this.$i18n.t('global.terms.edit'),<br>    Handle: this.handleEdit  },<br>  {    Title: () => this.$i18n.t('global.terms.delete'),<br>    Handle: this.handleDelete  },<br>  150  // Optional, the actions column width in px, or '10em' in custom width.  ]</pre>
+multipleActions|Array|false|[]| 表格顶部动作按钮。
+filters|Array|false|[]| 高级过滤器的配置。
+exportColumns|Object|false|null|导出文件的列配置。<pre>{<br>  "name": this.$t('upload.fields.name'),<br>  "description": this.$t('upload.fields.description'),<br>  "disk": this.$t('upload.fields.disk'),<br>  "path": this.$t('upload.fields.path'),<br>  "size": this.$t('upload.fields.size'),<br>  "type": this.$t('upload.fields.type'),<br>  "created_at": this.$t('global.fields.created_at'),<br>}</pre>
+
+
+图表组件 auto-icon
+--------------
+用法|描述
+---|---
+`<auto-icon icon-class="eye" />`|`frontend\src\icons` 里的图标
+`<auto-icon icon-class="fa-bell" />`|https://fontawesome.com/icons 的图标
+`<auto-icon icon-class="el-icon-bell" />`|http://element-cn.eleme.io/#/zh-CN/component/icon 的图标
+`<auto-icon icon-class="ion-md-notifications" />`|https://ionicons.com 的图标
 
 TODO
 
@@ -203,6 +235,16 @@ TODO
 ===========
 
 TODO
+
+常用操作
+====
+
+1. 添加一个前端页面
+    1. 在 `frontend/views` 下创建该页面。 建议储存到合理的子文件夹下。
+    2. 在 `frontend\src\router\dynamicRouterMap.js` 里添加路由。
+    3. 注意路由的 meta.title 可以设置成函数来实现多语言。
+2. ...
+
 
 感谢
 ===========
