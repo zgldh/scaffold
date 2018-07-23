@@ -1,55 +1,57 @@
 <template>
-  <div class="zgldh-datatables" v-loading="loading">
-    <el-row class="tools">
-      <el-col :span="12">
-        <cell-actions v-if="multipleActions.length>0"
-                      size="medium" type="primary"
-                      :target="selectedItems"
-                      :actions="multipleActions"></cell-actions>
-      </el-col>
-      <el-col :span="12" class="right-tools">
-        <el-input class="auto-search"
-                  :placeholder="$t('global.terms.auto_search')"
-                  v-model="datatablesParameters.search.value"
-                  prefix-icon="el-icon-search"
-                  :clearable="true"
-                  @change="onAutoSearchChanged">
-        </el-input>
-        <cell-actions size="medium" type="button" :actions="toolActions"></cell-actions>
-      </el-col>
-    </el-row>
-    <advance-search v-if="enableAdvanceSearch" :auto-search="true" :columns="filters"
-                    @filter-search="onAdvanceFilterSearch"
-                    @filter-remove="onAdvanceFilterRemove"></advance-search>
-    <el-table
-            :data="tableData"
-            :default-sort="defaultSort"
-            @sort-change="onSortChange"
-            @selection-change="onSelectionChange"
-            border
-            size="mini"
-            style="width: 100%"
-            height="100vh"
-            ref="table">
-      <el-table-column
-              v-if="enableSelection"
-              fixed
-              type="selection"
-              width="55">
-      </el-table-column>
-      <slot></slot>
-      <el-table-column
-              v-if="actions"
-              :width="actionsColumnWidth"
-              fixed="right"
-              :label="$t('global.terms.actions')">
-        <template slot-scope="scope">
-          <cell-actions :target="scope.row" :actions="actions"></cell-actions>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="zgldh-datatables" v-loading="loading">
+        <el-row class="tools">
+            <el-col :span="12">
+                <cell-actions v-if="multipleActions.length>0"
+                              size="medium" type="primary"
+                              :target="selectedItems"
+                              :actions="multipleActions"></cell-actions>
+                <span v-else>&nbsp;</span>
+            </el-col>
+            <el-col :span="12" class="right-tools">
+                <el-input class="auto-search"
+                          :placeholder="$t('global.terms.auto_search')"
+                          v-model="datatablesParameters.search.value"
+                          prefix-icon="el-icon-search"
+                          :clearable="true"
+                          @change="onAutoSearchChanged">
+                </el-input>
+                <cell-actions size="medium" type="button"
+                              :actions="toolActions"></cell-actions>
+            </el-col>
+        </el-row>
+        <advance-search v-if="enableAdvanceSearch" :auto-search="true" :columns="filters"
+                        @filter-search="onAdvanceFilterSearch"
+                        @filter-remove="onAdvanceFilterRemove"></advance-search>
+        <el-table
+                :data="tableData"
+                :default-sort="defaultSort"
+                @sort-change="onSortChange"
+                @selection-change="onSelectionChange"
+                border
+                size="mini"
+                style="width: 100%"
+                height="100vh"
+                ref="table">
+            <el-table-column
+                    v-if="enableSelection"
+                    fixed
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <slot></slot>
+            <el-table-column
+                    v-if="actions"
+                    :width="actionsColumnWidth"
+                    fixed="right"
+                    :label="$t('global.terms.actions')">
+                <template slot-scope="scope">
+                    <cell-actions :target="scope.row" :actions="actions"></cell-actions>
+                </template>
+            </el-table-column>
+        </el-table>
 
-    <div class="pagination-container">
+        <div class="pagination-container">
           <span class="page-size">{{$t('global.terms.page_size_show')}}
           <el-select v-model="pagination.pageSize" style="width: 80px"
                      size="mini"
@@ -62,15 +64,15 @@
             </el-option>
           </el-select>
             {{$t('global.terms.page_size_items')}}</span>
-      <el-pagination
-              @current-change="onPageChange"
-              :current-page="pagination.currentPage"
-              :page-size="pagination.pageSize==-1?1:pagination.pageSize"
-              :layout="pagination.pageSize==-1?'total':'total, prev, pager, next, jumper'"
-              :total="pagination.totalCount">
-      </el-pagination>
+            <el-pagination
+                    @current-change="onPageChange"
+                    :current-page="pagination.currentPage"
+                    :page-size="pagination.pageSize==-1?1:pagination.pageSize"
+                    :layout="pagination.pageSize==-1?'total':'total, prev, pager, next, jumper'"
+                    :total="pagination.totalCount">
+            </el-pagination>
+        </div>
     </div>
-  </div>
 </template>
 
 <script type="javascript">
@@ -142,19 +144,19 @@
        */
       actions: {
         type: Array,
-        default(){
+        default() {
           return [];
         }
       },
       multipleActions: {
         type: Array,
-        default(){
+        default() {
           return [];
         }
       },
       filters: {
         type: Array,
-        default(){
+        default() {
           return [];
         }
       },
@@ -175,7 +177,7 @@
         required: false
       }
     },
-    data(){
+    data() {
       return {
         loading: false,
         enableAdvanceSearch: hasPrefix(PARAMS_SEARCH_PREFIX),
@@ -223,7 +225,7 @@
       }
     },
     computed: {
-      actionsColumnWidth(){
+      actionsColumnWidth() {
         var width;
         if (this.actions && this.actions.length) {
           var accessibleTypes = [Number, String];
@@ -233,20 +235,20 @@
         width = width || 'auto';
         return width;
       },
-      toolActions(){
+      toolActions() {
         var vm = this;
         var defaultActions = [];
         defaultActions.push({
           Icon: 'fa-filter',
           Tooltip: () => this.$i18n.t('list.advance_search'),
-          Handle(targets){
+          Handle(targets) {
             vm.enableAdvanceSearch = !vm.enableAdvanceSearch;
           }
         });
         if (this.columnSelection) {
           defaultActions.push({
             Icon: 'fa-columns',
-            Handle(targets){
+            Handle(targets) {
               console.log('columns_setting', targets);
             }
           });
@@ -254,7 +256,7 @@
         defaultActions.push({
           Icon: 'fa-download',
           Tooltip: () => this.$i18n.t('list.export_button'),
-          Handle(targets){
+          Handle(targets) {
             if (vm.source.constructor === Function) {
               var oldColumns = JSON.stringify(vm.datatablesParameters.columns);
               if (vm.exportColumns) {
@@ -291,14 +293,14 @@
         return defaultActions;
       }
     },
-    mounted(){
+    mounted() {
       this.initializeDataTablesParameters();
       if (this.autoLoad) {
         this.loadSource();
       }
     },
     watch: {
-      source(newSource, oldSource){
+      source(newSource, oldSource) {
         if (newSource != oldSource) {
           return this.loadSource();
         }
@@ -319,7 +321,7 @@
           dir: this.defaultSort.order === 'descending' ? 'desc' : 'asc'
         });
       },
-      initColumns(){
+      initColumns() {
         let hasCreatedAt = false;
         if (this.$refs.table) {
           this.$refs.table.$children.forEach((column) => {
@@ -361,7 +363,7 @@
           })
         }
       },
-      initAdvanceSearch(){
+      initAdvanceSearch() {
         this.filters.forEach(filter => {
           var fieldName = filter.Field;
           if (!FindColumnConfigByName(this.datatablesParameters.columns, fieldName)) {
@@ -379,7 +381,7 @@
           }
         });
       },
-      initPagination(){
+      initPagination() {
         this.datatablesParameters.search.value = this.$route.query[PARAMS_SEARCH_TERM] || null;
         this.datatablesParameters.length = this.pagination.pageSize;
         this.datatablesParameters.start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
@@ -408,14 +410,14 @@
             break;
         }
       }, 500),
-      getQueryParameters(){
+      getQueryParameters() {
         this.datatablesParameters.draw++
         this._draw = this.datatablesParameters.draw
         this.datatablesParameters._ = new Date().getTime()
 
         return SerializerDatatablesParameters(this.datatablesParameters);
       },
-      onAutoSearchChanged (newValue) {
+      onAutoSearchChanged(newValue) {
         this.loadSource()
         this.updateAddressBarParams(PARAMS_SEARCH_TERM, this.datatablesParameters.search.value)
       },
@@ -482,7 +484,7 @@
           column.search.advance = {}
         }
       },
-      onAdvanceFilterSearch(searches){
+      onAdvanceFilterSearch(searches) {
         if (searches.constructor !== Array) {
           searches = [searches];
         }
@@ -491,19 +493,19 @@
         })
         this.loadSource();
       },
-      onAdvanceFilterRemove({ fieldName, operator }){
+      onAdvanceFilterRemove({ fieldName, operator }) {
         this.clearAdvanceSearchToColumn(fieldName, operator);
         this.loadSource();
       },
-      getExportFileName(){
+      getExportFileName() {
         var d = new Date();
         return this.$t('list.export_file_name', {
-                  title: this.title,
-                  timestamp: d.getTime()
-                }) + '.csv';
+          title: this.title,
+          timestamp: d.getTime()
+        }) + '.csv';
       },
       // Exported functions
-      removeItem(inputItem){
+      removeItem(inputItem) {
         var id = inputItem;
         if (inputItem.constructor === Object) {
           id = inputItem.id
@@ -514,7 +516,7 @@
           this.pagination.totalCount--;
         }
       },
-      addRowMessage(id, message, type){
+      addRowMessage(id, message, type) {
         var index = this.tableData.findIndex(item => item.id === id) + 1;
         var node = document.createElement('div');
         node.innerHTML = `<div role="alert" class="row-message-alert el-alert el-alert--${type}" onclick="this.remove()">
@@ -538,56 +540,56 @@
 </script>
 
 <style lang="scss">
-  @import "../../styles/variables.scss";
+    @import "../../styles/variables.scss";
 
-  .zgldh-datatables {
-    .tools {
-      margin-top: 6px;
-      .cell-actions {
-        display: inline-block;
-      }
-      .auto-search {
-        vertical-align: middle;
-        width: 200px;
-        > input {
-          height: 33px;
+    .zgldh-datatables {
+        .tools {
+            margin-top: 6px;
+            .cell-actions {
+                display: inline-block;
+            }
+            .auto-search {
+                vertical-align: middle;
+                width: 200px;
+                > input {
+                    height: 33px;
+                }
+            }
+            .right-tools {
+                text-align: right;
+                .cell-actions {
+                    margin-left: 6px;
+                }
+            }
         }
-      }
-      .right-tools {
-        text-align: right;
-        .cell-actions {
-          margin-left: 6px;
+        .advance-search {
+            margin-top: 6px;
+            text-align: right;
         }
-      }
+        .el-table {
+            margin-top: 6px;
+        }
+        .pagination-container {
+            text-align: right;
+            margin-top: 6px;
+            .page-size {
+                padding: 2px;
+                vertical-align: top;
+                color: $textPrimary;
+                font-size: 13px;
+                display: inline-block;
+            }
+            .el-pagination {
+                display: inline-block;
+            }
+        }
+        .row-message-alert {
+            position: absolute;
+            left: 0;
+            width: auto;
+            margin: 0.5em;
+            z-index: 10;
+            cursor: pointer;
+        }
     }
-    .advance-search {
-      margin-top: 6px;
-      text-align: right;
-    }
-    .el-table {
-      margin-top: 6px;
-    }
-    .pagination-container {
-      text-align: right;
-      margin-top: 6px;
-      .page-size {
-        padding: 2px;
-        vertical-align: top;
-        color: $textPrimary;
-        font-size: 13px;
-        display: inline-block;
-      }
-      .el-pagination {
-        display: inline-block;
-      }
-    }
-    .row-message-alert {
-      position: absolute;
-      left: 0;
-      width: auto;
-      margin: 0.5em;
-      z-index: 10;
-      cursor: pointer;
-    }
-  }
 </style>
