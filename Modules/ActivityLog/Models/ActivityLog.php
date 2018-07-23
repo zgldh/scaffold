@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class ActivityLog extends \Spatie\Activitylog\Models\Activity
 {
     protected $table = 'z_activity_log';
-    protected $appends = ['detail_string'];
 
     public function language($type)
     {

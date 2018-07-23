@@ -53,7 +53,7 @@
 
 <script type="javascript">
   import { DeleteConfirm } from '@/utils/message'
-  import { UserIndex, UserDestroy } from '@/api/user'
+  import { ActivityLogIndex, ActivityLogShow } from '@/api/activityLog'
   import ListMixin from '@/mixins/List'
 
   export default {
@@ -87,7 +87,7 @@
     mounted() {
     },
     methods: {
-      loadData: UserIndex,
+      loadData: ActivityLogIndex,
       handleYes(item) {
         console.log('yes', item);
       },
