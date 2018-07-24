@@ -34,7 +34,7 @@ class UserServiceProvider extends ServiceProvider
         //
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views',
             'Modules\User');
-        
+
         $this->registerListeners();
     }
 
@@ -45,10 +45,20 @@ class UserServiceProvider extends ServiceProvider
             $user->last_login_at = Carbon::now();
             $user->login_times++;
             $user->save();
+
+            activity('auth')
+                ->causedBy($user)
+                ->withProperties(['login_times' => $user->login_times])
+                ->log('login');
         });
 
         \Event::listen(Logout::class, function (Logout $event) {
             $user = $event->user;
+
+            activity('auth')
+                ->causedBy($user)
+                ->withProperties([])
+                ->log('logout');
         });
 
         Permission::observe(PermissionObserver::class);

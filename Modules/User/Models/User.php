@@ -1,5 +1,6 @@
 <?php namespace Modules\User\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Hash;
 use Modules\Upload\Models\Upload;
 use Modules\Upload\Traits\HasUploads;
@@ -7,6 +8,8 @@ use Modules\User\Repositories\RoleRepository;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Activitylog\ActivitylogServiceProvider;
+use Spatie\Activitylog\Traits\HasActivity;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Modules\ActivityLog\Traits\LogsActivity;
@@ -108,6 +111,11 @@ class User extends Authenticatable implements JWTSubject
     public function avatar()
     {
         return $this->morphOne(Upload::class, 'uploadable')->where('z_uploads.type', Upload::TYPE_AVATAR);
+    }
+
+    public function actions(): MorphMany
+    {
+        return $this->morphMany(ActivitylogServiceProvider::determineActivityModel(), 'causer');
     }
 
     public function isAdmin()

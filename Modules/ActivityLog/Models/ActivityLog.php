@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class ActivityLog extends \Spatie\Activitylog\Models\Activity
 {
-    protected $table = 'z_activity_log';
+    const TABLE = 'z_activity_log';
+    protected $table = self::TABLE;
 
     public function language($type)
     {

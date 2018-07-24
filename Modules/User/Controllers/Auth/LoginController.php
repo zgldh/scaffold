@@ -2,6 +2,7 @@
 
 namespace Modules\User\Controllers\Auth;
 
+use Illuminate\Auth\Events\Login;
 use Modules\User\Requests\Auth\LoginRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\JWTAuth;
@@ -25,6 +26,8 @@ class LoginController extends Controller
 
         try {
             $token = \JWTAuth::attempt($credentials);
+
+            event(new Login(\JWTAuth::user(), false));
 
             if (!$token) {
                 throw new AccessDeniedHttpException(__('auth.failed'));

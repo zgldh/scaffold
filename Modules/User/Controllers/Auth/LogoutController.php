@@ -4,6 +4,7 @@ namespace Modules\User\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Auth;
+use Illuminate\Auth\Events\Logout;
 
 class LogoutController extends Controller
 {
@@ -24,7 +25,9 @@ class LogoutController extends Controller
      */
     public function logout()
     {
+        $user = Auth::guard()->user();
         Auth::guard()->logout();
+        event(new Logout($user));
 
         return response()
             ->json(['message' => 'Successfully logged out']);
