@@ -31,7 +31,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 @if($MODEL->isActivityLog())
-use Modules\ActivityLog\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\HasActivity;
 @endif
 @if($MODEL->isSoftDelete())
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class {{$MODEL_NAME}} extends Model
 {
 @if($MODEL->isActivityLog())
-    use LogsActivity;
+    use HasActivity;
 @endif
 @if($MODEL->isSoftDelete())
     use SoftDeletes;
@@ -51,6 +51,7 @@ class {{$MODEL_NAME}} extends Model
     public $fillable = <?php echo Utils::exportArray($fillableFields);?>;
 @if($MODEL->isActivityLog())
 
+    protected static $logOnlyDirty = true;
     protected static $logAttributes = <?php echo Utils::exportArray($fillableFields);?>;
 @endif
 

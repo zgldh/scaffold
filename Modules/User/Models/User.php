@@ -21,9 +21,9 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
     use HasRoles;
     use HasUploads;
-    use LogsActivity;
     use SoftDeletes;
     use CanResetPassword;
+    use HasActivity;
 
     public $table = 'z_users';
 
@@ -46,6 +46,8 @@ class User extends Authenticatable implements JWTSubject
         'last_login_at',
         'login_times',
     ];
+
+    protected static $logOnlyDirty = true;
 
     protected static $logAttributes = [
         'name',

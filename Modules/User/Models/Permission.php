@@ -1,11 +1,11 @@
 <?php namespace Modules\User\Models;
 
+use Spatie\Activitylog\Traits\HasActivity;
 use Spatie\Permission\Models\Permission as BasePermission;
-use Modules\ActivityLog\Traits\LogsActivity;
 
 class Permission extends BasePermission
 {
-    use LogsActivity;
+    use HasActivity;
 
     public $table = 'permissions';
 
@@ -22,6 +22,7 @@ class Permission extends BasePermission
         'guard_name'
     ];
 
+    protected static $logOnlyDirty = true;
     protected static $logAttributes = [
         'name',
         'label',

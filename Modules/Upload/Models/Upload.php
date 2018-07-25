@@ -1,8 +1,8 @@
 <?php namespace Modules\Upload\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\HasActivity;
 use zgldh\UploadManager\UploadManager;
-use Modules\ActivityLog\Traits\LogsActivity;
 
 /**
  * Class Upload
@@ -11,7 +11,7 @@ use Modules\ActivityLog\Traits\LogsActivity;
  */
 class Upload extends Model
 {
-    use LogsActivity;
+    use HasActivity;
 
     const TYPE_AVATAR = 'avatar';
 
@@ -27,6 +27,7 @@ class Upload extends Model
         'user_id',
     ];
 
+    protected static $logOnlyDirty = true;
     protected static $logAttributes = [
         'name',
         'description',

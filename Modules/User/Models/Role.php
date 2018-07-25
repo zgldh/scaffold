@@ -1,11 +1,11 @@
 <?php namespace Modules\User\Models;
 
+use Spatie\Activitylog\Traits\HasActivity;
 use Spatie\Permission\Models\Role as BaseRole;
-use Modules\ActivityLog\Traits\LogsActivity;
 
 class Role extends BaseRole
 {
-    use LogsActivity;
+    use HasActivity;
 
     public $table = 'z_roles';
 
@@ -22,6 +22,7 @@ class Role extends BaseRole
         'guard_name',
     ];
 
+    protected static $logOnlyDirty = true;
     protected static $logAttributes = [
         'name',
         'label',

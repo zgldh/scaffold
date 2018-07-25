@@ -18,7 +18,7 @@
     "laravel/tinker": "~1.0",
     "league/csv": "^9.1",
     "prettus/l5-repository": "^2.6",
-    "spatie/laravel-activitylog": "^2.5",
+    "spatie/laravel-activitylog": "^2.8",
     "spatie/laravel-permission": "^2.9",
     "tymon/jwt-auth": "1.0.0-rc.2",
     "yajra/laravel-datatables-oracle": "~8.0",

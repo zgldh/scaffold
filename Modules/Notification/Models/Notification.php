@@ -1,19 +1,12 @@
 <?php namespace Modules\Notification\Models;
 
 use Illuminate\Notifications\DatabaseNotification;
-use Modules\ActivityLog\Traits\LogsActivity;
 
 class Notification extends DatabaseNotification
 {
-    use LogsActivity;
+    use HasActivity;
 
     public $fillable = [
-        "read_at"
-    ];
-
-    protected static $logAttributes = [
-        "type",
-        "data",
         "read_at"
     ];
 

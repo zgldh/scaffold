@@ -6,6 +6,11 @@ use Spatie\Activitylog\ActivitylogServiceProvider;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use  Spatie\Activitylog\Traits\LogsActivity as BasicLogsActivity;
 
+/**
+ * Trait LogsActivity
+ * @deprecated
+ * @package Modules\ActivityLog\Traits
+ */
 trait LogsActivity
 {
     use BasicLogsActivity {

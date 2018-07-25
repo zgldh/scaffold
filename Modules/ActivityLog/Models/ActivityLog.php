@@ -18,7 +18,7 @@ class ActivityLog extends \Spatie\Activitylog\Models\Activity
     }
 
     /**
-     * The
+     * @deprecated
      * @return MorphTo
      */
     public function collector(): MorphTo
@@ -28,13 +28,4 @@ class ActivityLog extends \Spatie\Activitylog\Models\Activity
         }
         return $this->morphTo();
     }
-
-    /**
-     * @return  \Illuminate\Database\Eloquent\Relations\MorphMany
-     **/
-    public function comments()
-    {
-        return $this->morphMany('Modules\Comment\Models\Comment', 'commentable');
-    }
-
 }
