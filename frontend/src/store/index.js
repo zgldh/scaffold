@@ -2,6 +2,7 @@ import notification from './modules/notification'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import app from './modules/app'
+import activityLog from './modules/activityLog'
 import currentUser from './modules/currentUser'
 import user from './modules/user'
 import getters from './getters'
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     notification,
     app,
     currentUser,
-    user
+    user,
+    activityLog
   },
   getters
 })

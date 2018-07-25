@@ -26,6 +26,7 @@
         <el-table
                 :data="tableData"
                 :default-sort="defaultSort"
+                :row-class-name="rowClassName"
                 @sort-change="onSortChange"
                 @selection-change="onSelectionChange"
                 border
@@ -123,6 +124,9 @@
       enableAddressBar: {
         type: Boolean,
         default: true
+      },
+      rowClassName: {
+        default: ''
       },
       /**
        * An array like this:

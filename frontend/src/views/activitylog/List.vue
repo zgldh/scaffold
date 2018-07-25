@@ -10,6 +10,7 @@
                               :multiple-actions="multipleActions"
                               :filters="advanceFilters"
                               :title="$t('activity_log.title')"
+                              :row-class-name="rowClassName"
             >
                 <el-table-column type="expand">
                     <log-detail slot-scope="scope" :log="scope.row"/>
@@ -40,6 +41,7 @@
   import ListMixin from '@/mixins/List'
   import LogDetail from '@/components/ActivityLog/LogDetail'
   import LogDescription from '@/components/ActivityLog/LogDescription'
+  import store from '@/store'
 
   export default {
     components: {
@@ -108,6 +110,11 @@
       handleConfirm(items) {
         console.log('confirm', items);
       },
+      rowClassName({ row, rowIndex }) {
+        if (store.state.activityLog.actionsNotExpandable.includes(row.description)) {
+          return 'not-expandable'
+        }
+      }
     }
   }
 </script>
@@ -117,6 +124,11 @@
         margin: 10px 30px;
         .zgldh-datatables > .el-table > .el-table__body-wrapper {
             height: calc(100vh - 310px) !important;
+        }
+        .not-expandable {
+            .el-table__expand-icon {
+                display: none;
+            }
         }
     }
 </style>
