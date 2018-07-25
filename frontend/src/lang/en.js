@@ -62,7 +62,8 @@ export default {
         name: 'Key',
         value: 'Value',
         old: 'Old',
-        new: 'New'
+        new: 'New',
+        diff: 'Difference'
       }
     },
     advance_search: {

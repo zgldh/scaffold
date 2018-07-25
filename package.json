@@ -27,6 +27,7 @@
     "screenfull": "^3.3.2",
     "vue": "2.5.10",
     "vue-clipboard2": "^0.2.0",
+    "vue-diff-match-patch": "0.0.1",
     "vue-i18n": "^7.6.0",
     "vue-image-crop-upload": "^2.2.3",
     "vue-infinite-loading": "^2.3.1",

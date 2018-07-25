@@ -62,7 +62,8 @@ export default {
         name: '字段',
         value: '值',
         old: '旧值',
-        new: '新值'
+        new: '新值',
+        diff: '差异'
       }
     },
     advance_search: {
