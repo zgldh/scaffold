@@ -1,31 +1,32 @@
 <template>
-  <div class="advance-search">
-    <div class="columns-in-use">
-      <component class="column-in-use" v-for="(column, $index) in columnsInUse"
-                 :key="$index"
-                 :name="getColumnName(column.Name)"
-                 :field="column.Field"
-                 :size="size"
-                 :parameters="column.ComponentParameters"
-                 :init-values="getColumnInitValues(column.Field)"
-                 @column-changed="onColumnChanged"
-                 @column-clear="onColumnClear"
-                 @column-close="onColumnClose"
-                 v-bind:is="column.Component"></component>
+    <div class="advance-search">
+        <div class="columns-in-use">
+            <component class="column-in-use" v-for="(column, $index) in columnsInUse"
+                       :key="$index"
+                       :name="getColumnName(column.Name)"
+                       :field="column.Field"
+                       :size="size"
+                       :parameters="column.ComponentParameters"
+                       :init-values="getColumnInitValues(column.Field)"
+                       @column-changed="onColumnChanged"
+                       @column-clear="onColumnClear"
+                       @column-close="onColumnClose"
+                       v-bind:is="column.Component"></component>
+        </div>
+        <el-dropdown @command="handleAddSearch" :size="size" :hide-on-click="false">
+            <el-button type="info" :size="size" :disabled="availableColumns.length ===0">
+                {{$t('components.advance_search.add_button')}}<i
+                    class="el-icon-plus el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown" v-if="availableColumns.length>0">
+                <el-dropdown-item v-for="(column, $index) in availableColumns"
+                                  :key="$index"
+                                  :command="column">
+                    {{getColumnName(column.Name)}}
+                </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
     </div>
-    <el-dropdown @command="handleAddSearch" :size="size" :hide-on-click="false">
-      <el-button type="info" :size="size" :disabled="availableColumns.length ===0">
-        {{$t('components.advance_search.add_button')}}<i
-              class="el-icon-plus el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item v-for="(column, $index) in availableColumns" :key="$index"
-                          :command="column">
-          {{getColumnName(column.Name)}}
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </div>
 </template>
 
 <script type="javascript">
@@ -81,25 +82,25 @@
         default: ''
       }
     },
-    data(){
+    data() {
       return {
         usedFields: [],
         columnsInUse: []
       }
     },
     computed: {
-      availableColumns(){
+      availableColumns() {
         return this.columns.filter(column => {
           return this.usedFields.indexOf(column.Field) === -1;
         });
       }
     },
-    mounted(){
+    mounted() {
       this.init();
     },
     watch: {},
     methods: {
-      init(){
+      init() {
         _.forEach(this.$route.query, (value, key) => {
           if (key.indexOf(PARAMS_SEARCH_PREFIX) !== -1) {
             var fieldName = key.substr(PARAMS_SEARCH_PREFIX.length);
@@ -115,16 +116,16 @@
           }
         })
       },
-      getColumnName(name){
+      getColumnName(name) {
         if (name.constructor === Function) {
           return name();
         }
         return name;
       },
-      getColumnInitValues(field){
+      getColumnInitValues(field) {
         return getSearchParams(field);
       },
-      handleAddSearch(action){
+      handleAddSearch(action) {
         var column = _.clone(action);
         if (column.hasOwnProperty('Component') === false) {
           column.Component = TypeToComponent[column.Type.constructor === String ? column.Type : column.Type.name];
@@ -135,17 +136,17 @@
         this.usedFields.push(column.Field);
         this.columnsInUse.push(column);
       },
-      onColumnChanged(searches){
+      onColumnChanged(searches) {
         this.$emit('filter-search', searches);
       },
-      onColumnClear({ fieldName, operator }){
+      onColumnClear({ fieldName, operator }) {
         removeSearchParams(fieldName);
         this.$emit('filter-remove', {
           fieldName: fieldName,
           operator: operator
         });
       },
-      onColumnClose({ fieldName, operator }){
+      onColumnClose({ fieldName, operator }) {
         this.usedFields.splice(this.usedFields.findIndex(field => field === fieldName), 1);
         this.columnsInUse.splice(this.columnsInUse.findIndex(column => column.Field === fieldName), 1);
 
@@ -209,16 +210,16 @@
 </script>
 
 <style lang="scss">
-  .advance-search {
-    .columns-in-use {
-      display: inline-block;
-      .column-in-use {
-        display: inline-block;
-        margin-right: 1em;
-        &:hover, &:hover * {
-          font-weight: bolder;
+    .advance-search {
+        .columns-in-use {
+            display: inline-block;
+            .column-in-use {
+                display: inline-block;
+                margin-right: 1em;
+                &:hover, &:hover * {
+                    font-weight: bolder;
+                }
+            }
         }
-      }
     }
-  }
 </style>

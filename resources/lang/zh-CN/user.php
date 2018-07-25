@@ -10,6 +10,8 @@ return [
             'is_active'     => '是否可用',
             'last_login_at' => '上次登录时间',
             'gender'        => '性别',
+            'login_times'   => '登录次数',
+            'ip'            => 'IP',
         ],
     'terms'       =>
         [

@@ -4,8 +4,6 @@ use Illuminate\Notifications\DatabaseNotification;
 
 class Notification extends DatabaseNotification
 {
-    use HasActivity;
-
     public $fillable = [
         "read_at"
     ];

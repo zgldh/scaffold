@@ -57,12 +57,20 @@ export default {
     }
   },
   components: {
-    avatar_editor: {
-      button_text: '修改头像',
-      title: '头像'
+    activity_log: {
+      property: {
+        name: '字段',
+        value: '值',
+        old: '旧值',
+        new: '新值'
+      }
     },
     advance_search: {
       add_button: '添加搜索'
+    },
+    avatar_editor: {
+      button_text: '修改头像',
+      title: '头像'
     },
     editor_title: {
       create: '创建{name}',

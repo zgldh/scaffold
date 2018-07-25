@@ -51,11 +51,10 @@ class ActivityLogController extends AppBaseController
     public function show($id, ShowRequest $request)
     {
         $activityLog = $this->repository->findWithoutFail($id);
-        $activityLog->load($request->getWith());
-
         if (empty($activityLog)) {
             return $this->sendError('ActivityLog not found');
         }
+        $activityLog->load($request->getWith());
 
         return $this->sendResponse($activityLog, '');
     }

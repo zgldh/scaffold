@@ -13,7 +13,18 @@ return [
             'properties'     => '变化',
             'collector_type' => '集合类型',
             'collector_id'   => '集合ID',
+            'created_at'     => '发生时间',
         ],
+    'terms'       => [
+        'description_search' => '动作'
+    ],
+    'type'        => [
+        'login'   => '登录',
+        'logout'  => '退出',
+        'created' => '创建了',
+        'updated' => '更新了',
+        'deleted' => '删除了',
+    ],
     'permissions' =>
         [
         ],

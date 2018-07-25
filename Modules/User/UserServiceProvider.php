@@ -44,12 +44,18 @@ class UserServiceProvider extends ServiceProvider
             $user = $event->user;
             $user->last_login_at = Carbon::now();
             $user->login_times++;
-            $user->save();
 
             activity('auth')
                 ->causedBy($user)
-                ->withProperties(['login_times' => $user->login_times])
+                ->withProperties([
+                    'login_times' => $user->login_times,
+                    'ip'          => request()->getClientIp()
+                ])
                 ->log('login');
+
+            activity()->disableLogging();
+            $user->save();
+            activity()->enableLogging();
         });
 
         \Event::listen(Logout::class, function (Logout $event) {

@@ -1,20 +1,20 @@
 <template>
-  <div class="advance-search-drop-down">
-    <div class="advance-search-drop-down-inner">
-      <label>{{name}}:</label>
-      <el-select v-model="selectedValue"
-                 :multiple="multiple"
-                 :size="size">
-        <el-option
-                v-for="item in items" :key="item.Value"
-                :label="getColumnName(item.Title)"
-                :value="item.Value">
-        </el-option>
-      </el-select>
+    <div class="advance-search-drop-down">
+        <div class="advance-search-drop-down-inner">
+            <label>{{name}}:</label>
+            <el-select v-model="selectedValue"
+                       :multiple="multiple"
+                       :size="size">
+                <el-option
+                        v-for="item in items" :key="item.Value"
+                        :label="getColumnName(item.Title)"
+                        :value="item.Value">
+                </el-option>
+            </el-select>
+        </div>
+        <el-button type="text" icon="el-icon-close" :size="size" circle
+                   @click="onClose"></el-button>
     </div>
-    <el-button type="text" icon="el-icon-close" :size="size" circle
-               @click="onClose"></el-button>
-  </div>
 </template>
 
 <script type="javascript">
@@ -60,7 +60,7 @@
       },
       initValues: null
     },
-    data(){
+    data() {
       const data = {
         selectedValue: this.parameters.Multiple ? [] : null,
         operator: '='
@@ -68,10 +68,10 @@
       return data;
     },
     computed: {
-      multiple(){
+      multiple() {
         return this.parameters.Multiple || false;
       },
-      items(){
+      items() {
         if (this.parameters.hasOwnProperty('Items')) {
           return this.parameters.Items;
         }
@@ -88,7 +88,7 @@
       }
     },
     watch: {
-      selectedValue(newValue, oldValue){
+      selectedValue(newValue, oldValue) {
         this.$emit('column-clear', { fieldName: this.field });
 
         updateSearchParams(this.field, newValue)
@@ -119,14 +119,14 @@
         }
       }
     },
-    mounted(){
+    mounted() {
       this.init();
     },
     methods: {
-      init(){
+      init() {
         this.initValuesProcess();
       },
-      initValuesProcess(){
+      initValuesProcess() {
         if (this.initValues !== null && this.initValues !== undefined) {
           if (this.parameters.Multiple) {
             if (this.initValues.constructor !== Array) {
@@ -137,22 +137,22 @@
           this.selectedValue = this.initValues;
         }
       },
-      handleSelect(item){
+      handleSelect(item) {
         this.selectedValue = item.Value;
         this.selectedText = this.getColumnName(item.Title);
       },
-      getColumnName(name){
+      getColumnName(name) {
         if (name.constructor === Function) {
           return name();
         }
         return name;
       },
-      onClose(){
+      onClose() {
         this.$emit('column-close', {
           fieldName: this.field
         });
       },
-      splitIntervalStatement(rawString){
+      splitIntervalStatement(rawString) {
         var startValue, endValue, startOperator, endOperator;
         var keyword = 'interval:'
         var operatorsMap = {
@@ -177,36 +177,36 @@
 </script>
 
 <style lang="scss">
-  @import "../../../styles/variables.scss";
+    @import "../../../styles/variables.scss";
 
-  .advance-search-drop-down {
-    .advance-search-drop-down-inner {
-      font-size: 13px;
-      line-height: normal;
-      border-collapse: separate;
-      display: inline-table;
-      vertical-align: middle;
-      label {
-        background-color: $borderL4;
-        color: $textSecondary;
-        vertical-align: middle;
-        display: table-cell;
-        position: relative;
-        border: 1px solid $borderL1;
-        padding: 0 20px;
-        width: 1px;
-        white-space: nowrap;
+    .advance-search-drop-down {
+        .advance-search-drop-down-inner {
+            font-size: 13px;
+            line-height: normal;
+            border-collapse: separate;
+            display: inline-table;
+            vertical-align: middle;
+            label {
+                background-color: $borderL4;
+                color: $textSecondary;
+                vertical-align: middle;
+                display: table-cell;
+                position: relative;
+                border: 1px solid $borderL1;
+                padding: 0 20px;
+                width: 1px;
+                white-space: nowrap;
 
-        border-right: 0;
-        border-radius: 4px 0 0 4px;
-      }
-      .el-select {
-        display: table-cell;
-        width: 200px;
-        input {
-          border-radius: 0 4px 4px 0;
+                border-right: 0;
+                border-radius: 4px 0 0 4px;
+            }
+            .el-select {
+                display: table-cell;
+                width: 200px;
+                input {
+                    border-radius: 0 4px 4px 0;
+                }
+            }
         }
-      }
     }
-  }
 </style>

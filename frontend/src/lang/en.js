@@ -57,12 +57,20 @@ export default {
     }
   },
   components: {
-    avatar_editor: {
-      button_text: 'Change Avatar',
-      title: 'Avatar'
+    activity_log: {
+      property: {
+        name: 'Key',
+        value: 'Value',
+        old: 'Old',
+        new: 'New'
+      }
     },
     advance_search: {
       add_button: 'Add a filter'
+    },
+    avatar_editor: {
+      button_text: 'Change Avatar',
+      title: 'Avatar'
     },
     editor_title: {
       create: 'Create {name}',

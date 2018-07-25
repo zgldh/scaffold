@@ -13,8 +13,18 @@ return [
             'properties'     => 'Properties',
             'collector_type' => 'Collector Type',
             'collector_id'   => 'Collector Id',
-
+            'created_at'     => 'Occurs At',
         ],
+    'terms'       => [
+        'description_search' => 'Action'
+    ],
+    'type'        => [
+        'login'   => 'Login',
+        'logout'  => 'Logout',
+        'created' => 'Created',
+        'updated' => 'Updated',
+        'deleted' => 'Deleted',
+    ],
     'permissions' =>
         [
         ],

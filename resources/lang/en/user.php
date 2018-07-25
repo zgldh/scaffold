@@ -10,6 +10,8 @@ return [
             'is_active'     => 'Is Active',
             'last_login_at' => 'Last Login At',
             'gender'        => 'Gender',
+            'login_times'   => 'Login Times',
+            'ip'            => 'IP',
         ],
     'terms'       =>
         [

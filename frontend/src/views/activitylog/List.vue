@@ -12,39 +12,22 @@
                               :title="$t('activity_log.title')"
             >
                 <el-table-column type="expand">
-                    <template slot-scope="props">
-                        {{props.row}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="log_name"
-                        :label="$t('activity_log.fields.log_name')"
-                        sortable="custom"
-                        show-overflow-tooltip
-                        width="180">
+                    <log-detail slot-scope="scope" :log="scope.row"/>
                 </el-table-column>
                 <el-table-column
                         prop="description"
                         :label="$t('activity_log.fields.description')"
-                        sortable="custom"
+                        :sortable="false"
                         show-overflow-tooltip>
-                </el-table-column>
-                <el-table-column
-                        prop="causer_id"
-                        :label="$t('activity_log.fields.causer_id')"
-                        sortable="custom"
-                        searchable="false"
-                        show-overflow-tooltip>
-                    <template slot-scope="scope">
-                        {{scope.row.causer?scope.row.causer.name:null}}
-                    </template>
+                    <log-description slot-scope="scope" :log="scope.row"/>
                 </el-table-column>
                 <el-table-column
                         prop="created_at"
-                        :label="$t('global.fields.created_at')"
+                        :label="$t('activity_log.fields.created_at')"
                         sortable="custom"
                         searchable="false"
-                        show-overflow-tooltip>
+                        show-overflow-tooltip
+                        width="180">
                 </el-table-column>
             </zgldh-datatables>
         </el-col>
@@ -55,9 +38,14 @@
   import { DeleteConfirm } from '@/utils/message'
   import { ActivityLogIndex, ActivityLogShow } from '@/api/activityLog'
   import ListMixin from '@/mixins/List'
+  import LogDetail from '@/components/ActivityLog/LogDetail'
+  import LogDescription from '@/components/ActivityLog/LogDescription'
 
   export default {
-    components: {},
+    components: {
+      LogDetail,
+      LogDescription
+    },
     mixins: [ListMixin],
     computed: {},
     data() {
@@ -66,14 +54,34 @@
         multipleActions: [],
         advanceFilters: [
           {
-            Name: () => this.$i18n.t('activity_log.fields.log_name'),
-            Field: 'log_name',
-            Type: String
-          },
-          {
-            Name: () => this.$i18n.t('activity_log.fields.description'),
+            Name: () => this.$i18n.t('activity_log.terms.description_search'),
             Field: 'description',
-            Type: String
+            Type: 'Select',
+            ComponentParameters: {
+              Multiple: true,
+              Items: [
+                {
+                  Title: () => this.$i18n.t('activity_log.type.login'),
+                  Value: 'login'
+                },
+                {
+                  Title: () => this.$i18n.t('activity_log.type.logout'),
+                  Value: 'logout'
+                },
+                {
+                  Title: () => this.$i18n.t('activity_log.type.created'),
+                  Value: 'created'
+                },
+                {
+                  Title: () => this.$i18n.t('activity_log.type.updated'),
+                  Value: 'updated'
+                },
+                {
+                  Title: () => this.$i18n.t('activity_log.type.deleted'),
+                  Value: 'deleted'
+                },
+              ]
+            }
           },
           {
             Name: () => this.$i18n.t('global.fields.created_at'),
@@ -87,7 +95,10 @@
     mounted() {
     },
     methods: {
-      loadData: ActivityLogIndex,
+      loadData: (parameters) => {
+        parameters += "&_with=causer";
+        return ActivityLogIndex(parameters)
+      },
       handleYes(item) {
         console.log('yes', item);
       },
@@ -104,7 +115,7 @@
 <style rel="stylesheet/scss" lang="scss">
     .activitylog-list-page {
         margin: 10px 30px;
-        .el-table__body-wrapper {
+        .zgldh-datatables > .el-table > .el-table__body-wrapper {
             height: calc(100vh - 310px) !important;
         }
     }
