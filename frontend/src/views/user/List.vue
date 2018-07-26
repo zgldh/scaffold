@@ -156,7 +156,10 @@
     {
     },
     methods: {
-      loadData: UserIndex,
+      loadData: (parameters) => {
+        parameters += "&_with=avatar";
+        return UserIndex(parameters)
+      },
       handleCreate(items)
       {
         this.$router.push({ path: `/user/create` })

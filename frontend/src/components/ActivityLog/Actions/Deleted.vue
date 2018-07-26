@@ -1,8 +1,21 @@
 <template>
-    <div class="log-action-deleted"></div>
+    <div class="log-action-deleted">
+        <el-table :data="tableData" stripe border size="mini">
+            <el-table-column
+                    prop="key"
+                    :label="$t('components.activity_log.property.name')"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="value"
+                    :label="$t('components.activity_log.property.value')">
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
 
 <script type="javascript">
+  import _ from 'lodash'
 
   export default {
     name: 'log-action-deleted',
@@ -17,23 +30,16 @@
       return {}
     },
     computed: {
-      causer() {
-        if (this.log.causer) {
-          return this.log.causer.name
-        }
-        return null
+      modelName() {
+        return _.last(this.log.subject_type.split('\\')).toLowerCase()
       },
-      action() {
-        if (this.log.description) {
-          return this.$i18n.t('activity_log.type.' + this.log.description)
-        }
-        return null
-      },
-      subject() {
-        if (this.log.subject_id) {
-          return this.log.subject_id
-        }
-        return null
+      tableData() {
+        return _.map(this.log.properties.attributes, (value, key) => {
+          return {
+            key: this.$t(this.modelName + '.fields.' + key),
+            value: this.$t(value)
+          }
+        })
       }
     },
     mounted() {

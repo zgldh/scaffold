@@ -98,7 +98,7 @@
     },
     methods: {
       loadData: (parameters) => {
-        parameters += "&_with=causer";
+        parameters += "&_with=causer.avatar,subject";
         return ActivityLogIndex(parameters)
       },
       handleYes(item) {
