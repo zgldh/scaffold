@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Hash;
+use Modules\ActivityLog\Models\ActivityLog;
 use Modules\Upload\Models\Upload;
 use Modules\Upload\Traits\HasUploads;
 use Modules\User\Repositories\RoleRepository;
@@ -48,16 +49,10 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected static $logOnlyDirty = true;
-
-    protected static $logAttributes = [
-        'name',
-        'email',
+    protected static $logFillable = true;
+    protected static $ignoreChangedAttributes = [
         'password',
-        'gender',
-        'mobile',
-        'is_active',
-        'last_login_at',
-        'login_times',
+        'updated_at'
     ];
 
     protected $hidden = [
@@ -102,7 +97,10 @@ class User extends Authenticatable implements JWTSubject
      */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value);
+        if (strlen($value)) {
+            $this->attributes['password'] = Hash::make($value);
+            activity()->on($this)->log(ActivityLog::ACTION_UPDATED_PASSWORD);
+        }
     }
 
     public function getAvatarUrlAttribute()
@@ -113,11 +111,6 @@ class User extends Authenticatable implements JWTSubject
     public function avatar()
     {
         return $this->morphOne(Upload::class, 'uploadable')->where('z_uploads.type', Upload::TYPE_AVATAR);
-    }
-
-    public function actions(): MorphMany
-    {
-        return $this->morphMany(ActivitylogServiceProvider::determineActivityModel(), 'causer');
     }
 
     public function isAdmin()

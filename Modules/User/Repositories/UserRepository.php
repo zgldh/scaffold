@@ -47,10 +47,6 @@ class UserRepository extends BaseRepository
      */
     public function update(array $attributes, $id)
     {
-        if (!(isset($attributes['password']) && strlen($attributes['password']) > 0)) {
-            unset($attributes['password']);
-        }
-
         $user = parent::update($attributes, $id);
 
         if (count($attributes['roles']) > 0) {

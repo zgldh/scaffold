@@ -19,11 +19,12 @@ return [
         'description_search' => '动作'
     ],
     'type'        => [
-        'login'   => '登录',
-        'logout'  => '退出',
-        'created' => '创建了',
-        'updated' => '更新了',
-        'deleted' => '删除了',
+        'login'            => '登录',
+        'logout'           => '退出',
+        'created'          => '创建了',
+        'updated'          => '更新了',
+        'deleted'          => '删除了',
+        'updated-password' => '更新了密码',
     ],
     'permissions' =>
         [

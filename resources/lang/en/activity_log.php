@@ -19,11 +19,12 @@ return [
         'description_search' => 'Action'
     ],
     'type'        => [
-        'login'   => 'Login',
-        'logout'  => 'Logout',
-        'created' => 'Created',
-        'updated' => 'Updated',
-        'deleted' => 'Deleted',
+        'login'            => 'Login',
+        'logout'           => 'Logout',
+        'created'          => 'Created',
+        'updated'          => 'Updated',
+        'deleted'          => 'Deleted',
+        'updated-password' => 'Updated the password of',
     ],
     'permissions' =>
         [

@@ -9,7 +9,7 @@
     name: 'log-detail',
     components: {
       'Login': () => import('./Actions/Login.vue'),
-      'Logout': () => import('./Actions/Logout.vue'),
+      // 'Logout': () => import('./Actions/Logout.vue'),
       'Created': () => import('./Actions/Created.vue'),
       'Updated': () => import('./Actions/Updated.vue'),
       'Deleted': () => import('./Actions/Deleted.vue')

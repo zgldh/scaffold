@@ -17,7 +17,8 @@
             <el-table-column
                     prop="new"
                     :label="$t('components.activity_log.property.diff')">
-                <semantic-diff class="new-diff" slot-scope="scope" :left="scope.row.old"
+                <semantic-diff v-if="scope.row.isString" class="new-diff"
+                               slot-scope="scope" :left="scope.row.old"
                                :right='scope.row.new'></semantic-diff>
             </el-table-column>
         </el-table>
@@ -51,8 +52,9 @@
           var newValue = this.log.properties.attributes[key]
           return {
             key: this.$t(this.modelName + '.fields.' + key),
-            old: old,
-            new: newValue
+            old: old.toString(),
+            new: newValue.toString(),
+            isString: _.isString(old)
           }
         })
       }

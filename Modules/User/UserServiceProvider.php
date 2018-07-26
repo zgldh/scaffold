@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\ServiceProvider;
+use Modules\ActivityLog\Models\ActivityLog;
 use Modules\User\Commands\UpdatePermissions;
 use Modules\User\Models\Permission;
 use Modules\User\Models\Role;
@@ -51,7 +52,7 @@ class UserServiceProvider extends ServiceProvider
                     'login_times' => $user->login_times,
                     'ip'          => request()->getClientIp()
                 ])
-                ->log('login');
+                ->log(ActivityLog::ACTION_LOGIN);
 
             activity()->disableLogging();
             $user->save();
@@ -64,7 +65,7 @@ class UserServiceProvider extends ServiceProvider
             activity('auth')
                 ->causedBy($user)
                 ->withProperties([])
-                ->log('logout');
+                ->log(ActivityLog::ACTION_LOGOUT);
         });
 
         Permission::observe(PermissionObserver::class);

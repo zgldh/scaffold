@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class ActivityLog extends \Spatie\Activitylog\Models\Activity
 {
     const TABLE = 'z_activity_log';
+
+    const ACTION_LOGIN = 'login';
+    const ACTION_LOGOUT = 'logout';
+    const ACTION_UPDATED_PASSWORD = 'updated-password';
+
     protected $table = self::TABLE;
 
     public function language($type)

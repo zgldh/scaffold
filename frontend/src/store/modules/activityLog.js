@@ -7,14 +7,13 @@ const activityLog = {
   namespaced: true,
   state: {
     actionsNotExpandable: [
-      'logout'
+      'logout',
+      'updated-password'
     ]
   },
   getters: {},
-  mutations: {
-  },
-  actions: {
-  }
+  mutations: {},
+  actions: {}
 }
 
 export default activityLog
