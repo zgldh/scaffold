@@ -35,7 +35,6 @@
     getSearchParams,
     PARAMS_SEARCH_PREFIX,
   } from '@/utils/addressbar';
-  import { UnifiedValue, SerializerDatatablesParameters } from '@/utils/datatables';
   import _ from 'lodash'
 
   var TypeToComponent = {
@@ -155,55 +154,6 @@
           fieldName: fieldName,
           operator: operator
         });
-      },
-
-      buildSearchParameters: function () {
-        return;// TODO buildSearchParameters
-        if (!this.$refs.searchForm) {
-          return;
-        }
-        var searchComponents = FindSearchComponents(this.$refs.searchForm);
-        searchComponents.forEach(item => {
-          var columnName = item.$el.getAttribute('column')
-          if (!columnName) {
-            return;
-          }
-          var operator = item.$el.getAttribute('operator') ? item.$el.getAttribute('operator') : '=';
-          let value = null;
-          let accessor = item.$el.getAttribute('accessor');
-          if (accessor) {
-            value = _.get(this.searchForm, accessor);
-          } else {
-            // TODO: Access currentValue for elemenr ui component
-            value = this.searchForm.hasOwnProperty(columnName) ? this.searchForm[columnName] : _.get(this.searchForm, columnName);
-          }
-
-          if (value === '' || value === null || value === undefined) {
-            this.clearAdvanceSearchToColumn(columnName, operator)
-          } else {
-            switch (operator) {
-              case 'range':
-                if (value[0]) {
-                  this.applyAdvanceSearchToColumn(columnName, '>=', UnifiedValue(value[0]))
-                } else {
-                  this.clearAdvanceSearchToColumn(columnName, '>=')
-                }
-                if (value[1]) {
-                  this.applyAdvanceSearchToColumn(columnName, '<=', UnifiedValue(value[1], true))
-                } else {
-                  this.clearAdvanceSearchToColumn(columnName, '<=')
-                }
-                break
-              case 'like':
-                this.applyAdvanceSearchToColumn(columnName, operator, '%' + UnifiedValue(value) + '%')
-                break
-              default:
-                // >, >=, =, <=, <
-                this.applyAdvanceSearchToColumn(columnName, operator, UnifiedValue(value))
-                break
-            }
-          }
-        })
       }
     }
   }

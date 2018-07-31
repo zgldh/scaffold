@@ -86,9 +86,12 @@
             }
           },
           {
-            Name: () => this.$i18n.t('global.fields.created_at'),
+            Name: () => this.$i18n.t('activity_log.fields.created_at'),
             Field: 'created_at',
-            Type: Date
+            Type: Date,
+            ComponentParameters: {
+              Type: 'daterange'
+            }
           },
         ]
       };
