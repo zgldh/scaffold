@@ -197,7 +197,6 @@
       },
       handleMultipleDelete(items)
       {
-        // TODO multiple works are too complex.
         var ids = items.map(item => item.id);
         var names = items.map(item => item.name).join(', ');
         DeleteConfirm(names, () => UploadBundle('delete', ids), false).then(({ data }) => {

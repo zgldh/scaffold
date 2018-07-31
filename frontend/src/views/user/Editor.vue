@@ -49,7 +49,7 @@
             </el-form>
         </el-col>
         <el-col :span="11" :offset="1">
-            <avatar-editor :avatar="form.avatar_url||''" :user-id="this.form.id"
+            <avatar-editor :avatar="form.avatar_url||''" :user-id="form.id"
                            @crop-upload-success="cropUploadSuccess">
             </avatar-editor>
         </el-col>
@@ -77,6 +77,7 @@
           },
         },
         form: {
+          id: null,
           name: '',
           email: '',
           password: '',

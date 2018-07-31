@@ -44,7 +44,8 @@ class Permission extends BasePermission
         'id'         => 'integer',
         'name'       => 'string',
         'label'      => 'string',
-        'guard_name' => 'string'
+        'guard_name' => 'string',
+        'roles'      => 'array'
     ];
 
     /**

@@ -35,10 +35,11 @@ class Role extends BaseRole
      * @var array
      */
     protected $casts = [
-        'id'         => 'integer',
-        'name'       => 'string',
-        'label'      => 'string',
-        'guard_name' => 'string'
+        'id'          => 'integer',
+        'name'        => 'string',
+        'label'       => 'string',
+        'guard_name'  => 'string',
+        'permissions' => 'array'
     ];
 
     /**

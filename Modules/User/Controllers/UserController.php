@@ -202,7 +202,7 @@ class UserController extends AppBaseController
         $user = $request->user();
 
         if ($request->has('user_id')) {
-            if (!$user->hasPermissionTo('manage-user', 'api')) {
+            if (!$user->hasPermissionTo('User@update', 'api')) {
                 throw new AuthorizationException();
             }
             $user = User::find($input['user_id']);
