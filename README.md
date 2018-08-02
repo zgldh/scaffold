@@ -123,6 +123,14 @@
   
    - `Modules/Post/routes.php`
    - `frontend/src/router/dynamicRouterMap.js`
+   
+  并创建权限：
+  
+   - Post@index
+   - Post@store
+   - Post@show
+   - Post@update
+   - Post@destroy
 
 API 生成 
 ----------
@@ -137,7 +145,6 @@ API 生成
   将创建好如下目录和文件:
    
    - `Modules/Post/Requests/PutIdLikeRequest.php`
-   - `Modules/Post/routes.php`
    - `tests/Modules/Post/Post/PutIdLikeTest.php`
    
   并自动修改好如下文件：
@@ -193,10 +200,8 @@ API 生成
 
 导出产物储存在 `frontend/src/lang/languages.js`
 
-
 组件说明
 ====
-
 
 内置了一些常用组件。
 
@@ -218,7 +223,6 @@ actions|Array|false| [] | 行动作按钮。 <pre> [{Title: () => this.$i18n.t('
 multipleActions|Array|false|[]| 表格顶部动作按钮。
 filters|Array|false|[]| 高级过滤器的配置。
 exportColumns|Object|false|null|导出文件的列配置。<pre>{<br>  "name": this.$t('upload.fields.name'),<br>  "description": this.$t('upload.fields.description'),<br>  "disk": this.$t('upload.fields.disk'),<br>  "path": this.$t('upload.fields.path'),<br>  "size": this.$t('upload.fields.size'),<br>  "type": this.$t('upload.fields.type'),<br>  "created_at": this.$t('global.fields.created_at'),<br>}</pre>
-
 
 图标组件 auto-icon
 --------------
@@ -244,7 +248,6 @@ TODO
     2. 在 `frontend\src\router\dynamicRouterMap.js` 里添加路由。
     3. 注意路由的 meta.title 可以设置成函数来实现多语言。
 2. ...
-
 
 感谢
 ===========
