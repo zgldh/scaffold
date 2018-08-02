@@ -43,7 +43,7 @@
       </el-form>
     </el-col>
     <el-col :span="11" :offset="1">
-      <avatar-editor :avatar="avatar"
+      <avatar-editor :avatar="avatar" :user-id="currentUserId"
                      @crop-upload-success="cropUploadSuccess">
       </avatar-editor>
     </el-col>
@@ -69,6 +69,7 @@
         avatar: state => state.currentUser.avatar,
         roles: state => state.currentUser.roles,
         permissions: state => state.currentUser.permissions,
+        currentUserId: state => state.currentUser.id,
       }),
       passwordRules() {
         return {

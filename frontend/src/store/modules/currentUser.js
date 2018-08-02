@@ -13,6 +13,7 @@ const currentUser = {
   namespaced: true,
   state: {
     token: getToken(),
+    id: '',
     name: '',
     email: '',
     gender: '',
@@ -41,6 +42,9 @@ const currentUser = {
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_ID: (state, id) => {
+      state.id = id
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -136,6 +140,7 @@ const currentUser = {
         const data = response.data
         store.commit('SET_PERMISSIONS', data.permissions)
         store.commit('SET_ROLES', data.roles)
+        store.commit('SET_ID', data.id)
         store.commit('SET_NAME', data.name)
         store.commit('SET_EMAIL', data.email)
         store.commit('SET_GENDER', data.gender)

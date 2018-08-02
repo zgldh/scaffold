@@ -45,8 +45,13 @@ class UploadRepository extends BaseRepository
 
     /**
      * @no-permission
+     * @param array $attributes
+     * @param Model|null $associate
+     * @param User|null $uploader
+     * @return bool|\Modules\Upload\Models\Upload
+     * @throws \Exception
      */
-    public function create(array $attributes, Model $associate = null)
+    public function create(array $attributes, Model $associate = null, User $uploader = null)
     {
         unset($attributes['path']);
         unset($attributes['size']);
@@ -60,7 +65,7 @@ class UploadRepository extends BaseRepository
         $upload->name = @$attributes['name'] ?: mb_convert_encoding($attributes['file']->getClientOriginalName(), 'utf8');
         $upload->description = @$attributes['description'] ?: '';
         $upload->type = @$attributes['type'] ?: '';
-        $upload->user_id = $attributes['user_id'];
+        $upload->user_id = $uploader ? $uploader->id : null;
         if ($associate) {
             $upload->uploadable_type = get_class($associate);
             $upload->uploadable_id = $associate->id;
@@ -71,15 +76,19 @@ class UploadRepository extends BaseRepository
 
     /**
      * @no-permission
+     * @param array $attributes
+     * @param User $user
+     * @param User|null $uploader
+     * @return
      */
-    public function createAvatar(array $attributes, User $user)
+    public function createAvatar(array $attributes, User $user, User $uploader = null)
     {
-        $upload = \DB::transaction(function () use ($attributes, $user) {
-            if ($user->avatar) {
+        $upload = \DB::transaction(function () use ($attributes, $user, $uploader) {
+            if ($user && $user->avatar) {
                 $user->avatar->delete();
             }
             $attributes['type'] = 'avatar';
-            $upload = $this->create($attributes, $user);
+            $upload = $this->create($attributes, $user, $uploader);
             return $upload;
         });
         return $upload;

@@ -38,6 +38,7 @@ class CreateUploadRequest extends FormRequest
     {
         $rules = Upload::$rules;
         $rules['file'] = 'required';
+        $rules['user_id'] = 'required';
         return $rules;
     }
 
