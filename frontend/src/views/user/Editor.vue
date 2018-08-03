@@ -82,6 +82,7 @@
           email: '',
           password: '',
           is_active: true,
+          avatar_url: null,
           roles: []
         }
       };
@@ -138,6 +139,7 @@
       },
       cropUploadSuccess({ jsonData, field }) {
         this.form.avatar_url = jsonData.data.url;
+        this.form.avatar = jsonData.data.id;
       }
     }
   }

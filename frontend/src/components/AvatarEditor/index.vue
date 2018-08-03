@@ -30,7 +30,7 @@
       },
       userId: {
         type: Number,
-        required: true
+        required: false
       }
     },
     data() {
@@ -55,7 +55,9 @@
       },
       params() {
         var params = {};
-        params.user_id = this.userId;
+        if (this.userId) {
+          params.user_id = this.userId;
+        }
         return params;
       },
     },

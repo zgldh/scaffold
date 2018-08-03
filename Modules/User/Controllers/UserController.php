@@ -202,13 +202,22 @@ class UserController extends AppBaseController
         $uploader = $request->user();
         $user = null;
 
-        if ($uploader->id == $input['user_id']) {
-            $user = $uploader;
+        if (isset($input['user_id'])) {
+            // Avatar for updating user
+            $userId = intval($input['user_id']);
+            if ($uploader->id == $userId) {
+                $user = $uploader;
+            } elseif ($userId) {
+                if (!$uploader->hasPermissionTo('User@update', 'api')) {
+                    throw new AuthorizationException();
+                }
+                $user = User::find($userId);
+            }
         } else {
-            if (!$uploader->hasPermissionTo('User@update', 'api')) {
+            // Avatar for new user
+            if (!$uploader->hasPermissionTo('User@store', 'api')) {
                 throw new AuthorizationException();
             }
-            $user = User::find($input['user_id']);
         }
 
         $upload = $repository->createAvatar($input, $user, $uploader);

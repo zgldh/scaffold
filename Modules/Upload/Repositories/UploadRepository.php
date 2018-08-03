@@ -81,7 +81,7 @@ class UploadRepository extends BaseRepository
      * @param User|null $uploader
      * @return
      */
-    public function createAvatar(array $attributes, User $user, User $uploader = null)
+    public function createAvatar(array $attributes, User $user = null, User $uploader = null)
     {
         $upload = \DB::transaction(function () use ($attributes, $user, $uploader) {
             if ($user && $user->avatar) {
