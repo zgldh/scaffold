@@ -23,7 +23,7 @@
     "spatie/laravel-permission": "^2.9",
     "tymon/jwt-auth": "1.0.0-rc.2",
     "yajra/laravel-datatables-oracle": "~8.0",
-    "zgldh/laravel-upload-manager": "^0.4.5"
+    "zgldh/laravel-upload-manager": "^0.5.0"
   },
   "require-dev": {
     "filp/whoops": "~2.0",

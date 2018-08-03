@@ -99,7 +99,9 @@ class User extends Authenticatable implements JWTSubject
     {
         if (strlen($value)) {
             $this->attributes['password'] = Hash::make($value);
-            activity()->on($this)->log(ActivityLog::ACTION_UPDATED_PASSWORD);
+            if ($this->id) {
+                activity()->on($this)->log(ActivityLog::ACTION_UPDATED_PASSWORD);
+            }
         }
     }
 

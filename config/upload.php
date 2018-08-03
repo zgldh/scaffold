@@ -38,5 +38,12 @@ return [
             'max'   => 8192,  //kilobytes
             'mimes' => 'jpeg,bmp,png,gif'
         ]
-    ]
+    ],
+
+    /**
+     * 已上传，但未使用的文件的过期时长。单位是秒
+     * 设置为 -1 则不会删除未使用的文件。
+     * 如果一个 Upload 对象没有 uploadable 关联对象， 则该 Upload 对象未使用。
+     */
+    'unused_lifetime'   => 86400
 ];
