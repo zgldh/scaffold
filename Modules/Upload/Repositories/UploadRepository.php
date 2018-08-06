@@ -124,16 +124,4 @@ class UploadRepository extends BaseRepository
 
         return $upload;
     }
-
-    /**
-     * @no-permission
-     */
-    public function cleanUpUpload($userId)
-    {
-        $query = call_user_func($this->model() . '::query');
-        $uploads = $query->where('user_id', $userId)->whereNull('uploadable_id')->get();
-        foreach ($uploads as $upload) {
-            $upload->delete();
-        }
-    }
 }

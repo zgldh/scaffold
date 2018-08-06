@@ -81,6 +81,16 @@ class Upload extends Model
         return $this->morphTo();
     }
 
+    public function scopeUsed($query)
+    {
+        return $query->has('uploadable');
+    }
+
+    public function scopeUnUsed($query)
+    {
+        return $query->whereNull('uploadable_id')->whereNull('uploadable_type');
+    }
+
     public function getUrlAttribute()
     {
         $manager = UploadManager::getInstance();

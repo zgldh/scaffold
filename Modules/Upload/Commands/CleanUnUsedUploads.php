@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Modules\User\Models\Permission;
 use Modules\User\Repositories\PermissionRepository;
 use ReflectionClass;
+use zgldh\UploadManager\UploadManager;
 
 class CleanUnUsedUploads extends Command
 {
@@ -12,7 +13,7 @@ class CleanUnUsedUploads extends Command
      *
      * @var string
      */
-    protected $signature = 'upload:clean {user-id=} {type=}';
+    protected $signature = 'upload:clean {--user-id=} {--type=}';
 
     /**
      * The console command description.
@@ -38,21 +39,14 @@ class CleanUnUsedUploads extends Command
      */
     public function handle()
     {
-        $guardName = $this->argument('type');
-        $this->info('Start update permissions...');
-        $this->permissions = $this->detectPermissions($guardName);
-        $this->table(['name', 'guard_name'], $this->permissions);
+        $userId = $this->option('user-id') ?: null;
+        $type = $this->option('type') ?: null;
 
-//        foreach ($this->connections as $connection) {
-//            $this->info('Storing to ' . $connection);
-//            $this->processConnection($connection);
-//            $this->line("\tComplete.");
-//        }
+        $uploadManager = UploadManager::getInstance();
+        $uploadManager->removeUnUsedUploads($userId, $type);
 
-        $connection = 'mysql';
-        $this->info('Storing to ' . $connection);
-        $this->processConnection($connection);
-        $this->call('lang:dump');
+
+        $this->info('Start cleaning un-used uploads...');
         $this->line("\tComplete.");
     }
 }
