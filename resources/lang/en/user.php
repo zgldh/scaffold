@@ -12,6 +12,7 @@ return [
             'gender'        => 'Gender',
             'login_times'   => 'Login Times',
             'ip'            => 'IP',
+            'mobile'        => 'Mobile Phone',
         ],
     'terms'       =>
         [

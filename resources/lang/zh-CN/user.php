@@ -12,6 +12,7 @@ return [
             'gender'        => '性别',
             'login_times'   => '登录次数',
             'ip'            => 'IP',
+            'mobile'        => '手机',
         ],
     'terms'       =>
         [

@@ -1,20 +1,20 @@
 <template>
-  <div class="avatar-editor">
-    <slot><h4>{{$t('components.avatar_editor.title')}}</h4></slot>
-    <img v-if="avatar" class="avatar" :src="avatar">
-    <el-button @click="imageCropperShow=true">
-      {{$t('components.avatar_editor.button_text')}}
-    </el-button>
-    <image-cropper :width="300" :height="300" field="file"
-                   :url="avatarUploadURL"
-                   :params="params"
-                   @crop-success="cropAvatarSuccess"
-                   @crop-upload-success="cropUploadSuccess"
-                   @crop-upload-fail="cropUploadFail"
-                   v-model="imageCropperShow"
-                   :headers="avatarHeader"
-                   :lang-type="avatarLangType"></image-cropper>
-  </div>
+    <div class="avatar-editor">
+        <slot><h4>{{$t('components.avatar_editor.title')}}</h4></slot>
+        <img v-if="avatar" class="avatar" :src="avatar">
+        <el-button @click="imageCropperShow=true">
+            {{$t('components.avatar_editor.button_text')}}
+        </el-button>
+        <image-cropper :width="300" :height="300" field="file"
+                       :url="avatarUploadURL"
+                       :params="params"
+                       @crop-success="cropAvatarSuccess"
+                       @crop-upload-success="cropUploadSuccess"
+                       @crop-upload-fail="cropUploadFail"
+                       v-model="imageCropperShow"
+                       :headers="avatarHeader"
+                       :lang-type="avatarLangType"></image-cropper>
+    </div>
 </template>
 
 <script type="javascript">
@@ -33,27 +33,27 @@
         required: false
       }
     },
-    data(){
+    data() {
       return {
         imageCropperShow: false,
       };
     },
     computed: {
-      avatarLangType(){
+      avatarLangType() {
         if (this.$i18n.locale.indexOf('zh-') === 0) {
           return 'zh';
         }
         return this.$i18n.locale;
       },
-      avatarUploadURL(){
+      avatarUploadURL() {
         return process.env.BASE_API + '/user/avatar';
       },
-      avatarHeader(){
+      avatarHeader() {
         return {
           Authorization: 'bearer ' + getToken()
         };
       },
-      params(){
+      params() {
         var params = {};
         if (this.userId) {
           params.user_id = this.userId;
@@ -62,7 +62,7 @@
       },
     },
     watch: {},
-    mounted(){
+    mounted() {
     },
     methods: {
       cropAvatarSuccess(imageDataUrl, field) {
@@ -82,12 +82,12 @@
 </script>
 
 <style lang="scss" scoped>
-  .avatar-editor {
-    .avatar {
-      width: 300px;
-      height: 300px;
-      display: block;
-      margin-bottom: 1em;
+    .avatar-editor {
+        .avatar {
+            width: 300px;
+            height: 300px;
+            display: block;
+            margin-bottom: 1em;
+        }
     }
-  }
 </style>

@@ -199,18 +199,28 @@ class UserController extends AppBaseController
     public function postAvatar(CreateUploadRequest $request, UploadRepository $repository)
     {
         $input = $request->all();
-        $user = $request->user();
+        $uploader = $request->user();
+        $user = null;
 
-        if ($request->has('user_id')) {
-            if (!$user->hasPermissionTo('User@update', 'api')) {
+        if (isset($input['user_id'])) {
+            // Avatar for updating user
+            $userId = intval($input['user_id']);
+            if ($uploader->id == $userId) {
+                $user = $uploader;
+            } elseif ($userId) {
+                if (!$uploader->hasPermissionTo('User@update', 'api')) {
+                    throw new AuthorizationException();
+                }
+                $user = User::find($userId);
+            }
+        } else {
+            // Avatar for new user
+            if (!$uploader->hasPermissionTo('User@store', 'api')) {
                 throw new AuthorizationException();
             }
-            $user = User::find($input['user_id']);
-        } else {
-            $input['user_id'] = $user->id;
         }
 
-        $upload = $repository->createAvatar($input, $user);
+        $upload = $repository->createAvatar($input, $user, $uploader);
         $upload->load($request->getWith());
 
         return $this->sendResponse($upload, 'Upload saved successfully.');
