@@ -161,7 +161,7 @@
           ')': '<',
           ']': '<='
         }
-        if (rawString.indexOf(keyword) === 0) {
+        if (typeof(rawString) === 'string' && rawString.indexOf(keyword) === 0) {
           var regExp = /(\[|\()(.*),(.*)(\]|\))/;
           var execResult = regExp.exec(rawString.substr(8));
           if (execResult !== null) {
