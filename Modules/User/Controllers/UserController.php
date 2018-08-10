@@ -33,11 +33,13 @@ class UserController extends AppBaseController
      * @name 列表
      * @param IndexRequest $request
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function index(IndexRequest $request)
     {
-        $with = $request->getWith();
-        $data = $this->repository->datatables(null, $with);
+        $data = $this->repository->datatables(null, $request->getWith())
+            ->search($request->getColumns(), null)
+            ->result($request->getExportFileName());
 
         return $data;
     }

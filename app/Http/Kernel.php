@@ -22,7 +22,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \App\Http\Middleware\MultipartFormDataParser::class,
         \Barryvdh\Cors\HandleCors::class,
-        ExportDatatables::class,
         AcceptLanguageSetter::class,
     ];
 

@@ -37,10 +37,10 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
      * @no-permission
      * @param $model
      * @param array $with
-     * @param null $filter
      * @return mixed
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function datatables($model = null, array $with = [], $filter = null)
+    public function datatables($model = null, array $with = [])
     {
         if ($model == null) {
             $this->applyScope();
@@ -62,75 +62,9 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
             $query = $query->newQuery();
         }
 
-        if (count($with) == 1) {
-            foreach ($with as $key => $value) {
-                if ($value === 'undefined') {
-                    unset($with[$key]);
-                }
-            }
-        }
-
-        if (count($with) > 0) {
-            $query = call_user_func_array([$query, 'with'], $with);
-        }
-
-        $dt = \DataTables::eloquent($query);
-        $dt->escapeColumns('~');
-
-        $columns = \Request::input('columns', []);
-        if (sizeof($columns) > 0) {
-            $dt->filter(function ($query) use ($columns, $filter) {
-                if (is_callable($filter)) {
-                    $filter($query);
-                }
-                foreach ($columns as $column) {
-                    $columnNames = explode('.', $column['name']);
-                    $advanceSearches = array_get($column, 'search.advance');
-                    if ($advanceSearches) {
-                        $query->where(function ($q) use ($advanceSearches, $columnNames) {
-                            foreach ($advanceSearches as $operator => $value) {
-                                $this->advanceSearch($q, $columnNames, $operator, $value);
-                            }
-                        });
-                    }
-                }
-            }, true);
-        } elseif ($filter) {
-            $dt->filter($filter, true);
-        }
-        $result = $dt->make(true);
+        $builder = new \App\Scaffold\Datatables\Builder($query, $with);
         $this->resetModel();
-        return $result;
-    }
-
-    private function advanceSearch($query, $columnNames, $operator, $value)
-    {
-        if (sizeof($columnNames) == 1) {
-            $columnName = $columnNames[0];
-            if (is_array($value)) {
-                switch ($operator) {
-                    case '!=':
-                        $query->whereNotIn($columnName, $value);
-                        break;
-                    case '=':
-                        $query->whereIn($columnName, $value);
-                        break;
-                    default:
-                        $query->where(function ($q) use ($columnName, $operator, $value) {
-                            foreach ($value as $valueItem) {
-                                $q->orWhere($columnName, $operator, $valueItem);
-                            }
-                        });
-                }
-            } else {
-                $query->where($columnName, $operator, $value);
-            }
-        } else {
-            $columnName = array_shift($columnNames);
-            $query->whereHas($columnName, function ($q) use ($columnNames, $operator, $value) {
-                $this->advanceSearch($q, $columnNames, $operator, $value);
-            });
-        }
+        return $builder;
     }
 
     // Inherit from InfyOm\Generator\Common\BaseRepository

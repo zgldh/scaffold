@@ -8,7 +8,7 @@ use League\Csv\Writer;
 class ExportDatatables
 {
     const KEY_NAME = '_export';
-    const MAX_LENGTH = 999999;
+    const MAX_LENGTH = -1;
 
     /**
      * Handle an incoming request.

@@ -26,4 +26,14 @@ class IndexRequest extends FormRequest
     {
         return [];
     }
+
+    public function getColumns()
+    {
+        return $this->input('columns', []);
+    }
+
+    public function getExportFileName()
+    {
+        return $this->input('_export', null);
+    }
 }
