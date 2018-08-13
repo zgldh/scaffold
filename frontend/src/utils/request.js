@@ -30,6 +30,11 @@ service.interceptors.request.use(async config => {
     config.url += '?' + config.params
     config.params = null
   }
+
+  var urlParser = new URL(config.url, config.baseURL)
+  if (urlParser.searchParams.has('_export')) {
+    config.responseType = 'blob'
+  }
   return config
 }, error => {
   // Do something with request error

@@ -22,12 +22,15 @@ class UploadController extends AppBaseController
      * Display a listing of the Upload.
      *
      * @param IndexRequest $request
-     * @return Response
+     * @return JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     * @throws \Exception
      */
     public function index(IndexRequest $request)
     {
-        $with = $request->getWith();
-        $data = $this->repository->datatables(null, $with);
+        $data = $this->repository->datatables(null, $request->getWith())
+            ->search($request->getColumns(), null)
+            ->result($request->getExportFileName());
 
         return $data;
     }

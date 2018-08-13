@@ -1,5 +1,6 @@
 <?php namespace App\Scaffold\Datatables;
 
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Yajra\DataTables\EloquentDataTable;
 
 /**
@@ -14,6 +15,7 @@ class Builder
      * @var EloquentDataTable
      */
     private $datatables = null;
+    private $columns = [];
 
     public function __construct($query, $with = [])
     {
@@ -26,6 +28,7 @@ class Builder
     public function search($columns = [], $filterFunction = null)
     {
         if (sizeof($columns) > 0) {
+            $this->columns = $columns;
             $this->datatables->filter(function ($query) use ($columns, $filterFunction) {
                 if (is_callable($filterFunction)) {
                     $filterFunction($query);
@@ -50,19 +53,50 @@ class Builder
 
     /**
      * @param null $exportFileName
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \Exception
      */
     public function result($exportFileName = null)
     {
         if ($exportFileName) {
             // Excel
-
+            $query = $this->datatables->getQuery();
+            return (new DynamicExport($query, $this->prepareColumns()))->download($exportFileName);
         } else {
             // JSON
             $result = $this->datatables->make(true);
             return $result;
         }
+    }
+
+    /**
+     * Prepare columns for excel exporting
+     * @return array
+     */
+    private function prepareColumns()
+    {
+        $columns = [];
+        $hasId = false;
+        foreach ($this->columns as $column) {
+            if ($column['name'] === 'id') {
+                $hasId = true;
+            }
+            if (!$column['label']) {
+                continue;
+            }
+            $columnType = null;
+            array_push($columns, [
+                'name'  => $column['name'],
+                'label' => $column['label'],
+            ]);
+        }
+        if (!$hasId) {
+            array_unshift($columns, [
+                'name'  => 'id',
+                'label' => 'ID'
+            ]);
+        }
+        return $columns;
     }
 
     private function applyWith($query, $with = [])

@@ -34,8 +34,9 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
      */
     public function index(IndexRequest $request)
     {
-        $with = $request->getWith();
-        $data = $this->repository->datatables(null, $with);
+        $data = $this->repository->datatables(null, $request->getWith())
+        ->search($request->getColumns(), null)
+        ->result($request->getExportFileName());
 
         return $data;
     }

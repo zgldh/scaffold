@@ -30,10 +30,10 @@ class UserController extends AppBaseController
 
     /**
      * Display a listing of the User.
-     * @name 列表
      * @param IndexRequest $request
-     * @return Response
+     * @return JsonResponse
      * @throws \Prettus\Repository\Exceptions\RepositoryException
+     * @throws \Exception
      */
     public function index(IndexRequest $request)
     {

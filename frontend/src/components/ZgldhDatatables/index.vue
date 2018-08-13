@@ -260,7 +260,7 @@
         defaultActions.push({
           Icon: 'fa-download',
           Tooltip: () => this.$i18n.t('list.export_button'),
-          Handle(targets) {
+          async Handle(targets) {
             if (vm.source.constructor === Function) {
               var oldColumns = JSON.stringify(vm.datatablesParameters.columns);
               if (vm.exportColumns) {
@@ -284,10 +284,9 @@
               var parameters = vm.getQueryParameters();
               var fileName = vm.getExportFileName();
               parameters = parameters + '&_export=' + encodeURIComponent(fileName);
-              vm.source(parameters).then(result => {
-                downloadjs(result, fileName, 'text/csv');
-              });
+              var result = await vm.source(parameters)
               vm.datatablesParameters.columns = JSON.parse(oldColumns);
+              return downloadjs(result, fileName);
             }
             else {
               console.info("Not support source type: ", typeof(source));
@@ -501,12 +500,12 @@
         this.clearAdvanceSearchToColumn(fieldName, operator);
         this.loadSource();
       },
-      getExportFileName() {
+      getExportFileName(ext) {
         var d = new Date();
         return this.$t('list.export_file_name', {
           title: this.title,
           timestamp: d.getTime()
-        }) + '.csv';
+        }) + (ext || '.xlsx');
       },
       // Exported functions
       removeItem(inputItem) {

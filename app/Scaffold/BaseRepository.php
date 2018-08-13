@@ -37,7 +37,7 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
      * @no-permission
      * @param $model
      * @param array $with
-     * @return mixed
+     * @return Datatables\Builder
      * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function datatables($model = null, array $with = [])
