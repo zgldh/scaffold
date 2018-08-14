@@ -27,7 +27,7 @@ class FakerFace extends Generator
 
         $command = $this->preCommand . '->' . $method
             . '(' . join(',', array_map(function ($item) {
-                return var_export($item);
+                return var_export($item, true);
             }, $attributes)) . ')';
         if (in_array($method, $chainMethods)) {
             $generator = new FakerFace($command);
