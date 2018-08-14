@@ -300,13 +300,14 @@ class AddModel extends Command
             return $this->line("\tskip");
         }
 
-        $modelName = camel_case($this->starter->getModelName());
+        $camelModelName = $this->model->getCamelCase();
+        $pascaleModelName = $this->model->getPascaleCase();
         $route = $this->model->getRoute();
-        Utils::createFrontEndAPI("{$modelName}Index", 'get', "{$route}", $modelName);
-        Utils::createFrontEndAPI("{$modelName}Store", 'post', "{$route}", $modelName);
-        Utils::createFrontEndAPI("{$modelName}Show", 'get', "{$route}/{id}", $modelName);
-        Utils::createFrontEndAPI("{$modelName}Update", 'put', "{$route}/{id}", $modelName);
-        Utils::createFrontEndAPI("{$modelName}Destroy", 'delete', "{$route}/{id}", $modelName);
+        Utils::createFrontEndAPI("{$pascaleModelName}Index", 'get', "{$route}", $camelModelName);
+        Utils::createFrontEndAPI("{$pascaleModelName}Store", 'post', "{$route}", $camelModelName);
+        Utils::createFrontEndAPI("{$pascaleModelName}Show", 'get', "{$route}/{id}", $camelModelName);
+        Utils::createFrontEndAPI("{$pascaleModelName}Update", 'put', "{$route}/{id}", $camelModelName);
+        Utils::createFrontEndAPI("{$pascaleModelName}Destroy", 'delete', "{$route}/{id}", $camelModelName);
 
         $this->info('Front End APIs are updated.');
         return;
