@@ -55,7 +55,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
   import store  from '@/store'
   import { mapState } from 'vuex'
   import { SuccessMessage } from '@/utils/message'
-  import { {{$modelPascaleCase}}Store, {{$modelPascaleCase}}Update, {{$modelPascaleCase}}Show } from '@/api/{{$modelName}}'
+  import { {{$modelPascaleCase}}Store, {{$modelPascaleCase}}Update, {{$modelPascaleCase}}Show } from '@/api/{{$modelCamelCase}}'
   import EditorMixin from '@/mixins/Editor'
 
   export default  {

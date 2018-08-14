@@ -71,7 +71,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
 
 <script type="javascript">
   import { DeleteConfirm } from '@/utils/message'
-  import { {{$modelPascaleCase}}Index, {{$modelPascaleCase}}Destroy } from '@/api/{{$modelName}}'
+  import { {{$modelPascaleCase}}Index, {{$modelPascaleCase}}Destroy } from '@/api/{{$modelCamelCase}}'
   import ListMixin from '@/mixins/List'
 
   export default {
