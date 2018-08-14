@@ -140,9 +140,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
     methods: {
       loadData: (parameters) => {
         var _with = '<?php echo join(',', $MODEL->getRelationNames());?>';
-        if (_with) {
-          parameters._with = _with;
-        }
+        parameters += "&_with=" + _with;
         return {{$modelPascaleCase}}Index(parameters);
       },
       handleCreate(items)
