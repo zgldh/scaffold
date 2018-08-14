@@ -76,26 +76,11 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
 //      Preload store data here.
 //      store.dispatch('user/LoadRoles').then(next);
 //    },
-    mounted () {
-      this.fetchData();
-    },
     watch: {
       $route: 'fetchData',
     },
-    mounted: function () {
-      this.loading = true;
-      let loads = [];
-      if (this.$route.params.id) {
-        this.form.id = this.$route.params.id;
-        loads.push(axios.get(this.resource));
-      }
-
-      Promise.all(loads).then(results => {
-        this.form = results[0].data.data;
-        this.loading = false;
-      }).catch(err => {
-        this.loading = false;
-      });
+    mounted () {
+      this.fetchData();
     },
     methods: {
       fetchData() {
