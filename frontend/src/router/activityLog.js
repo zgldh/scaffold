@@ -1,3 +1,6 @@
+import Layout from '../views/layout/Layout'
+import i18n from '../lang'
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -13,8 +16,18 @@
   }
  **/
 export default [
-  ...require('./user').default,
-  ...require('./upload').default,
-  ...require('./activityLog').default
-  // Append More Routes. Don't remove me
+  {
+    path: '/activitylog',
+    component: Layout,
+    permissions: ['ActivityLog@index'],
+    children: [
+      {
+        path: 'list',
+        name: 'ActivityLog',
+        permissions: ['ActivityLog@index'],
+        component: () => import('@/views/activitylog/List'),
+        meta: { title: () => i18n.t('activity_log.title'), icon: 'table' }
+      }
+    ]
+  }
 ]

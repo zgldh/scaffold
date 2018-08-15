@@ -1,3 +1,6 @@
+import Layout from '../views/layout/Layout'
+import i18n from '../lang'
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -13,8 +16,35 @@
   }
  **/
 export default [
-  ...require('./user').default,
-  ...require('./upload').default,
-  ...require('./activityLog').default
-  // Append More Routes. Don't remove me
+  {
+    path: '/upload',
+    component: Layout,
+    redirect: '/upload/list',
+    name: 'Upload',
+    permissions: ['Upload@index'],
+    meta: { title: () => i18n.t('upload.title'), icon: 'fa-cogs' },
+    children: [
+      {
+        path: 'list',
+        name: 'Upload List',
+        permissions: ['Upload@index'],
+        component: () => import('@/views/upload/List'),
+        meta: {
+          title: () => i18n.t('components.list_title', { name: i18n.t('upload.title') }),
+          icon: 'fa-upload'
+        }
+      },
+      {
+        hidden: true,
+        path: ':id/edit',
+        name: 'Edit Upload',
+        permissions: ['Upload@update'],
+        component: () => import('@/views/upload/Editor'),
+        meta: {
+          title: () => i18n.t('global.terms.edit'),
+          icon: 'fa-user'
+        }
+      }
+    ]
+  }
 ]
