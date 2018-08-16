@@ -320,7 +320,7 @@ class AddModel extends Command
     private function generateFrontEndPages()
     {
         $this->comment("Front End Pages...");
-        if (!$this->checkWilling('resource')) {
+        if (!$this->checkWilling('frontend')) {
             return $this->line("\tskip");
         }
 
@@ -349,23 +349,16 @@ class AddModel extends Command
      */
     private function generateFrontEndRoutes()
     {
-        $this->comment("Resources routes...");
-        if (!$this->checkWilling('resource')) {
+        $this->comment("Front End Routes...");
+        if (!$this->checkWilling('frontend')) {
             return $this->line("\tskip");
         }
 
-        $variables = [
-            'STARTER' => $this->starter,
-            'MODEL'   => $this->starter->getModel(),
-        ];
-        $routeLine = Utils::renderTemplate(
-            config('scaffold.templates.frontend.routes', 'scaffold::frontend.routes'),
-            $variables);
-        $routesPath = config('scaffold.templates.frontend.routes')[1];
-        Utils::replaceFilePlaceholders($routesPath, [
-            "\n  // Append More Routes. Don't remove me" => ",\n" .
-                '  ' . $routeLine . "\n  // Append More Routes. Don't remove me"
-        ], null, '');
+        $moduleName = $this->starter->getModuleName();
+        // 1. To generate the module route file if not exists and to update dynamic routes map.
+        Utils::addFrontEndRouteFile($moduleName);
+        // 2. Add new routes to the module route file.
+        Utils::appendFrontEndRoutes($moduleName, $this->model);
     }
 
     private function generateLanguageFiles()

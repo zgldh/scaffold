@@ -15,7 +15,7 @@ import i18n from '../lang'
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
-export default [
+export default [{},
   {
     path: '/user',
     component: Layout,
@@ -79,4 +79,5 @@ export default [
       }
     ]
   }
+  // Append More Routes. Don't remove me
 ]

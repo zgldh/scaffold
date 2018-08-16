@@ -13,8 +13,8 @@ $route = $MODEL->getRoute();
   $htmlType = $field->getHtmlType();
 @endphp
 @if($field->getRelationship() ||  $htmlType->getOptions())
-      {{$htmlType->getComputedPropertyName()}}() {
-        return this.$store.state.{{$modelCamelCase}}.{{$htmlType->getComputedPropertyName()}};
-      },
+//      {{$htmlType->getComputedPropertyName()}}() {
+//        return this.$store.state.{{$modelCamelCase}}.{{$htmlType->getComputedPropertyName()}};
+//      },
 @endif
 @endforeach

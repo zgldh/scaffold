@@ -13,6 +13,7 @@ import Layout from '../views/layout/Layout'
 import SimpleLayout from '../views/layout/Simple'
 
 import dynamicRouterMap from './dynamicRouterMap'
+
 export const constantRouterMap = [
   {
     path: '/login',
@@ -78,7 +79,7 @@ const router = new Router({
   routes: constantRouterMap
 })
 router.applyDynamicRouters = (roles, permissions) => {
-  let routerMap = dynamicRouterMap
+  let routerMap = dynamicRouterMap.filter(item => item.hasOwnProperty('path'))
   if (!roles.includes(store.state.currentUser.superAdmin)) {
     routerMap = filterRoutes(routerMap, permissions)
   }
