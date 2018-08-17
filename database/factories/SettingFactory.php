@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use Modules\Notification\Models\Notification;
+use Modules\Setting\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +14,15 @@ use Modules\Notification\Models\Notification;
 |
 */
 
-$factory->define(Notification::class, function (Faker $faker) {
+$factory->define(Setting::class, function (Faker $faker) {
     return [
-        'type'    => null,
-        'data'    => null,
-        'read_at' => $faker->dateTime,
+        'name'          => $faker->unique(),
+        'value'         => $faker->realText(),
+        'type'          => $faker->randomElement(array(
+            0 => 'system',
+            1 => 'settable',
+        )),
+        'settable_id'   => null,
+        'settable_type' => null,
     ];
 });

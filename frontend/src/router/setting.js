@@ -1,3 +1,6 @@
+import Layout from '../views/layout/Layout'
+import i18n from '../lang'
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -12,10 +15,20 @@
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
-export default [
-  ...require('./user').default,
-  ...require('./upload').default,
-  ...require('./activityLog').default,
-  ...require('./setting').default
+export default [{},
+  {
+    path: '/setting',
+    component: Layout,
+    permissions: ['Setting@update'],
+    children: [
+      {
+        path: '',
+        name: 'Setting List',
+        permissions: ['Setting@update'],
+        component: () => import('@/views/Setting/Setting/List'),
+        meta: { title: () => i18n.t('setting.title'), icon: 'fa-cogs' }
+      }
+    ]
+  }
   // Append More Routes. Don't remove me
 ]

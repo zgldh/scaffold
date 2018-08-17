@@ -24,7 +24,7 @@ class CreateActivityLogTable extends Migration
 
             $table->timestamps();
 
-            $table->index('log_name');			
+            $table->index('log_name');
             $table->index(['collector_type', 'collector_id'], 'collector_index');
         });
     }

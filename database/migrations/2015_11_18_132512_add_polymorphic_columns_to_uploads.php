@@ -20,7 +20,7 @@ class AddPolymorphicColumnsToUploads extends Migration
             $table->index([
                 'uploadable_id',
                 'uploadable_type'
-            ],'uploadable_index');
+            ], 'uploadable_index');
         });
     }
 
