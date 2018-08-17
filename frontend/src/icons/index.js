@@ -1,3 +1,6 @@
+import 'font-awesome/scss/font-awesome.scss'
+import 'ionicons/dist/scss/ionicons.scss'
+
 import Vue from 'vue'
 import AutoIcon from '@/components/AutoIcon'// svg组件
 import SvgIcon from '@/components/SvgIcon'// svg组件

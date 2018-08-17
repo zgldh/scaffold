@@ -6,8 +6,6 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import '@/styles/index.scss' // global css
-import 'font-awesome/scss/font-awesome.scss'
-import 'ionicons/dist/scss/ionicons.scss'
 import VueClipboard from 'vue-clipboard2'
 
 import App from './App'
