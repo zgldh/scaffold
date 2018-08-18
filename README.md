@@ -8,6 +8,8 @@
 - 用户，角色，权限体系
 - 文件上传
 - 通知系统
+- 操作记录
+- 系统设置
 - 完全脱离 Cookie/Session 机制。全面拥抱 JWT。自动刷新 Token
 - 强化的前端数据表格，使用 datatables 协议。
 - 多语言
@@ -32,6 +34,8 @@
 6. `npm run start`
 
 初始帐号密码： admin@email.com 123456
+
+注意：某些虚拟机中 php artisan storage:link 命令可能会失效，请在宿主主机中执行该命令。
 
 生成器
 ==========

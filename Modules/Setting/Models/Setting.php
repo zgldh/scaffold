@@ -12,7 +12,6 @@ class Setting extends Model
     public $fillable = [
         "name",
         "value",
-        "type",
         "settable_id",
         "settable_type"
     ];
@@ -21,7 +20,6 @@ class Setting extends Model
     protected static $logAttributes = [
         "name",
         "value",
-        "type",
         "settable_id",
         "settable_type"
     ];
@@ -34,7 +32,6 @@ class Setting extends Model
     protected $casts = [
         'name'          => 'string',
         'value'         => 'array',
-        'type'          => 'string',
         'settable_id'   => 'integer',
         'settable_type' => 'string',
     ];
@@ -47,7 +44,6 @@ class Setting extends Model
     public static $rules = [
         'name'          => 'required',
         'value'         => 'required',
-        'type'          => 'in:system,settable',
         'settable_id'   => '',
         'settable_type' => '',
     ];

@@ -18,10 +18,6 @@ $factory->define(Setting::class, function (Faker $faker) {
     return [
         'name'          => $faker->unique(),
         'value'         => $faker->realText(),
-        'type'          => $faker->randomElement(array(
-            0 => 'system',
-            1 => 'settable',
-        )),
         'settable_id'   => null,
         'settable_type' => null,
     ];
