@@ -1,41 +1,41 @@
 <template>
-    <el-row class="setting-list-page list-page">
-        <el-col :span="24">
-            <list-title :name="$t('setting.title')"></list-title>
+  <el-row class="setting-list-page list-page">
+    <el-col :span="24">
+      <list-title :name="$t('setting.title')"></list-title>
 
-            <zgldh-datatables :source="loadData"
-                              :actions="actions"
-                              :multiple-actions="multipleActions"
-                              :filters="advanceFilters"
-                              :title="$t('setting.title')"
-            >
-                                <el-table-column
-                        prop="name"
-                        :label="$t('setting.fields.name')"
-                        sortable="custom"
-                        searchable="true"
-                        show-overflow-tooltip>
-                                    </el-table-column>
+      <zgldh-datatables :source="loadData"
+                        :actions="actions"
+                        :multiple-actions="multipleActions"
+                        :filters="advanceFilters"
+                        :title="$t('setting.title')"
+      >
+        <el-table-column
+          prop="name"
+          :label="$t('setting.fields.name')"
+          sortable="custom"
+          searchable="true"
+          show-overflow-tooltip>
+        </el-table-column>
 
-                                <el-table-column
-                        prop="value"
-                        :label="$t('setting.fields.value')"
-                        sortable="custom"
-                        searchable="true"
-                        show-overflow-tooltip>
-                                    </el-table-column>
+        <el-table-column
+          prop="value"
+          :label="$t('setting.fields.value')"
+          sortable="custom"
+          searchable="true"
+          show-overflow-tooltip>
+        </el-table-column>
 
-                                <el-table-column
-                        prop="type"
-                        :label="$t('setting.fields.type')"
-                        sortable="custom"
-                        searchable="true"
-                        show-overflow-tooltip>
-                                    </el-table-column>
+        <el-table-column
+          prop="type"
+          :label="$t('setting.fields.type')"
+          sortable="custom"
+          searchable="true"
+          show-overflow-tooltip>
+        </el-table-column>
 
-                            </zgldh-datatables>
-        </el-col>
-    </el-row>
+      </zgldh-datatables>
+    </el-col>
+  </el-row>
 </template>
 
 <script type="javascript">
@@ -45,10 +45,9 @@
 
   export default {
     components: {},
-    mixins:[ListMixin],
-    computed: {
-            },
-    data (){
+    mixins: [ListMixin],
+    computed: {},
+    data () {
       let data = {
         actions: [
           {
@@ -102,8 +101,7 @@
       };
       return data;
     },
-    mounted()
-    {
+    mounted () {
     },
     methods: {
       loadData: (parameters) => {
@@ -111,28 +109,22 @@
         parameters += "&_with=" + _with;
         return SettingIndex(parameters);
       },
-      handleCreate(items)
-      {
-        this.$router.push({ path: `/setting/setting/create` })
+      handleCreate (items) {
+        this.$router.push({path: `/setting/setting/create`})
       },
-      handleEdit(item)
-      {
-        this.$router.push({ path: `/setting/setting/${item.id}/edit` })
+      handleEdit (item) {
+        this.$router.push({path: `/setting/setting/${item.id}/edit`})
       },
-      handleDelete(item)
-      {
+      handleDelete (item) {
         DeleteConfirm(item.name, () => SettingDestroy(item.id)).then(() => this.$refs.table.removeItem(item))
       },
-      handleYes(item)
-      {
+      handleYes (item) {
         console.log('yes', item);
       },
-      handleSkip(item)
-      {
+      handleSkip (item) {
         console.log('skip', item);
       },
-      handleConfirm(items)
-      {
+      handleConfirm (items) {
         console.log('confirm', items);
       }
     }

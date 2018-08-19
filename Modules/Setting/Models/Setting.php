@@ -47,4 +47,14 @@ class Setting extends Model
         'settable_id'   => '',
         'settable_type' => '',
     ];
+
+    public function settingTarget()
+    {
+        return $this->morphTo('settable');
+    }
+
+    public function scopeSystem($query)
+    {
+        return $query->whereNull('settable_id')->whereNull('settable_type');
+    }
 }

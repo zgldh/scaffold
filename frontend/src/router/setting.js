@@ -25,7 +25,7 @@ export default [{},
         path: '',
         name: 'Setting List',
         permissions: ['Setting@update'],
-        component: () => import('@/views/Setting/Setting/List'),
+        component: () => import('@/views/Setting'),
         meta: { title: () => i18n.t('setting.title'), icon: 'fa-cogs' }
       }
     ]

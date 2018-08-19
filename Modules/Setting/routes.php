@@ -1,3 +1,3 @@
 <?php
-$api->post('setting/bundle', '\Modules\Setting\Controllers\SettingController@bundle');
-$api->resource('setting', '\Modules\Setting\Controllers\SettingController');
+$api->get('setting', '\Modules\Setting\Controllers\SettingController@index');
+$api->put('setting/{name}', '\Modules\Setting\Controllers\SettingController@update');

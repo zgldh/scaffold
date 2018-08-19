@@ -1,6 +1,7 @@
 <?php namespace Modules\Setting;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Setting\Repositories\SettingRepository;
 
 class SettingServiceProvider extends ServiceProvider
 {
@@ -13,6 +14,9 @@ class SettingServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $this->app->singleton(SettingRepository::class, function ($app) {
+            return new SettingRepository($app);
+        });
     }
 
     /**

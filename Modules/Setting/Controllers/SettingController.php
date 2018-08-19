@@ -1,5 +1,6 @@
 <?php namespace Modules\Setting\Controllers;
 
+use Illuminate\Http\Request;
 use Modules\Setting\Requests\CreateSettingRequest;
 use Modules\Setting\Requests\UpdateSettingRequest;
 use Modules\Setting\Repositories\SettingRepository;
@@ -7,6 +8,7 @@ use App\Http\Requests\IndexRequest;
 use App\Http\Requests\ShowRequest;
 use Illuminate\Http\JsonResponse;
 use App\Scaffold\AppBaseController;
+use Modules\Setting\Sets\System;
 
 class SettingController extends AppBaseController
 {
@@ -19,93 +21,31 @@ class SettingController extends AppBaseController
     }
 
     /**
-     * Display a listing of the Setting.
+     * List system settings set
      *
-     * @param  IndexRequest $request
-     * @return  Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index(IndexRequest $request)
+    public function index(Request $request)
     {
-        $data = $this->repository->datatables(null, $request->getWith())
-            ->search($request->getColumns(), null)
-            ->result($request->getExportFileName());
-
-        return $data;
-    }
-
-    /**
-     * Store a newly created Setting in storage.
-     *
-     * @param  CreateSettingRequest $request
-     * @return  JsonResponse
-     */
-    public function store(CreateSettingRequest $request)
-    {
-        $input = $request->all();
-
-        $item = $this->repository->create($input);
-        $item->load($request->getWith());
-
-        return $this->sendResponse($item, 'Setting saved successfully.');
-    }
-
-    /**
-     * Display the specified Setting.
-     *
-     * @param    int $id
-     *
-     * @return  JsonResponse
-     */
-    public function show($id, ShowRequest $request)
-    {
-        $item = $this->repository->findWithoutFail($id);
-        if (empty($item)) {
-            return $this->sendError('Setting not found');
-        }
-        $item->load($request->getWith());
-
-        return $this->sendResponse($item, '');
+        $set = $this->repository->getSettingSet(new System());
+        return $this->sendResponse($set, 'System settings set');
     }
 
     /**
      * Update the specified Setting in storage.
      *
-     * @param    int $id
+     * @param    string $name
      * @param  UpdateSettingRequest $request
      *
      * @return  JsonResponse
      */
-    public function update($id, UpdateSettingRequest $request)
+    public function update($name, UpdateSettingRequest $request)
     {
-        $item = $this->repository->findWithoutFail($id);
+        $set = $this->repository->getSettingSet(new System());
+        $set->update($name, $request->input('value'));
+        $setting = $set->getSetting($name);
 
-        if (empty($item)) {
-            return $this->sendError('Setting not found');
-        }
-
-        $item = $this->repository->update($request->all(), $id);
-        $item->load($request->getWith());
-
-        return $this->sendResponse($item, 'Setting updated successfully.');
-    }
-
-    /**
-     * Remove the specified Setting from storage.
-     *
-     * @param    int $id
-     *
-     * @return  JsonResponse
-     */
-    public function destroy($id)
-    {
-        $item = $this->repository->findWithoutFail($id);
-
-        if (empty($item)) {
-            return $this->sendError('Setting not found');
-        }
-
-        $this->repository->delete($id);
-
-        return $this->sendResponse($item, 'Setting deleted successfully.');
+        return $this->sendResponse($setting, 'Setting updated successfully.');
     }
 }
