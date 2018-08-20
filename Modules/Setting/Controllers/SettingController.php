@@ -8,7 +8,7 @@ use App\Http\Requests\IndexRequest;
 use App\Http\Requests\ShowRequest;
 use Illuminate\Http\JsonResponse;
 use App\Scaffold\AppBaseController;
-use Modules\Setting\Sets\System;
+use Modules\Setting\Bundles\System;
 
 class SettingController extends AppBaseController
 {
@@ -21,15 +21,15 @@ class SettingController extends AppBaseController
     }
 
     /**
-     * List system settings set
+     * List system settings bundle
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request)
     {
-        $set = $this->repository->getSettingSet(new System());
-        return $this->sendResponse($set, 'System settings set');
+        $bundle = $this->repository->getBundle(new System());
+        return $this->sendResponse($bundle, 'System settings bundle');
     }
 
     /**
@@ -40,11 +40,10 @@ class SettingController extends AppBaseController
      *
      * @return  JsonResponse
      */
-    public function update($name, UpdateSettingRequest $request)
+    public function update($name, UpdateSettingRequest $request, System $systemBundle)
     {
-        $set = $this->repository->getSettingSet(new System());
-        $set->update($name, $request->input('value'));
-        $setting = $set->getSetting($name);
+        $this->repository->updateByBundle($systemBundle, $name, $request->input('value'));
+        $setting = $systemBundle->getSetting($name);
 
         return $this->sendResponse($setting, 'Setting updated successfully.');
     }

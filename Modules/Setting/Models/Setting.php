@@ -52,9 +52,4 @@ class Setting extends Model
     {
         return $this->morphTo('settable');
     }
-
-    public function scopeSystem($query)
-    {
-        return $query->whereNull('settable_id')->whereNull('settable_type');
-    }
 }

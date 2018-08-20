@@ -2,7 +2,7 @@
 
 use Modules\Setting\Models\Setting;
 use App\Scaffold\BaseRepository;
-use Modules\Setting\Sets\AbstractSet;
+use Modules\Setting\Bundles\AbstractBundle;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class SettingRepository extends BaseRepository
@@ -35,15 +35,38 @@ class SettingRepository extends BaseRepository
     }
 
     /**
-     * TODO
-     * @param AbstractSet $set
+     * Get a setting bundle
+     * @param AbstractBundle $bundle
+     * @return AbstractBundle
      */
-    public function getSettingSet(AbstractSet $set)
+    public function getBundle(AbstractBundle $bundle)
+    {
+        try {
+            $query = $this->makeModel()->newQuery();
+        } catch (RepositoryException $e) {
+            $query = Setting::query();
+        }
+        $settingTarget = $bundle->getSettingTarget();
+        if ($settingTarget) {
+            $query = $query->where([
+                ['settable_id', '=', $settingTarget->getKeyName()],
+                ['settable_type', '=', $settingTarget->getMorphClass()]
+            ]);
+        } else {
+            $query = $query->whereNull('settable_id')->whereNull('settable_type');
+        }
+
+        $settings = $query->pluck('value', 'name');
+        $bundle->load($settings);
+        return $bundle;
+    }
+
+    public function setBundle(AbstractBundle $bundle)
     {
 
     }
 
-    public function setSettingSet(AbstractSet $set)
+    public function updateByBundle(AbstractBundle $bundle, $name, $value)
     {
 
     }
@@ -75,17 +98,6 @@ class SettingRepository extends BaseRepository
             $setting->value = $value;
             $setting->save();
         } catch (RepositoryException $e) {
-        }
-    }
-
-    private function loadSystemSettings()
-    {
-        try {
-            $settings = $this->makeModel()->system()->pluck('value', 'name');
-            dd($settings);
-            return $settings;
-        } catch (RepositoryException $e) {
-            return [];
         }
     }
 }

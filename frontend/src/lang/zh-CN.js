@@ -54,6 +54,9 @@ export default {
       old_password: '旧密码',
       new_password: '新密码',
       repeat: '重复新密码'
+    },
+    system_setting: {
+      title: '系统设置'
     }
   },
   components: {

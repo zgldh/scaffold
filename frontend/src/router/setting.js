@@ -22,11 +22,11 @@ export default [{},
     permissions: ['Setting@update'],
     children: [
       {
-        path: '',
-        name: 'Setting List',
+        path: 'system',
+        name: 'System Setting',
         permissions: ['Setting@update'],
         component: () => import('@/views/Setting'),
-        meta: { title: () => i18n.t('setting.title'), icon: 'fa-cogs' }
+        meta: { title: () => i18n.t('pages.system_setting.title'), icon: 'fa-cogs' }
       }
     ]
   }

@@ -54,6 +54,9 @@ export default {
       old_password: 'Old Password',
       new_password: 'New Password',
       repeat: 'Repeat'
+    },
+    system_setting: {
+      title: 'System Setting'
     }
   },
   components: {

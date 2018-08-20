@@ -1,7 +1,8 @@
-<?php namespace Modules\Setting\Sets;
+<?php namespace Modules\Setting\Bundles;
 
-class System extends AbstractSet
+class System extends AbstractBundle
 {
+    private static $data = null;
 
     /**
      * Register any application services.
@@ -41,5 +42,18 @@ class System extends AbstractSet
     public function setDefaultLanguage($newValue, $oldValue)
     {
         return $oldValue;   // 新的值会被丢弃，default_language 将保持不变
+    }
+
+    protected function getData()
+    {
+        if (self::$data === null) {
+            self::$data = collect();
+        }
+        return self::$data;
+    }
+
+    protected function setData($data)
+    {
+        self::$data = $data;
     }
 }
