@@ -56,7 +56,9 @@ export default {
       repeat: '重复新密码'
     },
     system_setting: {
-      title: '系统设置'
+      title: '系统设置',
+      discard: '取消本次修改',
+      reset: '全部恢复默认'
     }
   },
   components: {

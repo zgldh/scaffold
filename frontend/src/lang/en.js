@@ -56,7 +56,9 @@ export default {
       repeat: 'Repeat'
     },
     system_setting: {
-      title: 'System Setting'
+      title: 'System Setting',
+      discard: 'Discard',
+      reset: 'Reset to default'
     }
   },
   components: {
