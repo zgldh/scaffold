@@ -53,7 +53,7 @@
           this.$emit('column-changed', {
             fieldName: this.field,
             operator: this.operator,
-            value: this.input
+            value: this.operator === 'like' ? `%${this.input}%` : this.input
           });
         }
       }, 500),

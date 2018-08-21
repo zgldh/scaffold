@@ -125,6 +125,9 @@
         return title;
       },
       isDisabled(action) {
+        if (action.loading) {
+          return true;
+        }
         if (action.TargetCare) {
           if (!this.target) {
             return true;
