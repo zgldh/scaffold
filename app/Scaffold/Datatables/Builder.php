@@ -60,7 +60,7 @@ class Builder
     {
         if ($exportFileName) {
             // Excel
-            $query = $this->datatables->getQuery();
+            $query = $this->datatables->getFilteredQuery();
             return (new DynamicExport($query, $this->prepareColumns()))->download($exportFileName);
         } else {
             // JSON
