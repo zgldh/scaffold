@@ -106,7 +106,10 @@
           {
             Name: () => this.$i18n.t('user.fields.email'),
             Field: 'email',
-            Type: String
+            Type: String,
+            ComponentParameters: {
+              Like: true
+            }
           },
           {
             Name: () => this.$i18n.t('user.fields.gender'),
