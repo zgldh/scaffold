@@ -44,6 +44,7 @@
   import { isvalidEmail, isvalidPassword } from '@/utils/validate'
   import LangSelect from '@/components/LangSelect'
   import PasswordInput from '@/components/PasswordInput'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     name: 'login',
@@ -82,6 +83,9 @@
       }
     },
     computed: {},
+    mounted() {
+      updateTitle('pages.login.sign_in')
+    },
     methods: {
       handleLogin() {
         this.$refs.loginForm.validate(valid => {

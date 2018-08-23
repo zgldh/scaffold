@@ -1,34 +1,34 @@
 <template>
-  <div class="role-editor-page" v-loading="loading">
-    <el-row>
-      <el-col :span="24">
-        <editor-title :name="$t('role.title')"></editor-title>
+    <div class="role-editor-page" v-loading="loading">
+        <el-row>
+            <el-col :span="24">
+                <editor-title :name="$t('role.title')"></editor-title>
 
-        <el-form label-position="right" label-width="80px" :rules="rules" :model="form"
-                 ref="form">
-          <form-item prop="name" :label="$t('role.fields.name')" :required="true">
-            <el-input v-model="form.name"></el-input>
-          </form-item>
-          <form-item prop="label" :label="$t('role.fields.label')" :required="true">
-            <el-input v-model="form.label"></el-input>
-          </form-item>
-          <form-item :label="$t('permission.title')">
-            <permissions-matrix v-model="form.permissions"></permissions-matrix>
-          </form-item>
-          <form-item>
-            <el-button type="primary" @click="isCreating?onCreate():onUpdate()">
-              {{$t('global.terms.submit')}}
-            </el-button>
-            <el-button @click="onCopy" v-if="!isCreating">{{$t('global.terms.copy')}}
-            </el-button>
-            <el-button @click="$router.go(-1)">{{$t('global.terms.back')}}</el-button>
-          </form-item>
-        </el-form>
-      </el-col>
-      <el-col :span="11" :offset="1">
-      </el-col>
-    </el-row>
-  </div>
+                <el-form label-position="right" label-width="80px" :rules="rules" :model="form"
+                         ref="form">
+                    <form-item prop="name" :label="$t('role.fields.name')" :required="true">
+                        <el-input v-model="form.name"></el-input>
+                    </form-item>
+                    <form-item prop="label" :label="$t('role.fields.label')" :required="true">
+                        <el-input v-model="form.label"></el-input>
+                    </form-item>
+                    <form-item :label="$t('permission.title')">
+                        <permissions-matrix v-model="form.permissions"></permissions-matrix>
+                    </form-item>
+                    <form-item>
+                        <el-button type="primary" @click="isCreating?onCreate():onUpdate()">
+                            {{$t('global.terms.submit')}}
+                        </el-button>
+                        <el-button @click="onCopy" v-if="!isCreating">{{$t('global.terms.copy')}}
+                        </el-button>
+                        <el-button @click="$router.go(-1)">{{$t('global.terms.back')}}</el-button>
+                    </form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="11" :offset="1">
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script type="javascript">
@@ -39,6 +39,7 @@
   import { PermissionIndex, RoleShow, RoleStore, RoleUpdate, RoleCopy } from '@/api/user'
   import EditorMixin from '@/mixins/Editor'
   import { RoleCopyDialog } from '@/utils/permission'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {
@@ -68,19 +69,20 @@
         language: state => state.app.language,
       })
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       store.dispatch('user/LoadPermissions').then(next);
     },
-    beforeRouteUpdate(to, from, next){
+    beforeRouteUpdate(to, from, next) {
       this.$el.parentElement.scrollTop = 0
       next()
     },
     mounted() {
+      updateTitle('role.title')
       this.fetchData()
     },
     watch: {
       $route: 'fetchData',
-      language(){
+      language() {
         this.fetchData();
       }
     },
@@ -89,35 +91,35 @@
         if (this.$route.params.id) {
           this.loading = true;
           RoleShow(this.$route.params.id + '?_with=permissions')
-                  .then(res => this.form = res.data)
-                  .then(res => this.loading = false)
-                  .catch(err => this.loading = false)
+            .then(res => this.form = res.data)
+            .then(res => this.loading = false)
+            .catch(err => this.loading = false)
         }
       },
-      onCreate(){
+      onCreate() {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
           return RoleStore(this.form, '_with=permissions');
         })
-                .then(res => this.form = res.data)
-                .then(SuccessMessage(this.$t('global.terms.save_completed')))
-                .then(res => {
-                  this.loading = false;
-                  this.$router.replace({ path: `/user/role/${this.form.id}/edit` });
-                })
-                .catch(this.errorHandler);
+          .then(res => this.form = res.data)
+          .then(SuccessMessage(this.$t('global.terms.save_completed')))
+          .then(res => {
+            this.loading = false;
+            this.$router.replace({ path: `/user/role/${this.form.id}/edit` });
+          })
+          .catch(this.errorHandler);
       },
-      onUpdate(){
+      onUpdate() {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
           return RoleUpdate(this.form.id, '_with=permissions', this.form);
         })
-                .then(res => this.form = res.data)
-                .then(SuccessMessage(this.$t('global.terms.save_completed')))
-                .then(res => this.loading = false)
-                .catch(this.errorHandler);
+          .then(res => this.form = res.data)
+          .then(SuccessMessage(this.$t('global.terms.save_completed')))
+          .then(res => this.loading = false)
+          .catch(this.errorHandler);
       },
-      onCopy(){
+      onCopy() {
         var newRole = null;
         RoleCopyDialog(this.form).then(({ value }) => {
           this.loading = true
@@ -145,7 +147,7 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .role-editor-page {
-    margin: 10px 30px;
-  }
+    .role-editor-page {
+        margin: 10px 30px;
+    }
 </style>

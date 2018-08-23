@@ -44,6 +44,7 @@
 <script type="javascript">
   import LangSelect from '@/components/LangSelect'
   import { isvalidEmail } from '@/utils/validate'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     name: 'forget-page',
@@ -70,6 +71,9 @@
         pwdType: 'password',
         isSend: false
       }
+    },
+    mounted() {
+      updateTitle('pages.password.forget_title')
     },
     methods: {
       showPwd() {

@@ -52,6 +52,7 @@
   import LangSelect from '@/components/LangSelect'
   import PasswordInput from '@/components/PasswordInput'
   import { SuccessMessage, ErrorMessage } from "../../utils/message";
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     name: 'reset-page',
@@ -102,6 +103,9 @@
         loading: false,
         pwdType: 'password'
       }
+    },
+    mounted() {
+      updateTitle('pages.password.reset_title')
     },
     methods: {
       showPwd() {

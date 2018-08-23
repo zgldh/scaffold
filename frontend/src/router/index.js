@@ -78,6 +78,7 @@ const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
 router.applyDynamicRouters = (roles, permissions) => {
   let routerMap = dynamicRouterMap.filter(item => item.hasOwnProperty('path'))
   if (!roles.includes(store.state.currentUser.superAdmin)) {

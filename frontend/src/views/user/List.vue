@@ -1,74 +1,75 @@
 <template>
-  <el-row class="user-list-page">
-    <el-col :span="24">
-      <list-title :name="$t('user.title')"></list-title>
+    <el-row class="user-list-page">
+        <el-col :span="24">
+            <list-title :name="$t('user.title')"></list-title>
 
-      <zgldh-datatables ref="table"
-                        :source="loadData"
-                        :actions="actions"
-                        :multiple-actions="multipleActions"
-                        :filters="advanceFilters"
-                        :title="$t('user.title')"
-      >
-        <el-table-column
-                prop="name"
-                :label="$t('user.fields.name')"
-                sortable="custom"
-                show-overflow-tooltip
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="email"
-                :label="$t('user.fields.email')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="is_active"
-                :label="$t('user.fields.is_active')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-          <template slot-scope="scope">
-            {{scope.row.is_active?$t('global.terms.yes'):$t('global.terms.no')}}
-          </template>
-        </el-table-column>
-        <el-table-column
-                prop="last_login_at"
-                :label="$t('user.fields.last_login_at')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.last_login_at">{{ scope.row.last_login_at }}
-            </el-tag>
-            <el-tag type="grey" v-if="scope.row.login_times">{{
-              scope.row.login_times }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-                prop="created_at"
-                :label="$t('global.fields.created_at')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-        </el-table-column>
-      </zgldh-datatables>
-    </el-col>
-  </el-row>
+            <zgldh-datatables ref="table"
+                              :source="loadData"
+                              :actions="actions"
+                              :multiple-actions="multipleActions"
+                              :filters="advanceFilters"
+                              :title="$t('user.title')"
+            >
+                <el-table-column
+                        prop="name"
+                        :label="$t('user.fields.name')"
+                        sortable="custom"
+                        show-overflow-tooltip
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="email"
+                        :label="$t('user.fields.email')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="is_active"
+                        :label="$t('user.fields.is_active')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{scope.row.is_active?$t('global.terms.yes'):$t('global.terms.no')}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="last_login_at"
+                        :label="$t('user.fields.last_login_at')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.last_login_at">{{ scope.row.last_login_at }}
+                        </el-tag>
+                        <el-tag type="grey" v-if="scope.row.login_times">{{
+                            scope.row.login_times }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        :label="$t('global.fields.created_at')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                </el-table-column>
+            </zgldh-datatables>
+        </el-col>
+    </el-row>
 </template>
 
 <script type="javascript">
   import { DeleteConfirm } from '@/utils/message'
   import { UserIndex, UserDestroy } from '@/api/user'
   import ListMixin from '@/mixins/List'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {},
     mixins: [ListMixin],
     computed: {},
-    data (){
+    data() {
       let data = {
         actions: [
           {
@@ -155,36 +156,30 @@
       };
       return data;
     },
-    mounted()
-    {
+    mounted() {
+      updateTitle('user.title')
     },
     methods: {
       loadData: (parameters) => {
         parameters += "&_with=avatar";
         return UserIndex(parameters)
       },
-      handleCreate(items)
-      {
+      handleCreate(items) {
         this.$router.push({ path: `/user/create` })
       },
-      handleEdit(item)
-      {
+      handleEdit(item) {
         this.$router.push({ path: `/user/${item.id}/edit` })
       },
-      handleDelete(item)
-      {
+      handleDelete(item) {
         DeleteConfirm(item.name, () => UserDestroy(item.id)).then(() => this.$refs.table.removeItem(item))
       },
-      handleYes(item)
-      {
+      handleYes(item) {
         console.log('yes', item);
       },
-      handleSkip(item)
-      {
+      handleSkip(item) {
         console.log('skip', item);
       },
-      handleConfirm(items)
-      {
+      handleConfirm(items) {
         console.log('confirm', items);
       },
     }
@@ -192,10 +187,10 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .user-list-page {
-    margin: 10px 30px;
-    .el-table__body-wrapper {
-      height: calc(100vh - 310px) !important;
+    .user-list-page {
+        margin: 10px 30px;
+        .el-table__body-wrapper {
+            height: calc(100vh - 310px) !important;
+        }
     }
-  }
 </style>

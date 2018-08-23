@@ -57,6 +57,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
   import { SuccessMessage } from '@/utils/message'
   import { {{$modelPascaleCase}}Store, {{$modelPascaleCase}}Update, {{$modelPascaleCase}}Show } from '@/api/{{$modelCamelCase}}'
   import EditorMixin from '@/mixins/Editor'
+  import { updateTitle } from '@/utils/browser'
 
   export default  {
     components: {},
@@ -80,6 +81,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
       $route: 'fetchData',
     },
     mounted () {
+      updateTitle('{{$modelSnakeCase}}.title')
       this.fetchData();
     },
     methods: {
