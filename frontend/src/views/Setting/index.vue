@@ -8,10 +8,10 @@
             <el-form label-position="right" label-width="160px" :rules="rules"
                      :model="settings"
                      ref="form" v-loading="loading">
-                <form-item prop="name" :label="name('system','site_name')" :required="true">
+                <form-item prop="site_name" :label="name('system','site_name')" :required="true">
                     <el-input v-model="settings.site_name"></el-input>
                 </form-item>
-                <form-item prop="email" :label="name('system','site_introduction')" :required="true">
+                <form-item prop="site_introduction" :label="name('system','site_introduction')" :required="true">
                     <el-input v-model="settings.site_introduction" type="textarea"></el-input>
                 </form-item>
                 <form-item :label="name('system','default_language')">
@@ -61,12 +61,15 @@
   import setting_name from '@/utils/setting'
   import { SuccessMessage } from '@/utils/message'
   import { SettingIndex } from '@/api/setting'
-  import { updateTitle } from '../../utils/browser'
+  import { updateTitle } from '@/utils/browser'
+  import store from '@/store'
 
   export default {
     components: {},
     mixins: [],
-    computed: {},
+    computed: {
+      system: () => store.state.settings.system
+    },
     data() {
       let data = {
         rules: {},
@@ -82,8 +85,7 @@
     methods: {
       async loadData() {
         this.loading = true
-        let result = await SettingIndex()
-        this.settings = result.data
+        this.settings = await store.dispatch('setting/LoadSystem')
         this.loading = false
       },
       handleSave() {

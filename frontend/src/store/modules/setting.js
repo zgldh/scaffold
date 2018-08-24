@@ -2,10 +2,12 @@
  * You should import APIs which you need. Just like:
  * import { RoleIndex } from '@/api/user'
  **/
+import { SettingIndex } from '@/api/setting'
 
 const setting = {
   namespaced: true,
   state: {
+    system: {}
     /**
      State can hold some common data like enum items or values cross pages.
      list: []
@@ -19,6 +21,12 @@ const setting = {
         state.list = list
       }
      **/
+    setSystemItem(state, { key, value }) {
+      state.system.key = value
+    },
+    setSystem(state, system) {
+      state.system = system
+    }
   },
   actions: {
     /**
@@ -33,6 +41,15 @@ const setting = {
         }
       }
      **/
+    async LoadSystem({ commit, state }) {
+      if (JSON.stringify(state.system) !== '{}') {
+        return state.system
+      } else {
+        var response = await SettingIndex()
+        commit('setSystem', response.data)
+        return response.data
+      }
+    }
   }
 }
 
