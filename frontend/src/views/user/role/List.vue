@@ -1,45 +1,45 @@
 <template>
-  <el-row class="role-list-page" v-loading="loading">
-    <el-col :span="24">
-      <list-title :name="$t('role.title')"></list-title>
+    <el-row class="role-list-page" v-loading="loading">
+        <el-col :span="24">
+            <list-title :name="$t('role.title')"></list-title>
 
-      <zgldh-datatables ref="table"
-                        :source="loadData"
-                        :actions="actions"
-                        :multiple-actions="multipleActions"
-                        :filters="advanceFilters"
-                        :enable-selection="false"
-      >
-        <el-table-column
-                prop="name"
-                :label="$t('role.fields.name')"
-                sortable="custom"
-                show-overflow-tooltip
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="label"
-                :label="$t('role.fields.label')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="created_at"
-                :label="$t('global.fields.created_at')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="updated_at"
-                :label="$t('global.fields.updated_at')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-        </el-table-column>
-      </zgldh-datatables>
-    </el-col>
-  </el-row>
+            <zgldh-datatables ref="table"
+                              :source="loadData"
+                              :actions="actions"
+                              :multiple-actions="multipleActions"
+                              :filters="advanceFilters"
+                              :enable-selection="false"
+            >
+                <el-table-column
+                        prop="name"
+                        :label="$t('role.fields.name')"
+                        sortable="custom"
+                        show-overflow-tooltip
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="label"
+                        :label="$t('role.fields.label')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        :label="$t('global.fields.created_at')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="updated_at"
+                        :label="$t('global.fields.updated_at')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                </el-table-column>
+            </zgldh-datatables>
+        </el-col>
+    </el-row>
 </template>
 
 <script type="javascript">
@@ -49,6 +49,7 @@
   import { mapState } from 'vuex'
   import { RoleCopyDialog } from '@/utils/permission'
   import store from '@/store/index'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {},
@@ -58,7 +59,7 @@
         language: state => state.app.language,
       })
     },
-    data (){
+    data() {
       let data = {
         loading: false,
         actions: [
@@ -103,21 +104,22 @@
       return data;
     },
     watch: {
-      language(){
+      language() {
         this.$refs.table.loadSource();
       }
     },
-    mounted(){
+    mounted() {
+      updateTitle('role.title')
     },
     methods: {
-      loadData (parameters) {
+      loadData(parameters) {
         parameters += "&_with=permissions";
         return RoleIndex(parameters)
       },
-      handleEdit(item){
+      handleEdit(item) {
         this.$router.push({ path: `/user/role/${item.id}/edit` })
       },
-      handleCopy(item){
+      handleCopy(item) {
         RoleCopyDialog(item).then(async ({ value }) => {
           this.loading = true
           try {
@@ -133,7 +135,7 @@
           }
         });
       },
-      handleDelete(item){
+      handleDelete(item) {
         DeleteConfirm(item.label, async () => {
           this.loading = true
           try {
@@ -144,16 +146,16 @@
           }
         })
       },
-      editPermission(item){
+      editPermission(item) {
         this.$router.push({ path: `/user/role/${item.id}/permission-edit` })
       },
-      handleSkip(item){
+      handleSkip(item) {
         console.log('skip', item);
       },
-      handleCreate(items){
+      handleCreate(items) {
         this.$router.push({ path: `/user/role/create` })
       },
-      handleConfirm(items){
+      handleConfirm(items) {
         console.log('confirm', items);
       },
     }
@@ -161,10 +163,10 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .role-list-page {
-    margin: 10px 30px;
-    .el-table__body-wrapper {
-      height: calc(100vh - 310px) !important;
+    .role-list-page {
+        margin: 10px 30px;
+        .el-table__body-wrapper {
+            height: calc(100vh - 310px) !important;
+        }
     }
-  }
 </style>

@@ -1,17 +1,23 @@
 <?php namespace App\Scaffold\Installer;
 
+use App\Scaffold\Installer\Model\ModelDefinition;
+
 /**
  * Created by PhpStorm.
  * User: zgldh
  * Date: 2016/11/20
  * Time: 23:49
  */
-
 class Utils
 {
+    /**
+     * 得到某模板的文件路径
+     * @param $name
+     * @return bool|string
+     */
     public static function template($name)
     {
-        $path = realpath(__DIR__ . '/../../templates/' . $name);
+        $path = base_path('app/Scaffold/templates/' . $name);
         return $path;
     }
 
@@ -40,9 +46,8 @@ class Utils
     public static function fillTemplate($variables, $template, $pending = '$')
     {
         foreach ($variables as $variable => $value) {
-            $template = str_replace($pending . $variable . $pending, $value, $template);
+            $template = str_replace($pending . $variable . $pending, $value, $template, $count);
         }
-
         return $template;
     }
 
@@ -96,7 +101,6 @@ class Utils
             }
             file_put_contents($destPath, $templateData);
         }
-
     }
 
     /**
@@ -354,5 +358,51 @@ class Utils
         Utils::writeFile($apiPath, $apiFileContent);
 
         return $apiPath;
+    }
+
+    /**
+     * 为一个 Module 创建前端路由文件
+     * @param $moduleName
+     */
+    public static function addFrontEndRouteFile($moduleName)
+    {
+        $moduleName = camel_case($moduleName);
+        $newRouteFilePath = dirname(config('scaffold.templates.frontend.routes')[1]) . DIRECTORY_SEPARATOR . $moduleName . '.js';
+        if (!file_exists($newRouteFilePath)) {
+            $src = self::template('frontend/routes.js');
+            file_put_contents($newRouteFilePath, file_get_contents($src));
+        }
+
+        $routeLine = "...require('./$moduleName').default";
+        $routesPath = config('scaffold.templates.frontend.routes')[1];
+        if (str_contains(file_get_contents($routesPath), $routeLine) == false) {
+            Utils::replaceFilePlaceholders($routesPath, [
+                "default
+  // Append More Routes. Don't remove me" =>
+                    "default,\n  " . $routeLine . "\n  // Append More Routes. Don't remove me"
+            ], null, null);
+        }
+    }
+
+    /**
+     * 为一个 Module 追加 一个 Model 的基础前端路由配置
+     * @param $moduleName
+     * @param ModelDefinition $model
+     */
+    public static function appendFrontEndRoutes($moduleName, ModelDefinition $model)
+    {
+        $moduleName = camel_case($moduleName);
+        $newRouteFilePath = dirname(config('scaffold.templates.frontend.routes')[1]) . DIRECTORY_SEPARATOR . $moduleName . '.js';
+
+        $variables = [
+            'MODEL' => $model
+        ];
+
+        $newRouteContent = Utils::renderTemplate('scaffold::frontend.routes-model', $variables);
+        Utils::replaceFilePlaceholders($newRouteFilePath, [
+            "}
+  // Append More Routes. Don't remove me" =>
+                "},\n  " . $newRouteContent . "\n  // Append More Routes. Don't remove me"
+        ], null, null);
     }
 }

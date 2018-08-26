@@ -99,6 +99,7 @@ abstract class ModelStarter
     /**
      * Get the folder path to the defining module root '/var/wwwroot/Modules/Blog'
      * @return string
+     * @throws \ReflectionException
      */
     public function getModuleFolder()
     {

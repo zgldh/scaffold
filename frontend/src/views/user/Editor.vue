@@ -63,6 +63,7 @@
   import { SuccessMessage } from '@/utils/message'
   import { UserStore, UserUpdate, UserShow, RoleIndex } from '@/api/user'
   import EditorMixin from '@/mixins/Editor'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: { AvatarEditor },
@@ -96,6 +97,7 @@
       store.dispatch('user/LoadRoles').then(next);
     },
     mounted() {
+      updateTitle('user.title')
       this.fetchData();
     },
     watch: {

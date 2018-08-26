@@ -1,74 +1,74 @@
 <template>
-  <el-row class="upload-list-page">
-    <el-col :span="24">
-      <list-title :name="$t('upload.title')"></list-title>
+    <el-row class="upload-list-page">
+        <el-col :span="24">
+            <list-title :name="$t('upload.title')"></list-title>
 
-      <zgldh-datatables ref="table"
-                        :source="loadData"
-                        :actions="actions"
-                        :multiple-actions="multipleActions"
-                        :filters="advanceFilters"
-                        :title="$t('upload.title')"
-                        :export-columns="exportColumns"
-      >
-        <el-table-column
-                prop="name"
-                :label="$t('upload.fields.name')"
-                sortable="custom"
-                show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-button size="small" type="text" @click="onCopy(scope.row.name)">
-              {{scope.row.name}}
-            </el-button>
-            <p class="name-column-description" v-if="scope.row.description">
-              {{scope.row.description}}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-                prop="disk"
-                :label="$t('upload.fields.disk')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="path"
-                :label="$t('upload.fields.path')"
-                sortable="custom"
-                show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-button size="small" type="text" @click="onCopy(scope.row.path)">
-              {{scope.row.path}}
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column
-                prop="size"
-                :label="$t('upload.fields.size')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="type"
-                :label="$t('upload.fields.type')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="user.name"
-                :label="$t('user.fields.name')"
-                sortable="custom"
-                show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-                prop="created_at"
-                :label="$t('global.fields.created_at')"
-                sortable="custom"
-                searchable="false"
-                show-overflow-tooltip>
-        </el-table-column>
-      </zgldh-datatables>
-    </el-col>
-  </el-row>
+            <zgldh-datatables ref="table"
+                              :source="loadData"
+                              :actions="actions"
+                              :multiple-actions="multipleActions"
+                              :filters="advanceFilters"
+                              :title="$t('upload.title')"
+                              :export-columns="exportColumns"
+            >
+                <el-table-column
+                        prop="name"
+                        :label="$t('upload.fields.name')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <el-button size="small" type="text" @click="onCopy(scope.row.name)">
+                            {{scope.row.name}}
+                        </el-button>
+                        <p class="name-column-description" v-if="scope.row.description">
+                            {{scope.row.description}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="disk"
+                        :label="$t('upload.fields.disk')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="path"
+                        :label="$t('upload.fields.path')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <el-button size="small" type="text" @click="onCopy(scope.row.path)">
+                            {{scope.row.path}}
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="size"
+                        :label="$t('upload.fields.size')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        :label="$t('upload.fields.type')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="user.name"
+                        :label="$t('user.fields.name')"
+                        sortable="custom"
+                        show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        :label="$t('global.fields.created_at')"
+                        sortable="custom"
+                        searchable="false"
+                        show-overflow-tooltip>
+                </el-table-column>
+            </zgldh-datatables>
+        </el-col>
+    </el-row>
 </template>
 
 <script type="javascript">
@@ -81,12 +81,13 @@
   } from '@/utils/message'
   import { UploadIndex, UploadDestroy, UploadBundle } from '@/api/upload'
   import ListMixin from '@/mixins/List'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {},
     mixins: [ListMixin],
     computed: {},
-    data (){
+    data() {
       let data = {
         actions: [
           {
@@ -187,16 +188,15 @@
       };
       return data;
     },
-    mounted()
-    {
+    mounted() {
+      updateTitle('upload.title')
     },
     methods: {
-      loadData (parameters) {
+      loadData(parameters) {
         parameters += "&_with=user";
         return UploadIndex(parameters)
       },
-      handleMultipleDelete(items)
-      {
+      handleMultipleDelete(items) {
         var ids = items.map(item => item.id);
         var names = items.map(item => item.name).join(', ');
         DeleteConfirm(names, () => UploadBundle('delete', ids), false).then(({ data }) => {
@@ -210,20 +210,16 @@
           }
         });
       },
-      handleEdit(item)
-      {
+      handleEdit(item) {
         this.$router.push({ path: `/upload/${item.id}/edit` })
       },
-      handleDownload(item)
-      {
+      handleDownload(item) {
         window.open(item.url, '_blank');
       },
-      handleDelete(item)
-      {
+      handleDelete(item) {
         return DeleteConfirm(item.name, () => UploadDestroy(item.id)).then(() => this.$refs.table.removeItem(item))
       },
-      onCopy(message)
-      {
+      onCopy(message) {
         this.$copyText(message).then(SuccessMessage(this.$t('messages.text_copy.complete')), (e) => {
           return TextCopyDialog(message)
         })
@@ -233,13 +229,13 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .upload-list-page {
-    margin: 10px 30px;
-    .el-table__body-wrapper {
-      height: calc(100vh - 310px) !important;
+    .upload-list-page {
+        margin: 10px 30px;
+        .el-table__body-wrapper {
+            height: calc(100vh - 310px) !important;
+        }
+        p.name-column-description {
+            margin: 0;
+        }
     }
-    p.name-column-description {
-      margin: 0;
-    }
-  }
 </style>

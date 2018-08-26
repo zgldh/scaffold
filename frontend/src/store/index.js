@@ -5,6 +5,7 @@ import app from './modules/app'
 import activityLog from './modules/activityLog'
 import currentUser from './modules/currentUser'
 import user from './modules/user'
+import setting from './modules/setting'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     app,
     currentUser,
     user,
-    activityLog
+    activityLog,
+    setting
   },
   getters
 })

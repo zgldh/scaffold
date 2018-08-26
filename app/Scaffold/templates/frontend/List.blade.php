@@ -73,6 +73,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
   import { DeleteConfirm } from '@/utils/message'
   import { {{$modelPascaleCase}}Index, {{$modelPascaleCase}}Destroy } from '@/api/{{$modelCamelCase}}'
   import ListMixin from '@/mixins/List'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {},
@@ -134,8 +135,8 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
       };
       return data;
     },
-    mounted()
-    {
+    mounted(){
+      updateTitle('{{$modelSnakeCase}}.title')
     },
     methods: {
       loadData: (parameters) => {

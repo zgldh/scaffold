@@ -53,6 +53,7 @@
     SplitModelAction,
     ModelLang
   } from '@/utils/permission'
+  import { updateTitle } from '@/utils/browser'
 
   var selectedRoles = [];
 
@@ -91,6 +92,7 @@
       };
     },
     async mounted() {
+      updateTitle('permission.title')
       await store.dispatch('user/LoadPermissions')
       await store.dispatch('user/LoadRoles')
       this.fetchData()

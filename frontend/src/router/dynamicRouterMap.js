@@ -1,6 +1,3 @@
-import Layout from '../views/layout/Layout'
-import i18n from '../lang'
-
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -16,113 +13,9 @@ import i18n from '../lang'
   }
  **/
 export default [
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/list',
-    name: 'User',
-    permissions: ['User@index', 'Role@index', 'Permission@index'],
-    meta: { title: () => i18n.t('user.title'), icon: 'fa-users' },
-    children: [
-      {
-        path: 'list',
-        name: 'Users',
-        permissions: ['User@index'],
-        component: () => import('@/views/user/List'),
-        meta: { title: () => i18n.t('global.terms.list'), icon: 'fa-user' }
-      },
-      {
-        hidden: true,
-        path: ':id/edit',
-        name: 'Edit User',
-        permissions: ['User@update'],
-        component: () => import('@/views/user/Editor'),
-        meta: { title: () => i18n.t('global.terms.edit'), icon: 'fa-user' }
-      },
-      {
-        hidden: true,
-        path: 'create',
-        name: 'Create User',
-        permissions: ['User@store'],
-        component: () => import('@/views/user/Editor'),
-        meta: { title: () => i18n.t('global.terms.create'), icon: 'fa-user' }
-      },
-      {
-        path: 'role/list',
-        name: 'Roles',
-        permissions: ['Role@index'],
-        component: () => import('@/views/user/role/List'),
-        meta: { title: () => i18n.t('routes.role_list'), icon: 'fa-id-card' }
-      },
-      {
-        hidden: true,
-        path: 'role/create',
-        name: 'Create Role',
-        permissions: ['Role@create'],
-        component: () => import('@/views/user/role/Editor'),
-        meta: { title: () => i18n.t('routes.role_create'), icon: 'fa-user' }
-      },
-      {
-        hidden: true,
-        path: 'role/:id/edit',
-        name: 'Edit Role',
-        permissions: ['Role@update'],
-        component: () => import('@/views/user/role/Editor'),
-        meta: { title: () => i18n.t('routes.role_edit'), icon: 'fa-user' }
-      },
-      {
-        path: 'permission',
-        name: 'Permissions',
-        permissions: ['Permission@index'],
-        component: () => import('@/views/user/permission/List'),
-        meta: { title: () => i18n.t('permission.title'), icon: 'fa-cogs' }
-      }
-    ]
-  },
-  {
-    path: '/upload',
-    component: Layout,
-    redirect: '/upload/list',
-    name: 'Upload',
-    permissions: ['Upload@index'],
-    meta: { title: () => i18n.t('upload.title'), icon: 'fa-cogs' },
-    children: [
-      {
-        path: 'list',
-        name: 'Upload List',
-        permissions: ['Upload@index'],
-        component: () => import('@/views/upload/List'),
-        meta: {
-          title: () => i18n.t('components.list_title', { name: i18n.t('upload.title') }),
-          icon: 'fa-upload'
-        }
-      },
-      {
-        hidden: true,
-        path: ':id/edit',
-        name: 'Edit Upload',
-        permissions: ['Upload@update'],
-        component: () => import('@/views/upload/Editor'),
-        meta: {
-          title: () => i18n.t('global.terms.edit'),
-          icon: 'fa-user'
-        }
-      }
-    ]
-  },
-  {
-    path: '/activitylog',
-    component: Layout,
-    permissions: ['ActivityLog@index'],
-    children: [
-      {
-        path: 'list',
-        name: 'ActivityLog',
-        permissions: ['ActivityLog@index'],
-        component: () => import('@/views/activitylog/List'),
-        meta: { title: () => i18n.t('activity_log.title'), icon: 'table' }
-      }
-    ]
-  }
+  ...require('./user').default,
+  ...require('./upload').default,
+  ...require('./activityLog').default,
+  ...require('./setting').default
   // Append More Routes. Don't remove me
 ]

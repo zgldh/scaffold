@@ -42,6 +42,7 @@
   import LogDetail from '@/components/ActivityLog/LogDetail'
   import LogDescription from '@/components/ActivityLog/LogDescription'
   import store from '@/store'
+  import { updateTitle } from '@/utils/browser'
 
   export default {
     components: {
@@ -98,6 +99,7 @@
       return data;
     },
     mounted() {
+      updateTitle('activity_log.title')
     },
     methods: {
       loadData: (parameters) => {

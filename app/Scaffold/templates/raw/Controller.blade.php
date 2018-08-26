@@ -30,7 +30,8 @@ class {{$MODEL_NAME}}Controller extends AppBaseController
      * Display a listing of the {{$MODEL_NAME}}.
      *
      * @param IndexRequest $request
-     * @return Response
+     * @return JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Exception
      */
     public function index(IndexRequest $request)
     {

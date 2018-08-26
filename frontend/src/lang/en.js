@@ -54,6 +54,13 @@ export default {
       old_password: 'Old Password',
       new_password: 'New Password',
       repeat: 'Repeat'
+    },
+    system_setting: {
+      title: 'System Setting',
+      discard: 'Discard',
+      discard_complete: 'Discard complete',
+      reset: 'Reset to default',
+      reset_complete: 'Reset to default complete'
     }
   },
   components: {
@@ -99,6 +106,8 @@ export default {
     }
   },
   messages: {
+    submit_completed: 'Submit completed',
+    data_saved: 'Data saved',
     role_copy: {
       title: 'Copy the role {label}',
       text: 'Please input new role name',
