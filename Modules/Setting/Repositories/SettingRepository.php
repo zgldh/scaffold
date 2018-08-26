@@ -36,6 +36,7 @@ class SettingRepository extends BaseRepository
 
     /**
      * Get a setting bundle
+     * @no-permission
      * @param AbstractBundle $bundle
      * @param bool $default
      * @return AbstractBundle
@@ -56,6 +57,7 @@ class SettingRepository extends BaseRepository
 
     /**
      * Put a bundle into Persistence saving
+     * @no-permission
      * @param AbstractBundle $bundle
      */
     public function setBundle(AbstractBundle $bundle)
@@ -72,6 +74,7 @@ class SettingRepository extends BaseRepository
 
     /**
      * Update the $name $value of the $bundle
+     * @no-permission
      * @param AbstractBundle $bundle
      * @param $name
      * @param $value
@@ -84,6 +87,10 @@ class SettingRepository extends BaseRepository
         return $query->where('name', $name)->update('value', $value);
     }
 
+    /**
+     *
+     * @no-permission
+     */
     public function getNewQuery()
     {
         try {
