@@ -4,7 +4,7 @@ use Modules\Setting\Models\Setting;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Scaffold\Traits\HasWithParameter;
 
-class CreateSettingRequest extends FormRequest
+class UpdateSettingItemRequest extends FormRequest
 {
     use HasWithParameter;
 

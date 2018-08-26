@@ -58,7 +58,9 @@ export default {
     system_setting: {
       title: '系统设置',
       discard: '取消本次修改',
-      reset: '全部恢复默认'
+      discard_complete: '本次修改已取消',
+      reset: '全部恢复默认',
+      reset_complete: '已恢复默认值'
     }
   },
   components: {
@@ -104,6 +106,8 @@ export default {
     }
   },
   messages: {
+    submit_completed: '提交完毕',
+    data_saved: '保存完毕',
     role_copy: {
       title: '复制角色 {label}',
       text: '请输入新角色的内部名称',

@@ -1,36 +1,14 @@
 <?php namespace Modules\Setting\Requests;
 
-use Modules\Setting\Models\Setting;
-use Illuminate\Foundation\Http\FormRequest;
-use App\Scaffold\Traits\HasWithParameter;
+use Illuminate\Http\Request;
 
-class UpdateSettingRequest extends FormRequest
+class UpdateSettingRequest extends Request
 {
-    use HasWithParameter;
-
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return  bool
+     * Is reset this bundle?
      */
-    public function authorize()
+    public function isReset()
     {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return  array
-     */
-    public function rules()
-    {
-        $rules = Setting::$rules;
-        return $rules;
-    }
-
-    public function attributes()
-    {
-        return __('setting.fields');
+        return 1 == @$_GET['reset'];
     }
 }

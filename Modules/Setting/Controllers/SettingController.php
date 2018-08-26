@@ -1,14 +1,13 @@
 <?php namespace Modules\Setting\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\Setting\Requests\CreateSettingRequest;
-use Modules\Setting\Requests\UpdateSettingRequest;
+use Modules\Setting\Requests\GetSettingRequest;
+use Modules\Setting\Requests\UpdateSettingItemRequest;
 use Modules\Setting\Repositories\SettingRepository;
-use App\Http\Requests\IndexRequest;
-use App\Http\Requests\ShowRequest;
 use Illuminate\Http\JsonResponse;
 use App\Scaffold\AppBaseController;
 use Modules\Setting\Bundles\System;
+use Modules\Setting\Requests\UpdateSettingRequest;
 
 class SettingController extends AppBaseController
 {
@@ -23,28 +22,66 @@ class SettingController extends AppBaseController
     /**
      * List system settings bundle
      *
-     * @param Request $request
+     * @param GetSettingRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(GetSettingRequest $request)
     {
-        $bundle = $this->repository->getBundle(new System());
+        $bundle = $this->repository->getBundle(new System(), $request->isDefault());
         return $this->sendResponse($bundle, 'System settings bundle');
     }
 
     /**
-     * Update the specified Setting in storage.
+     * Reset system settings bundle
+     *
+     * @param Request $request
+     * @param System $systemBundle
+     * @return JsonResponse
+     */
+    public function reset(Request $request, System $systemBundle)
+    {
+        $systemBundle->persist();
+
+        return $this->sendResponse($systemBundle, 'System setting has been reset successfully.');
+    }
+
+    /**
+     * Update the specified system Setting in storage.
      *
      * @param    string $name
-     * @param  UpdateSettingRequest $request
+     * @param  UpdateSettingItemRequest $request
      *
+     * @param System $systemBundle
      * @return  JsonResponse
      */
-    public function update($name, UpdateSettingRequest $request, System $systemBundle)
+    public function update($name, UpdateSettingItemRequest $request, System $systemBundle)
     {
         $this->repository->updateByBundle($systemBundle, $name, $request->input('value'));
         $setting = $systemBundle->getSetting($name);
 
-        return $this->sendResponse($setting, 'Setting updated successfully.');
+        return $this->sendResponse($setting, 'Setting item updated successfully.');
+    }
+
+    /**
+     * Update all data of the system setting in storage.
+     *
+     * @param UpdateSettingRequest $request
+     * @param System $bundle
+     * @return  JsonResponse
+     */
+    public function updateAll(UpdateSettingRequest $request, System $bundle)
+    {
+        if ($request->isReset() === false) {
+            $bundle = $this->repository->getBundle($bundle);
+            $data = $request->json();
+            foreach ($data as $name => $value) {
+                if ($bundle->hasName($name) && $value != $bundle[$name]) {
+                    $bundle[$name] = $value;
+                }
+            }
+        }
+        $bundle->persist();
+
+        return $this->sendResponse($bundle, 'Setting updated successfully.');
     }
 }

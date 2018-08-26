@@ -4,6 +4,11 @@ class System extends AbstractBundle
 {
     private static $data = null;
 
+    public function alias()
+    {
+        return 'system';
+    }
+
     /**
      * Register any application services.
      *
@@ -30,6 +35,7 @@ class System extends AbstractBundle
      */
     public function setSiteName($newValue, $oldValue)
     {
+        \Log::info('system.site_name', [$newValue, $oldValue]);
         return $newValue;   //新的值会被应用
     }
 
@@ -41,13 +47,14 @@ class System extends AbstractBundle
      */
     public function setDefaultLanguage($newValue, $oldValue)
     {
-        return $oldValue;   // 新的值会被丢弃，default_language 将保持不变
+        \Log::info('system.default_language', [$newValue, $oldValue]);
+        return $newValue;   // 新的值会被丢弃，default_language 将保持不变
     }
 
     protected function getData()
     {
         if (self::$data === null) {
-            self::$data = collect();
+            self::$data = collect($this->defaults());
         }
         return self::$data;
     }

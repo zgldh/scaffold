@@ -1,18 +1,39 @@
 import request from '@/utils/request'
 
-export function SettingIndex() {
+export function SettingIndex(params) {
   return request({
     url: `/setting`,
-    method: 'get'
-    // params
+    method: 'get',
+    params
   })
 }
 
-export function SettingUpdate(id, data) {
+export function SettingUpdateItem(name, value) {
+  return request({
+    // params,
+    data: {
+      value: value
+    },
+    url: `/setting/${name}`,
+    method: 'put'
+  })
+}
+
+export function SettingUpdate(data) {
   return request({
     // params,
     data,
-    url: `/setting/${id}`,
+    url: `/setting`,
+    method: 'put'
+  })
+}
+
+export function SettingReset() {
+  return request({
+    params: {
+      reset: 1
+    },
+    url: `/setting`,
     method: 'put'
   })
 }

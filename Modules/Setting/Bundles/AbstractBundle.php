@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
 use JsonSerializable;
+use Modules\Setting\Exceptions\NameDoesNotExist;
 use Modules\Setting\Models\Setting;
+use Modules\Setting\Repositories\SettingRepository;
+use Prettus\Repository\Exceptions\RepositoryException;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess, Arrayable, Countable, IteratorAggregate
 {
@@ -18,6 +22,8 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
     private $settingTarget = null;
 
     private $data = null;
+
+    private $enableSetter = true;
 
     /**
      * AbstractSet constructor.
@@ -37,6 +43,8 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
      */
     abstract public function defaults();
 
+    abstract public function alias();
+
     /**
      * @return null|Model
      */
@@ -54,22 +62,88 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
     }
 
     /**
-     * TODO
+     * 更新本 Bundle 的一个配置项
      * @param $name
      * @param $value
      */
     public function update($name, $value)
     {
-
+        /** @var SettingRepository $repository */
+        $repository = app(SettingRepository::class);
+        $repository->updateByBundle($this, $name, $value);
     }
 
     /**
-     * TODO
+     * 将本 Bundle 当前数据持久化储存起来
+     */
+    public function persist()
+    {
+        /** @var SettingRepository $repository */
+        $repository = app(SettingRepository::class);
+        $repository->setBundle($this);
+    }
+
+    /**
+     * Get a specific setting. If not exist, create the default one and return it.
      * @param $name
      * @return Setting
      */
     public function getSetting($name)
     {
+        if ($this->hasName($name) === false) {
+            throw NameDoesNotExist::named($name, $this->alias());
+        }
+        /** @var SettingRepository $repository */
+        $repository = app(SettingRepository::class);
+        $query = $repository->getNewQuery();
+        $query = $this->makeQueryFiltered($query);
+        $setting = $query->where('name', $name)->first();
+        if (!$setting) {
+            $defaultValue = $this->getDefault($name);
+            $this->update($name, $defaultValue);
+            $setting = $query->first();
+        }
+        return $setting;
+    }
+
+    /**
+     * 这个Bundle是否拥有该 $name 的选项
+     * @param $name
+     * @return bool
+     */
+    public function hasName($name)
+    {
+        return key_exists($name, $this->defaults());
+    }
+
+    /**
+     * 得到一个配置项 $name 的默认值
+     * @param $name
+     * @return mixed
+     */
+    public function getDefault($name)
+    {
+        $defaults = $this->defaults();
+        return $defaults[$name];
+    }
+
+    /**
+     * 使一个 $query 附加上 settable 过滤条件
+     * @param $query
+     * @return mixed
+     */
+    public function makeQueryFiltered($query)
+    {
+        $settingTarget = $this->getSettingTarget();
+        if ($settingTarget) {
+            $query = $query->where([
+                ['settable_id', '=', $settingTarget->getKeyName()],
+                ['settable_type', '=', $settingTarget->getMorphClass()]
+            ]);
+        } else {
+            $query = $query->whereNull('settable_id')->whereNull('settable_type');
+        }
+        return $query;
     }
 
     /**
@@ -79,12 +153,47 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
     {
         $this->setData($data);
         $defaults = $this->defaults();
-        foreach ($defaults as $key => $value) {
-            if ($this->getData()->has($key) === false) {
-                $this->getData()->put($key, $value);
+        foreach ($defaults as $name => $value) {
+            if ($this->getData()->has($name) === false) {
+                $this->getData()->put($name, $value);
             }
         }
     }
+
+    public function getKeys()
+    {
+        return array_keys($this->defaults());
+    }
+
+    /**
+     * Get merged name=>value pairs
+     * @return array
+     */
+    public function getValues()
+    {
+        $result = [];
+        $defaults = $this->defaults();
+        foreach ($defaults as $name => $value) {
+            if ($this->getData()->has($name)) {
+                $result[$name] = $this->getData()->get($name);
+            } else {
+                $result[$name] = $value;
+            }
+        }
+        return $result;
+    }
+
+    private function getFinalValue($name, $value)
+    {
+        $setterMethod = 'set' . studly_case($name);
+        if (method_exists($this, $setterMethod)) {
+            $oldValue = $this[$name];
+            return call_user_func_array([$this, $setterMethod], [$value, $oldValue]);
+        }
+        return $value;
+    }
+
+    /////////////////////////////////////////////////////////////////////////
 
     /**
      * @return Collection
@@ -92,7 +201,7 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
     protected function getData()
     {
         if ($this->data === null) {
-            $this->data = collect();
+            $this->data = collect($this->defaults());
         }
         return $this->data;
     }
@@ -124,7 +233,8 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
 
     public function offsetSet($offset, $value)
     {
-        return $this->getData()->offsetSet($offset, $value);
+        $finalValue = $this->enableSetter ? $this->getFinalValue($offset, $value) : $value;
+        return $this->getData()->offsetSet($offset, $finalValue);
     }
 
     public function offsetUnset($offset)
@@ -145,5 +255,15 @@ abstract class AbstractBundle implements Jsonable, JsonSerializable, ArrayAccess
     public function getIterator()
     {
         return $this->getData()->getIterator();
+    }
+
+    /**
+     * @param bool $enableSetter
+     * @return AbstractBundle
+     */
+    public function setEnableSetter(bool $enableSetter): AbstractBundle
+    {
+        $this->enableSetter = $enableSetter;
+        return $this;
     }
 }

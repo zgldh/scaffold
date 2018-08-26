@@ -242,7 +242,61 @@ TODO
 预制功能说明
 ===========
 
-TODO
+1. 添加新的系统设置
+
+    比如我们要设置一个 `theme` 项，默认值是 `sunset`。
+    1. 在 `Modules\Setting\Bundles\System` 的 `defaults`函数内设置该项：
+
+    ```
+    public function defaults()
+    {
+        return [
+            'site_name'         => '管理平台',
+            'site_introduction' => '<b>各种介绍</b>',
+            'default_language'  => 'zh-CN',
+            'target_planets'    => [
+                'earth',
+                'mars'
+            ],
+            'theme'             => 'sunset' // 这是新增的设置项
+        ];
+    }
+    ```
+
+    2. 修改 `frontend\src\views\Setting\index.vue` 增加输入字段
+    ```
+        <form-item :label="name('system','theme')">
+          <el-select
+            v-model="settings.theme"
+            value-key=""
+            reserve-keyword>
+            <el-option label="星空" value="star"/>
+            <el-option label="夕阳" value="sunset"/>
+          </el-select>
+        </form-item>
+    ```
+
+    3. （可选）新增该配置项的语言配置 `resources\lang\*\setting.php`。然后 `lang:dump` 如：
+
+    ```
+    'bundles' => [
+        'system' => [
+            ...
+            'theme'         => '主题',
+            ...
+        ]
+    ]
+    ```
+
+2. 使系统设置生效
+
+    初始化好以后，系统设置只会保存设置值，但目前版本不会有任何实际作用。请手工修改类 `Modules\Setting\Bundles\System`
+
+    注意观察里面的 `setSiteName` 和 `setDefaultLanguage` 函数，他们是当设置项的值真正改变前的钩子函数。
+
+    你可以在这里做任何额外操作，然后将最终的设置项的值返回即可。
+
+
 
 常用操作
 ====
