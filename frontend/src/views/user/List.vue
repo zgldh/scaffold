@@ -16,6 +16,10 @@
                         sortable="custom"
                         show-overflow-tooltip
                         width="180">
+                    <template slot-scope="scope">
+                        <img class="avatar" :src="scope.row.avatar_url" v-if="scope.row.avatar_url"/>
+                        <span class="name">{{scope.row.name}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="email"
@@ -191,6 +195,15 @@
         margin: 10px 30px;
         .el-table__body-wrapper {
             height: calc(100vh - 310px) !important;
+        }
+        img.avatar {
+            display: inline-block;
+            max-width: 50px;
+            max-height: 50px;
+            border: none;
+        }
+        span.name {
+
         }
     }
 </style>
