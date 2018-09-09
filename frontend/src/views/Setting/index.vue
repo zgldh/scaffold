@@ -1,12 +1,12 @@
 <template>
-  <el-row class="setting-list-page list-page">
+  <el-row class="setting-list-page list-page" v-loading="loading">
     <el-col :span="24">
       <h3 class="list-title">
         <span>{{$t('pages.system_setting.title')}}</span>
       </h3>
       <el-form label-position="right" label-width="160px" :rules="rules"
                :model="settings"
-               ref="form" v-loading="loading">
+               ref="form">
         <form-item prop="site_name" :label="name('system','site_name')" :required="true">
           <el-input v-model="settings.site_name"></el-input>
         </form-item>
@@ -67,12 +67,11 @@
     components: {},
     mixins: [],
     data() {
-      let data = {
+      return {
         rules: {},
         settings: {},
         loading: false
       };
-      return data;
     },
     mounted() {
       updateTitle('pages.system_setting.title')
