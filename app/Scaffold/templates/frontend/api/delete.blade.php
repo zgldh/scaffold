@@ -1,6 +1,6 @@
 export function {{$functionName}}({{join(', ',$parameters)}}) {
   return request({
-    // params,
+    params,
     url: `{{$route}}`,
     method: 'delete'
   })

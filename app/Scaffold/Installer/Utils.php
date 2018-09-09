@@ -348,6 +348,7 @@ class Utils
         if ($method == 'post' || $method == 'put') {
             $parameters[] = 'data';
         }
+        $parameters[] = 'params';
 
         $route = str_replace('{', '${', $route);
         $apiFileContent .= view('scaffold::frontend.api.' . $method, [
