@@ -6,11 +6,12 @@ trait HasWithParameter
     public function getWith()
     {
         $with = $this->input('_with');
-        if (is_string($with)) {
-            return preg_split('/,/', $with);
+        $result = [];
+        if (is_string($with) && $with) {
+            $result = preg_split('/,/', $with);
         } elseif (is_array($with)) {
-            return $with;
+            $result = $with;
         }
-        return [];
+        return $result;
     }
 }

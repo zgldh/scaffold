@@ -9,6 +9,8 @@ $modelPascaleCase = $MODEL->getPascaleCase();
 $modelSnakeCase = $MODEL->getSnakeCase();
 $modelCamelCase = $MODEL->getCamelCase();
 $frontendRoute = $MODEL->getFrontEndRoutePrefix();
+$withRelationNames = join(',', $MODEL->getRelationNames());
+$apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
 ?>
 <template>
   <el-row class="{{$modelSnakeCase}}-editor-page" v-loading="loading">
@@ -88,7 +90,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
       fetchData() {
         if (this.$route.params.id) {
           this.loading = true;
-          {{$modelPascaleCase}}Show(this.$route.params.id, '_with=roles')
+          {{$modelPascaleCase}}Show(this.$route.params.id, {{$apiQueryParameters}})
             .then(res => this.setFormData(res.data))
             .then(res => this.loading = false)
         }
@@ -99,7 +101,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
       onCreate () {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return {{$modelPascaleCase}}Store('_with=roles', this.form);
+          return {{$modelPascaleCase}}Store(this.form, {{$apiQueryParameters}});
         })
           .then(SuccessMessage(this.$t('global.terms.save_completed')))
           .then(res => {
@@ -111,7 +113,7 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
       onUpdate () {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return {{$modelPascaleCase}}Update(this.form.id, '_with=roles', this.form)
+          return {{$modelPascaleCase}}Update(this.form.id, this.form, {{$apiQueryParameters}})
         })
           .then(res => this.setFormData(res.data))
           .then(SuccessMessage(this.$t('global.terms.save_completed')))
