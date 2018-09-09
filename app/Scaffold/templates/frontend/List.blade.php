@@ -16,7 +16,8 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
         <el-col :span="24">
             <list-title :name="$t('{{$modelSnakeCase}}.title')"></list-title>
 
-            <zgldh-datatables :source="loadData"
+            <zgldh-datatables ref="table"
+                              :source="loadData"
                               :actions="actions"
                               :multiple-actions="multipleActions"
                               :filters="advanceFilters"
