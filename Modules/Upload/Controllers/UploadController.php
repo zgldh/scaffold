@@ -44,9 +44,8 @@ class UploadController extends AppBaseController
     public function store(CreateUploadRequest $request)
     {
         $input = $request->all();
-        $input['user_id'] = $request->user()->id;
 
-        $upload = $this->repository->create($input);
+        $upload = $this->repository->create($input, null, $request->user());
         $upload->load($request->getWith());
 
         return $this->sendResponse($upload, 'Upload saved successfully.');
