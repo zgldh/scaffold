@@ -125,6 +125,10 @@
         type: Boolean,
         default: true
       },
+      enableRefresh: {
+        type: Boolean,
+        default: true
+      },
       rowClassName: {
         default: ''
       },
@@ -293,6 +297,15 @@
             }
           }
         });
+        if (this.enableRefresh) {
+          defaultActions.push({
+            Icon: 'fa-refresh',
+            Tooltip: () => this.$i18n.t('list.refresh'),
+            Handle(targets) {
+              vm.loadSource();
+            }
+          });
+        }
         return defaultActions;
       }
     },

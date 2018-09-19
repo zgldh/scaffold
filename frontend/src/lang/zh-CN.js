@@ -23,8 +23,9 @@ export default {
   },
   list: {
     advance_search: '高级搜索',
-    export_button: '导出为 CSV',
-    export_file_name: '导出-{title}-{timestamp}'
+    export_button: '导出为 Excel',
+    export_file_name: '导出-{title}-{timestamp}',
+    refresh: '刷新'
   },
   pages: {
     login: {

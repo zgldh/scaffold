@@ -23,8 +23,9 @@ export default {
   },
   list: {
     advance_search: 'Advance search',
-    export_button: 'Export to CSV',
-    export_file_name: 'Export-{title}-{timestamp}'
+    export_button: 'Export to Excel',
+    export_file_name: 'Export-{title}-{timestamp}',
+    refresh: 'Refresh'
   },
   pages: {
     login: {
