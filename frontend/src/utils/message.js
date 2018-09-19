@@ -22,6 +22,16 @@ export function ErrorMessage(message) {
   }
 }
 
+export function WarningMessage(message) {
+  return (parameters) => {
+    Message({
+      message: message,
+      type: 'warning',
+      duration: 3 * 1000
+    })
+  }
+}
+
 export function Error422(err) {
   if (_.get(err, 'status') !== 422) {
     throw err

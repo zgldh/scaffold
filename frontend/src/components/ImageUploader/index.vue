@@ -1,33 +1,46 @@
 <template>
-  <div class="image-uploader">
-    <slot><h4>{{$t('components.image_uploader.title')}}</h4></slot>
-    <el-upload
-      class="image-uploader-core"
-      :headers="avatarHeader"
-      :action="avatarUploadURL"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :on-success="handleSuccess"
-      :file-list="fileList"
-      list-type="picture">
-      <el-button size="small" type="primary">{{$t('components.image_uploader.button_text')}}</el-button>
-      <div slot="tip" class="el-upload__tip">{{$t('components.image_uploader.note')}}</div>
-    </el-upload>
-  </div>
+    <div class="image-uploader">
+        <slot><h4>{{$t('components.image_uploader.title')}}</h4></slot>
+        <el-upload
+                class="image-uploader-core"
+                :headers="avatarHeader"
+                :action="avatarUploadURL"
+                :on-preview="handlePreview"
+                :on-progress="handleProgress"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :on-exceed="handleExceed"
+                :before-upload="beforeUpload"
+                :file-list="fileList"
+                :multiple="multiple"
+                :limit="max"
+                accept="image/*"
+                list-type="picture">
+            <el-button size="small" type="primary">{{$t('components.image_uploader.button_text')}}</el-button>
+            <div slot="tip" class="el-upload__tip">{{$t('components.image_uploader.note')}}</div>
+        </el-upload>
+    </div>
 </template>
 
 <script type="javascript">
-  import ImageCropper from 'vue-image-crop-upload'
   import { getToken } from '@/utils/auth'
+  import { WarningMessage } from "../../utils/message";
 
   export default {
     name: 'image-uploader',
-    components: { ImageCropper },
+    components: {},
     props: {
       value: {
         required: true
       },
       multiple: {
+        default: false
+      },
+      max: {
+        type: Number,
+        default: null
+      },
+      debug: {
         default: false
       }
     },
@@ -68,30 +81,46 @@
         if (modelValue.constructor !== Array) {
           modelValue = [modelValue]
         }
-        this.fileList = modelValue.map(item => {
-          return {
-            name: item.name,
-            url: item.url
-          }
-        })
+        this.fileList = JSON.parse(JSON.stringify(modelValue))
       },
       handleSuccess(response, file, fileList) {
-        console.log(response, file, fileList);
-        if (fileList.length > 1 && this.multiple === false) {
+        this.log(response, file, fileList);
+        if (this.multiple && this.max !== null && this.max < fileList.length) {
+          fileList.shift()
+        } else if (this.multiple === false && 1 < fileList.length) {
           fileList.shift()
         }
-        if (this.multiple) {
-          this.$emit('input', fileList.map(item => item.response.data))
-        } else {
-          this.$emit('input', fileList[0].response.data)
-        }
+        this.emit(fileList);
       },
       handleRemove(file, fileList) {
-        console.log(file, fileList);
+        this.emit(fileList);
+        this.log(file, fileList);
       },
       handlePreview(file) {
         var url = file.hasOwnProperty('response') ? file.response.data.url : file.url
         window.open(url, '_blank');
+      },
+      handleExceed(file, fileList) {
+        WarningMessage(this.$t('components.image_uploader.exceed', { max: this.max }))();
+      },
+      handleProgress(event, file, fileList) {
+        this.log(event, file, fileList);
+      },
+      beforeUpload(file) {
+        this.log(file)
+        return true;
+      },
+      emit(fileList) {
+        if (this.multiple) {
+          this.$emit('input', fileList.map(item => item.response ? item.response.data : item))
+        } else {
+          this.$emit('input', fileList[0].response.data)
+        }
+      },
+      log() {
+        if (this.debug) {
+          console.log.apply(arguments)
+        }
       }
     }
   }
@@ -100,8 +129,8 @@
 </script>
 
 <style lang="scss" scoped>
-  .image-uploader {
-    .image-uploader-core {
+    .image-uploader {
+        .image-uploader-core {
+        }
     }
-  }
 </style>

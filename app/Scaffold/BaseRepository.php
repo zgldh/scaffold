@@ -225,22 +225,15 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
                         case 'Illuminate\Database\Eloquent\Relations\MorphMany':
                             $newValues = array_get($attributes, $key, []);
                             // 1. Unassociate old uploads to this $model
-                            $oldUploadObjects = $model->$key()->get();
-                            foreach ($oldUploadObjects as $oldUploadObject) {
-                                $oldUploadObject->uploadable()->dessociate();
-                                $oldUploadObject->save();
-                            }
+                            $model->$key()->update(['uploadable_id' => null, 'uploadable_type' => null]);
                             // 2. Loop
-                            foreach ($newValues as $newValue) {
-                                $uploadId = $this->getUploadId($newValue);
-                                $uploadObj = $uploadModelClassName::where('user_id', $userId)->where('id',
-                                    $uploadId)->first();
-                                if ($uploadObj) {
-                                    // 3. Update this upload obj to associate to this $model, setup a proper type
-                                    $uploadObj->type = $key;
-                                    $model->$key()->save($uploadObj);
-                                }
-                            }
+                            $uploadIds = array_map(function ($newValue) {
+                                return $this->getUploadId($newValue);
+                            }, $newValues);
+                            $uploadModelClassName::where('user_id', $userId)->whereIn('id', $uploadIds)
+                                ->update(['uploadable_id'   => $model->getKey(),
+                                          'uploadable_type' => get_class($model),
+                                          'type'            => $key]);
                             break;
                     }
                 }
@@ -267,12 +260,6 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         if (is_numeric($item)) {
             return $item;
         }
-        if (is_array($item)) {
-            return array_get($item, 'id', 0);
-        }
-        if (is_object($item)) {
-            return object_get($item, 'id', 0);
-        }
-        return 0;
+        return data_get($item, 'id', 0);
     }
 }

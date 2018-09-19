@@ -239,6 +239,16 @@ exportColumns|Object|false|null|导出文件的列配置。<pre>{<br>  "name": t
 `<auto-icon icon-class="el-icon-bell" />`|http://element-cn.eleme.io/#/zh-CN/component/icon 的图标
 `<auto-icon icon-class="ion-md-notifications" />`|https://ionicons.com 的图标
 
+图片上传组件 image-uploader
+---------------------
+改造自 `ElementUI` 的 `el-upload` 组件
+
+用法|描述
+---|---
+`<image-uploader v-model="image" :multiple="false"></image-uploader>`| 处理一个图片的上传
+`<image-uploader v-model="images" :multiple="true"></image-uploader>`| 处理多个图片的上传
+`<image-uploader v-model="images" :multiple="true" :max="5"></image-uploader>`| 处理多个图片的上传，最多5个
+
 TODO
 
 预制功能说明
@@ -298,6 +308,38 @@ TODO
 
     你可以在这里做任何额外操作，然后将最终的设置项的值返回即可。
 
+
+3. 为某模型添加图片关联
+
+    比如想为`User`模型添加`images`属性作为该用户的相册。
+
+    首先在`User`模型添加关系：
+    ```
+    public function images()
+    {
+        return $this->morphMany(Upload::class, 'uploadable')->where('z_uploads.type', __FUNCTION__);
+    }
+    ```
+
+    然后在`frontend\src\views\user\Editor.vue`添加`images`参数以及`ImageUploader`。
+    ```
+    data() {
+      return {
+        ...
+        form: {
+          id: null,
+          ...
+          images:[] // 新添加的参数
+        }
+      };
+    }
+    ```
+    ```
+    _with=images
+    ```
+    ```
+    <image-uploader v-model="form.images" :multiple="true"></image-uploader>
+    ```
 
 
 常用操作

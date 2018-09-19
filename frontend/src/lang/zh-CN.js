@@ -104,6 +104,12 @@ export default {
       mark_as_unread: '标为未读',
       no_notification: '太好了！没有任何通知！',
       no_more: '没有更多了'
+    },
+    image_uploader: {
+      title: '图片上传',
+      button_text: '选择图像',
+      note: '只允许 JPG, GIF 和 PNG 格式的文件',
+      exceed: '已达到最大文件数 {max} 个'
     }
   },
   messages: {

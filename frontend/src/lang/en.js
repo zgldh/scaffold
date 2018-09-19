@@ -104,6 +104,12 @@ export default {
       mark_as_unread: 'Mark as unread',
       no_notification: 'Great! No notification!',
       no_more: 'There is no more notifications'
+    },
+    image_uploader: {
+      title: 'Image Uploader',
+      button_text: 'Select image',
+      note: 'JPG, GIF and PNG files only',
+      exceed: 'Files counts exceed the max amount {max}.'
     }
   },
   messages: {
