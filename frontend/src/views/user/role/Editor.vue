@@ -42,12 +42,14 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'CreateRole',
     components: {
       PermissionsMatrix
     },
     mixins: [EditorMixin],
     data() {
       return {
+        pageTitle: 'role.title',
         rules: {
           email: {
             required: true,

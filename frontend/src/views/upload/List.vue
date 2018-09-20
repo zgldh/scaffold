@@ -84,11 +84,13 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'SystemSetting',
     components: {},
     mixins: [ListMixin],
     computed: {},
     data() {
       let data = {
+        pageTitle: 'upload.title',
         actions: [
           {
             Title: () => this.$i18n.t('global.terms.download'),
@@ -189,7 +191,6 @@
       return data;
     },
     mounted() {
-      updateTitle('upload.title')
     },
     methods: {
       loadData(parameters) {

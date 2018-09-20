@@ -20,13 +20,12 @@ export default [{},
     path: '/user',
     component: Layout,
     redirect: '/user/list',
-    name: 'User',
     permissions: ['User@index', 'Role@index', 'Permission@index'],
     meta: { title: () => i18n.t('user.title'), icon: 'fa-users' },
     children: [
       {
         path: 'list',
-        name: 'Users',
+        name: 'UsersList',
         permissions: ['User@index'],
         component: () => import('@/views/user/List'),
         meta: { title: () => i18n.t('global.terms.list'), icon: 'fa-user' }
@@ -34,7 +33,7 @@ export default [{},
       {
         hidden: true,
         path: ':id/edit',
-        name: 'Edit User',
+        name: 'EditUser',
         permissions: ['User@update'],
         component: () => import('@/views/user/Editor'),
         meta: { title: () => i18n.t('global.terms.edit'), icon: 'fa-user' }
@@ -42,14 +41,14 @@ export default [{},
       {
         hidden: true,
         path: 'create',
-        name: 'Create User',
+        name: 'CreateUser',
         permissions: ['User@store'],
         component: () => import('@/views/user/Editor'),
         meta: { title: () => i18n.t('global.terms.create'), icon: 'fa-user' }
       },
       {
         path: 'role/list',
-        name: 'Roles',
+        name: 'RolesList',
         permissions: ['Role@index'],
         component: () => import('@/views/user/role/List'),
         meta: { title: () => i18n.t('routes.role_list'), icon: 'fa-id-card' }
@@ -57,7 +56,7 @@ export default [{},
       {
         hidden: true,
         path: 'role/create',
-        name: 'Create Role',
+        name: 'CreateRole',
         permissions: ['Role@create'],
         component: () => import('@/views/user/role/Editor'),
         meta: { title: () => i18n.t('routes.role_create'), icon: 'fa-user' }
@@ -65,7 +64,7 @@ export default [{},
       {
         hidden: true,
         path: 'role/:id/edit',
-        name: 'Edit Role',
+        name: 'EditRole',
         permissions: ['Role@update'],
         component: () => import('@/views/user/role/Editor'),
         meta: { title: () => i18n.t('routes.role_edit'), icon: 'fa-user' }

@@ -23,8 +23,9 @@ export default {
   },
   list: {
     advance_search: '高级搜索',
-    export_button: '导出为 CSV',
-    export_file_name: '导出-{title}-{timestamp}'
+    export_button: '导出为 Excel',
+    export_file_name: '导出-{title}-{timestamp}',
+    refresh: '刷新'
   },
   pages: {
     login: {
@@ -103,6 +104,18 @@ export default {
       mark_as_unread: '标为未读',
       no_notification: '太好了！没有任何通知！',
       no_more: '没有更多了'
+    },
+    image_uploader: {
+      title: '图片上传',
+      button_text: '选择图像',
+      note: '只允许 JPG, GIF 和 PNG 格式的文件',
+      exceed: '已达到最大文件数 {max} 个'
+    },
+    tagsView: {
+      refresh: '刷新',
+      close: '关闭',
+      closeOthers: '关闭其它',
+      closeAll: '关闭所有'
     }
   },
   messages: {

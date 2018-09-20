@@ -70,11 +70,13 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'UsersList',
     components: {},
     mixins: [ListMixin],
     computed: {},
     data() {
       let data = {
+        pageTitle: 'user.title',
         actions: [
           {
             Title: () => this.$i18n.t('global.terms.edit'),
@@ -161,7 +163,6 @@
       return data;
     },
     mounted() {
-      updateTitle('user.title')
     },
     methods: {
       loadData: (parameters) => {

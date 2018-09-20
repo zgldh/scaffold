@@ -20,13 +20,12 @@ export default [
     path: '/upload',
     component: Layout,
     redirect: '/upload/list',
-    name: 'Upload',
     permissions: ['Upload@index'],
     meta: { title: () => i18n.t('upload.title'), icon: 'fa-cogs' },
     children: [
       {
         path: 'list',
-        name: 'Upload List',
+        name: 'UploadList',
         permissions: ['Upload@index'],
         component: () => import('@/views/upload/List'),
         meta: {
@@ -37,7 +36,7 @@ export default [
       {
         hidden: true,
         path: ':id/edit',
-        name: 'Edit Upload',
+        name: 'EditUpload',
         permissions: ['Upload@update'],
         component: () => import('@/views/upload/Editor'),
         meta: {

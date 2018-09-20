@@ -97,7 +97,9 @@
     methods: {
       updateInnerActions(newValue) {
         this.innerActions = newValue.map(item => {
-          item.loading = false
+          if (isNaN(item)) {
+            item.loading = false
+          }
           return item
         })
       },

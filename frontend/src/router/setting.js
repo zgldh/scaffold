@@ -23,7 +23,7 @@ export default [{},
     children: [
       {
         path: 'system',
-        name: 'System Setting',
+        name: 'SystemSetting',
         permissions: ['Setting@update'],
         component: () => import('@/views/Setting'),
         meta: { title: () => i18n.t('pages.system_setting.title'), icon: 'fa-cogs' }

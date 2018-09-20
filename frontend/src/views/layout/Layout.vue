@@ -3,17 +3,19 @@
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
       <navbar></navbar>
+      <tags-view></tags-view>
       <app-main></app-main>
     </div>
   </div>
 </template>
 
 <script type="javascript">
-  import { Navbar, Sidebar, AppMain } from '@/views/layout/components'
+  import { Navbar, Sidebar, AppMain, TagsView } from '@/views/layout/components'
 
   export default {
     name: 'layout',
     components: {
+      TagsView,
       Navbar,
       Sidebar,
       AppMain
@@ -24,7 +26,6 @@
       }
     }
   }
-
 
 </script>
 

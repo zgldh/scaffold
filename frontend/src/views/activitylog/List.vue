@@ -45,6 +45,7 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'ActivityLog',
     components: {
       LogDetail,
       LogDescription

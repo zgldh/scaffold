@@ -66,10 +66,12 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'UserForm',
     components: { AvatarEditor },
     mixins: [EditorMixin],
     data() {
       return {
+        with: 'roles',
         rules: {
           email: {
             required: true,
@@ -91,23 +93,25 @@
     computed: {
       ...mapState({
         roles: state => state.user.roles
-      })
+      }),
+      pageTitle() {
+        return 'user.title'
+      }
     },
     beforeRouteEnter(to, from, next) {
       store.dispatch('user/LoadRoles').then(next);
     },
     mounted() {
-      updateTitle('user.title')
       this.fetchData();
     },
-    watch: {
-      $route: 'fetchData',
-    },
+    // watch: {
+    //   $route: 'fetchData',
+    // },
     methods: {
       fetchData() {
         if (this.$route.params.id) {
           this.loading = true;
-          UserShow(this.$route.params.id, '_with=roles')
+          UserShow(this.$route.params.id, '_with=' + this.with)
             .then(res => this.setFormData(res.data))
             .then(res => this.loading = false)
         }
@@ -119,7 +123,7 @@
       onCreate() {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return UserStore('_with=roles', this.form);
+          return UserStore('_with=' + this.with, this.form);
         })
           .then(res => this.setFormData(res.data))
           .then(SuccessMessage(this.$t('global.terms.save_completed')))
@@ -132,7 +136,7 @@
       onUpdate() {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return UserUpdate(this.form.id, '_with=roles', this.form)
+          return UserUpdate(this.form.id, '_with=' + this.with, this.form)
         })
           .then(res => this.setFormData(res.data))
           .then(SuccessMessage(this.$t('global.terms.save_completed')))

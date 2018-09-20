@@ -52,6 +52,7 @@
   import { updateTitle } from '@/utils/browser'
 
   export default {
+    name: 'RolesList',
     components: {},
     mixins: [ListMixin],
     computed: {
@@ -61,6 +62,7 @@
     },
     data() {
       let data = {
+        pageTitle: 'role.title',
         loading: false,
         actions: [
           {
@@ -109,7 +111,6 @@
       }
     },
     mounted() {
-      updateTitle('role.title')
     },
     methods: {
       loadData(parameters) {

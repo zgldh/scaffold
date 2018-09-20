@@ -55,9 +55,8 @@
   } from '@/utils/permission'
   import { updateTitle } from '@/utils/browser'
 
-  var selectedRoles = [];
-
   export default {
+    name: 'Permissions',
     components: { ScrollToTop, PermissionRow, PermissionEditorDialog },
     mixins: [ListMixin],
     computed: {
@@ -82,6 +81,7 @@
     },
     data() {
       return {
+        pageTitle: 'permission.title',
         filter: '',
         innerFilter: '',
         roles: [],
@@ -92,7 +92,6 @@
       };
     },
     async mounted() {
-      updateTitle('permission.title')
       await store.dispatch('user/LoadPermissions')
       await store.dispatch('user/LoadRoles')
       this.fetchData()

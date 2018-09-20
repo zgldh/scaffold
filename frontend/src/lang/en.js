@@ -24,7 +24,8 @@ export default {
   list: {
     advance_search: 'Advance search',
     export_button: 'Export to CSV',
-    export_file_name: 'Export-{title}-{timestamp}'
+    export_file_name: 'Export-{title}-{timestamp}',
+    refresh: 'Refresh'
   },
   pages: {
     login: {
@@ -103,6 +104,18 @@ export default {
       mark_as_unread: 'Mark as unread',
       no_notification: 'Great! No notification!',
       no_more: 'There is no more notifications'
+    },
+    image_uploader: {
+      title: 'Image Uploader',
+      button_text: 'Select image',
+      note: 'JPG, GIF and PNG files only',
+      exceed: 'Files counts exceed the max amount {max}.'
+    },
+    tagsView: {
+      refresh: 'Refresh',
+      close: 'Close',
+      closeOthers: 'Close Others',
+      closeAll: 'Close All'
     }
   },
   messages: {
