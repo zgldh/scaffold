@@ -106,7 +106,7 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
           .then(SuccessMessage(this.$t('global.terms.save_completed')))
           .then(res => {
             this.loading = false;
-            this.$router.replace({ path: `{{$frontendRoute}}/${this.form.id}/edit` });
+            this.$router.replace({ path: `{{$frontendRoute}}/${res.data.id}/edit` });
           })
           .catch(this.errorHandler);
       },
