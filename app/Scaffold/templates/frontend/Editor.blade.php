@@ -103,11 +103,11 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
           this.loading = true;
           return {{$modelPascaleCase}}Store(this.form, {{$apiQueryParameters}});
         })
-          .then(SuccessMessage(this.$t('global.terms.save_completed')))
           .then(res => {
             this.loading = false;
             this.$router.replace({ path: `{{$frontendRoute}}/${res.data.id}/edit` });
           })
+          .then(SuccessMessage(this.$t('global.terms.save_completed')))
           .catch(this.errorHandler);
       },
       onUpdate () {
