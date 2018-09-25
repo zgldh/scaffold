@@ -132,6 +132,15 @@ class Utils
         }
     }
 
+    public static function addLineToServiceProvider($moduleName, $line, $method = 'boot')
+    {
+        $serviceProviderPath = base_path("Modules/{$moduleName}/{$moduleName}ServiceProvider.php");
+        $content = file_get_contents($serviceProviderPath);
+        $content = preg_replace('/(public function boot\(\)\n(.*){)/',
+            "$1\n$2$2" . $line, $content);
+        file_put_contents($serviceProviderPath, $content);
+    }
+
     /**
      * Add service alias settings into config/app.php
      * @param $alias

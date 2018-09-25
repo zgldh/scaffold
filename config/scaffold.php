@@ -15,6 +15,10 @@ return [
             'scaffold::raw.Model',    // The template file location
             'Models/$MODEL_NAME$.php'       // The generated file location. $MODEL_NAME$ is in PascalCase.
         ],
+        'observer'            => [
+            'scaffold::raw.Observer',    // The template file location
+            'Observers/$MODEL_NAME$Observer.php'       // The generated file location. $MODEL_NAME$ is in PascalCase.
+        ],
         'repository'       => [
             'scaffold::raw.Repository',
             'Repositories/$MODEL_NAME$Repository.php'

@@ -120,6 +120,7 @@ class AddModel extends Command
 
         $this->model = $this->starter->getModel();
         $this->generateModel();
+        $this->generateObserver();
         $this->generateRepository();
         $this->generateRequest();
         $this->generateController();
@@ -260,6 +261,31 @@ class AddModel extends Command
             $variables);
         $destinationPath = $this->getDestinationPath('model', $pascalCase);
         Utils::writeFile($destinationPath, $content);
+
+        return;
+    }
+
+    private function generateObserver()
+    {
+        $this->comment("Model Observer...");
+        if (!$this->checkWilling('observer')) {
+            return $this->line("\tskip");
+        }
+        $pascalCase = $this->model->getPascaleCase();
+        $variables = [
+            'NAME_SPACE' => $this->namespace,
+            'MODEL_NAME' => $pascalCase,
+            'MODEL'      => $this->model
+        ];
+        $content = Utils::renderTemplate(
+            config('scaffold.templates.observer', 'scaffold::raw.Observer'),
+            $variables);
+        $destinationPath = $this->getDestinationPath('observer', $pascalCase);
+        Utils::writeFile($destinationPath, $content);
+
+        // Update service provider boot() method
+        $line = "\\{$this->namespace}\\Models\\{$pascalCase}::observe(\\{$this->namespace}\\Observers\\{$pascalCase}Observer::class);";
+        Utils::addLineToServiceProvider($this->model->getModuleName(), $line);
 
         return;
     }
