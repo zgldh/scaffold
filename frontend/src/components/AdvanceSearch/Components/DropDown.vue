@@ -1,20 +1,20 @@
 <template>
-    <div class="advance-search-drop-down">
-        <div class="advance-search-drop-down-inner">
-            <label>{{name}}:</label>
-            <el-select v-model="selectedValue"
-                       :multiple="multiple"
-                       :size="size">
-                <el-option
-                        v-for="item in items" :key="item.Value"
-                        :label="getColumnName(item.Title)"
-                        :value="item.Value">
-                </el-option>
-            </el-select>
-        </div>
-        <el-button type="text" icon="el-icon-close" :size="size" circle
-                   @click="onClose"></el-button>
+  <div class="advance-search-drop-down">
+    <div class="advance-search-drop-down-inner">
+      <label>{{name}}:</label>
+      <el-select v-model="selectedValue"
+                 :multiple="multiple"
+                 :size="size">
+        <el-option
+          v-for="item in items" :key="item.Value"
+          :label="getColumnName(item.Title)"
+          :value="item.Value">
+        </el-option>
+      </el-select>
     </div>
+    <el-button type="text" icon="el-icon-close" :size="size" circle
+               @click="onClose"></el-button>
+  </div>
 </template>
 
 <script type="javascript">
@@ -177,36 +177,36 @@
 </script>
 
 <style lang="scss">
-    @import "../../../styles/variables.scss";
+  @import "../../../styles/variables.scss";
 
-    .advance-search-drop-down {
-        .advance-search-drop-down-inner {
-            font-size: 13px;
-            line-height: normal;
-            border-collapse: separate;
-            display: inline-table;
-            vertical-align: middle;
-            label {
-                background-color: $borderL4;
-                color: $textSecondary;
-                vertical-align: middle;
-                display: table-cell;
-                position: relative;
-                border: 1px solid $borderL1;
-                padding: 0 20px;
-                width: 1px;
-                white-space: nowrap;
+  .advance-search-drop-down {
+    .advance-search-drop-down-inner {
+      font-size: 13px;
+      line-height: normal;
+      border-collapse: separate;
+      display: inline-table;
+      vertical-align: middle;
+      label {
+        background-color: $borderL4;
+        color: $textSecondary;
+        vertical-align: middle;
+        display: table-cell;
+        position: relative;
+        border: 1px solid $borderL1;
+        padding: 0 20px;
+        width: 1px;
+        white-space: nowrap;
 
-                border-right: 0;
-                border-radius: 4px 0 0 4px;
-            }
-            .el-select {
-                display: table-cell;
-                width: 200px;
-                input {
-                    border-radius: 0 4px 4px 0;
-                }
-            }
+        border-right: 0;
+        border-radius: 4px 0 0 4px;
+      }
+      .el-select {
+        display: table-cell;
+        width: 200px;
+        input {
+          border-radius: 0 4px 4px 0;
         }
+      }
     }
+  }
 </style>

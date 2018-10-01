@@ -1,32 +1,32 @@
 <template>
-    <div class="advance-search">
-        <div class="columns-in-use">
-            <component class="column-in-use" v-for="(column, $index) in columnsInUse"
-                       :key="$index"
-                       :name="getColumnName(column.Name)"
-                       :field="column.Field"
-                       :size="size"
-                       :parameters="column.ComponentParameters"
-                       :init-values="getColumnInitValues(column.Field)"
-                       @column-changed="onColumnChanged"
-                       @column-clear="onColumnClear"
-                       @column-close="onColumnClose"
-                       v-bind:is="column.Component"></component>
-        </div>
-        <el-dropdown @command="handleAddSearch" :size="size" :hide-on-click="false">
-            <el-button type="info" :size="size" :disabled="availableColumns.length ===0">
-                {{$t('components.advance_search.add_button')}}<i
-                    class="el-icon-plus el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown" v-if="availableColumns.length>0">
-                <el-dropdown-item v-for="(column, $index) in availableColumns"
-                                  :key="$index"
-                                  :command="column">
-                    {{getColumnName(column.Name)}}
-                </el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
+  <div class="advance-search">
+    <div class="columns-in-use">
+      <component class="column-in-use" v-for="(column, $index) in columnsInUse"
+                 :key="$index"
+                 :name="getColumnName(column.Name)"
+                 :field="column.Field"
+                 :size="size"
+                 :parameters="column.ComponentParameters"
+                 :init-values="getColumnInitValues(column.Field)"
+                 @column-changed="onColumnChanged"
+                 @column-clear="onColumnClear"
+                 @column-close="onColumnClose"
+                 v-bind:is="column.Component"></component>
     </div>
+    <el-dropdown @command="handleAddSearch" :size="size" :hide-on-click="false">
+      <el-button type="info" :size="size" :disabled="availableColumns.length ===0">
+        {{$t('components.advance_search.add_button')}}<i
+        class="el-icon-plus el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown" v-if="availableColumns.length>0">
+        <el-dropdown-item v-for="(column, $index) in availableColumns"
+                          :key="$index"
+                          :command="column">
+          {{getColumnName(column.Name)}}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
 </template>
 
 <script type="javascript">
@@ -97,7 +97,19 @@
     mounted() {
       this.init();
     },
-    watch: {},
+    watch: {
+      columns(newValue) {
+        this.columnsInUse.forEach(column => {
+          var updatedColumn = newValue.find(item => item.Field === column.Field);
+          if (updatedColumn) {
+            column.Name = updatedColumn.Name;
+            column.Type = updatedColumn.Type;
+            column.Component = updatedColumn.Component;
+            column.ComponentParameters = updatedColumn.ComponentParameters;
+          }
+        });
+      }
+    },
     methods: {
       init() {
         _.forEach(this.$route.query, (value, key) => {
@@ -160,16 +172,16 @@
 </script>
 
 <style lang="scss">
-    .advance-search {
-        .columns-in-use {
-            display: inline-block;
-            .column-in-use {
-                display: inline-block;
-                margin-right: 1em;
-                &:hover, &:hover * {
-                    font-weight: bolder;
-                }
-            }
+  .advance-search {
+    .columns-in-use {
+      display: inline-block;
+      .column-in-use {
+        display: inline-block;
+        margin-right: 1em;
+        &:hover, &:hover * {
+          font-weight: bolder;
         }
+      }
     }
+  }
 </style>
