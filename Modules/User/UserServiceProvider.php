@@ -1,11 +1,14 @@
 <?php namespace Modules\User;
 
+use App\Scaffold\GraphQL\GraphQL;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\ServiceProvider;
 use Modules\ActivityLog\Models\ActivityLog;
 use Modules\User\Commands\UpdatePermissions;
+use Modules\User\GraphQL\Queries\UsersQuery;
+use Modules\User\GraphQL\Types\UserType;
 use Modules\User\Models\Permission;
 use Modules\User\Models\Role;
 use Modules\User\Observers\PermissionObserver;
@@ -23,6 +26,7 @@ class UserServiceProvider extends ServiceProvider
     {
         //
         $this->registerCommands();
+        $this->registerGraphQL();
     }
 
     /**
@@ -80,6 +84,19 @@ class UserServiceProvider extends ServiceProvider
 
         $this->commands([
             'permission.auto-refresh'
+        ]);
+    }
+
+    private function registerGraphQL()
+    {
+        GraphQL::addType(UserType::class, 'User');
+        GraphQL::addSchema([
+            'query'    => [
+                'users' => UsersQuery::class
+            ],
+            'mutation' => [
+                //'updateUserEmail' => 'App\GraphQL\Query\UpdateUserEmailMutation'
+            ]
         ]);
     }
 }

@@ -1,7 +1,10 @@
 <?php namespace Modules\Upload;
 
+use App\Scaffold\GraphQL\GraphQL;
 use Illuminate\Support\ServiceProvider;
 use Modules\Upload\Commands\CleanUnUsedUploads;
+use Modules\Upload\GraphQL\Queries\UploadsQuery;
+use Modules\Upload\GraphQL\Types\UploadType;
 use Modules\Upload\Models\Upload;
 
 class UploadServiceProvider extends ServiceProvider
@@ -16,6 +19,7 @@ class UploadServiceProvider extends ServiceProvider
     {
         //
         $this->registerCommands();
+        $this->registerGraphQL();
     }
 
     /**
@@ -45,6 +49,19 @@ class UploadServiceProvider extends ServiceProvider
 
         $this->commands([
             'upload.clean'
+        ]);
+    }
+
+    private function registerGraphQL()
+    {
+        GraphQL::addType(UploadType::class, 'Upload');
+        GraphQL::addSchema([
+            'query'    => [
+                'uploads' => UploadsQuery::class
+            ],
+            'mutation' => [
+                //'updateUserEmail' => 'App\GraphQL\Query\UpdateUserEmailMutation'
+            ]
         ]);
     }
 }

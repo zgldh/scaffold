@@ -7,6 +7,7 @@ use App\Scaffold\Commands\DumpLanguages;
 use App\Scaffold\Commands\FromTable;
 use App\Scaffold\Commands\ScaffoldInit;
 use App\Scaffold\Commands\UpdatePermissions;
+use App\Scaffold\GraphQL\GraphQL;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -38,6 +39,7 @@ class ScaffoldServiceProvider extends ServiceProvider
     {
         //
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'templates', 'scaffold');
+        $this->addGraphQL();
     }
 
     private function registerCommands()
@@ -65,5 +67,15 @@ class ScaffoldServiceProvider extends ServiceProvider
             'scaffold.model',
             'lang.dump',
         ]);
+    }
+
+    private function addGraphQL()
+    {
+        foreach (GraphQL::getTypes() as $typeName => $typeClass) {
+            \GraphQL::addType($typeClass, $typeName);
+        }
+        foreach (GraphQL::getSchemas() as $schemaName => $schema) {
+            \GraphQL::addSchema($schemaName, $schema);
+        }
     }
 }
