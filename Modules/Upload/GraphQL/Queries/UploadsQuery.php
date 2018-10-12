@@ -1,9 +1,9 @@
 <?php namespace Modules\Upload\GraphQL\Queries;
 
+use App\Scaffold\GraphQL\GraphQL;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\Type;
 use Modules\Upload\Models\Upload;
-use Modules\User\Models\User;
 
 /**
  * Created by PhpStorm.
@@ -19,28 +19,26 @@ class UploadsQuery extends Query
 
     public function type()
     {
-        return Type::listOf(\GraphQL::type('Upload'));
+        return Type::listOf(GraphQL::getModelObjectType(Upload::class, [
+            'user'
+        ]));
     }
 
     public function args()
     {
         return [
-            'id'   => ['name' => 'id', 'type' => Type::string()],
-            'name' => ['name' => 'name', 'type' => Type::string()],
-            'disk' => ['name' => 'disk', 'type' => Type::string()]
+            'filter' => ['name' => 'filter',
+                         'type' => GraphQL::getFilterType(Upload::class, [
+                             'user'
+                         ])
+            ],
         ];
     }
 
     public function resolve($root, $args)
     {
-        if (isset($args['id'])) {
-            return Upload::where('id', $args['id'])->get();
-        } else if (isset($args['name'])) {
-            return Upload::where('name', $args['name'])->get();
-        } else if (isset($args['disk'])) {
-            return Upload::where('disk', $args['disk'])->get();
-        } else {
-            return Upload::all();
-        }
+        $query = Upload::query();
+        $result = GraphQL::queryResolver($query, $root, $args);
+        return $result;
     }
 }

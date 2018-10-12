@@ -54,7 +54,6 @@ class UploadServiceProvider extends ServiceProvider
 
     private function registerGraphQL()
     {
-        GraphQL::addType(UploadType::class, 'Upload');
         GraphQL::addSchema([
             'query'    => [
                 'uploads' => UploadsQuery::class

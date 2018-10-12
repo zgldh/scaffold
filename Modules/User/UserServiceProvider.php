@@ -89,7 +89,6 @@ class UserServiceProvider extends ServiceProvider
 
     private function registerGraphQL()
     {
-        GraphQL::addType(UserType::class, 'User');
         GraphQL::addSchema([
             'query'    => [
                 'users' => UsersQuery::class

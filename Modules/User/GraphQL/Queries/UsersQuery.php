@@ -1,5 +1,6 @@
 <?php namespace Modules\User\GraphQL\Queries;
 
+use App\Scaffold\GraphQL\GraphQL;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\Type;
 use Modules\User\Models\User;
@@ -18,25 +19,26 @@ class UsersQuery extends Query
 
     public function type()
     {
-        return Type::listOf(\GraphQL::type('User'));
+        return Type::listOf(GraphQL::getModelObjectType(User::class, [
+            'avatar'
+        ]));
     }
 
     public function args()
     {
         return [
-            'id'    => ['name' => 'id', 'type' => Type::string()],
-            'email' => ['name' => 'email', 'type' => Type::string()]
+            'filter' => ['name' => 'filter',
+                         'type' => GraphQL::getFilterType(User::class, [
+                             'avatar'
+                         ])
+            ],
         ];
     }
 
     public function resolve($root, $args)
     {
-        if (isset($args['id'])) {
-            return User::where('id', $args['id'])->get();
-        } else if (isset($args['email'])) {
-            return User::where('email', $args['email'])->get();
-        } else {
-            return User::all();
-        }
+        $query = User::query();
+        $result = GraphQL::queryResolver($query, $root, $args);
+        return $result;
     }
 }
