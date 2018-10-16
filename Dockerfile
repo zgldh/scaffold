@@ -1,3 +1,4 @@
+# docker-compose up -d 
 FROM daocloud.io/php:7.1.8-apache
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
