@@ -21,7 +21,6 @@ class SettingRepository extends BaseRepository
     protected $fieldSearchable = [
         "name",
         "value",
-        "type",
         "settable_id",
         "settable_type"
     ];
@@ -84,7 +83,46 @@ class SettingRepository extends BaseRepository
     {
         $query = $this->getNewQuery();
         $query = $bundle->makeQueryFiltered($query);
-        return $query->where('name', $name)->update('value', $value);
+        return $query->where('name', '=', $name)->update(['value' => $value]);
+    }
+
+    /**
+     * Get a setting record model object
+     * @param $name
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null|object
+     */
+    public function getItem($name)
+    {
+        return $this->getNewQuery()->where('name', '=', $name)->first();
+    }
+
+    /**
+     * Get a setting record value
+     * @param $name
+     * @param $default
+     * @return mixed
+     */
+    public function getItemValue($name, $default)
+    {
+        $item = $this->getItem($name);
+        if ($item) {
+            return $item->value;
+        }
+        return $default;
+    }
+
+    /**
+     * Set a setting record value
+     * @param $name
+     * @param $value
+     */
+    public function setItemValue($name, $value)
+    {
+        $item = $this->getItem($name);
+        if ($item) {
+            $item->value = $value;
+            $item->save();
+        }
     }
 
     /**

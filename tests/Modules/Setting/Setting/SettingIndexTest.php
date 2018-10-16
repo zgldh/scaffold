@@ -22,6 +22,7 @@ class SettingIndexTest extends TestCase
     {
         // Reference: https://laravel.com/docs/5.5/http-tests
         $user = factory(User::class)->create();
+        $user->givePermissionTo('Setting@index');
         $request = $this->actingAs($user, 'api');
 
         $response = $request->get('api/setting');

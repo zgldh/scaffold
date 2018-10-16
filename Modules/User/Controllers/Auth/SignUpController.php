@@ -3,7 +3,7 @@
 namespace Modules\User\Controllers\Auth;
 
 use Config;
-use App\User;
+use Modules\User\Models\User;
 use Modules\User\Requests\Auth\SignUpRequest;
 use Tymon\JWTAuth\JWTAuth;
 use App\Http\Controllers\Controller;

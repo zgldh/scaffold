@@ -4,27 +4,22 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Modules\User\Models\User;
 
-class NotificationDestroyTest extends TestCase
+class NotificationDestroyTest extends BaseTest
 {
     use DatabaseTransactions;
 
     public function setUp()
     {
         parent::setUp();
-
-//      Prepare testing database environment.
-        /**
-         * $this->createTestUser();
-         **/
     }
 
     public function testNotificationDestroySuccessfully()
     {
         // Reference: https://laravel.com/docs/5.5/http-tests
         $user = factory(User::class)->create();
+        $notification = $this->sendNotification($user);
         $request = $this->actingAs($user, 'api');
-
-        $response = $request->delete('api/notification/{id}');
+        $response = $request->delete('api/notification/' . $notification->id);
         $response->assertStatus(200);
     }
 

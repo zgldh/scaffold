@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Modules\User\Models\User;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -26,5 +27,20 @@ abstract class TestCase extends BaseTestCase
         $app->make(Kernel::class)->bootstrap();
 
         return $app;
+    }
+
+    /**
+     * @return User
+     */
+    protected function prepareTestUser()
+    {
+        $user = new User([
+            'name'     => 'Test',
+            'email'    => 'test@email.com',
+            'password' => '123456'
+        ]);
+
+        $user->save();
+        return $user;
     }
 }

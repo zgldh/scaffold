@@ -21,10 +21,10 @@ if (!function_exists('setting')) {
 
         if (is_array($key)) {
             foreach ($key as $name => $value) {
-                $repository->setSystemSetting($name, $value);
+                $repository->setItemValue($name, $value);
             }
         } else {
-            return $repository->getSystemSetting($key, $default);
+            return $repository->getItemValue($key, $default);
         }
     }
 }
