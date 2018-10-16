@@ -18,9 +18,6 @@ class GraphQL
 {
     private static $types = [];
     private static $schemas = [];
-    private static $parsedModels = [];
-    private static $modelFilterTypes = [];
-    private static $modelObjectTypes = [];
 
     public static function addSchema($config, $schema = 'default')
     {
@@ -56,9 +53,6 @@ class GraphQL
     {
         self::$types = [];
         self::$schemas = [];
-        self::$parsedModels = [];
-        self::$modelFilterTypes = [];
-        self::$modelObjectTypes = [];
     }
 
     public static function getFilterType($modelClass, $relations = [])
@@ -75,35 +69,22 @@ class GraphQL
 
     private static function getParsedModel($className, $relations = [])
     {
-        if (!isset(self::$parsedModels[$className])) {
-            self::$parsedModels[$className] = self::parseModel($className, $relations);
-        }
-        return self::$parsedModels[$className];
+        return self::parseModel($className, $relations);
     }
 
     private static function parseModel($className, $relations = [])
     {
-        $hasModelFilterType = isset(self::$modelFilterTypes[$className]);
-        $hasModelObjectType = isset(self::$modelObjectTypes[$className]);
-
-        if ($hasModelFilterType && $hasModelObjectType) {
-            return [
-                'FilterType' => self::$modelFilterTypes[$className],
-                'ObjectType' => self::$modelObjectTypes[$className]
-            ];
-        }
-
         /** @var Model $model */
         $model = new $className;
         $visible = $model->getVisible();
         $hidden = $model->getHidden();
         $casts = $model->getCasts();
 
-        $filterFields = $hasModelFilterType ? null : [[
+        $filterFields = [[
             'name' => 'id',
             'type' => \GraphQL::type('Filter')
         ]];
-        $objectFields = $hasModelObjectType ? null : [[
+        $objectFields = [[
             'name' => 'id',
             'type' => Type::int()
         ]];
@@ -113,18 +94,14 @@ class GraphQL
             } else if (in_array($attribute, $hidden)) {
                 continue;
             } else {
-                if (!$hasModelFilterType) {
-                    $filterFields[] = [
-                        'name' => $attribute,
-                        'type' => \GraphQL::type('Filter')
-                    ];
-                }
-                if (!$hasModelObjectType) {
-                    $objectFields[] = [
-                        'name' => $attribute,
-                        'type' => self::getModelFieldOutputType($attribute, $casts)
-                    ];
-                }
+                $filterFields[] = [
+                    'name' => $attribute,
+                    'type' => \GraphQL::type('Filter')
+                ];
+                $objectFields[] = [
+                    'name' => $attribute,
+                    'type' => self::getModelFieldOutputType($attribute, $casts)
+                ];
             }
         }
 
@@ -136,39 +113,29 @@ class GraphQL
             } else if (method_exists($model, $relation)) {
                 $relationship = $model->$relation();
                 $relatedClassName = get_class($relationship->getRelated());
-                $parsedRelatedModel = self::getParsedModel($relatedClassName);
-                if (!$hasModelFilterType) {
-                    $filterFields[] = [
-                        'name' => $relation,
-                        'type' => $parsedRelatedModel['FilterType']
-                    ];
-                }
-                if (!$hasModelObjectType) {
-                    $objectFields[] = [
-                        'name' => $relation,
-                        'type' => $parsedRelatedModel['ObjectType']
-                    ];
-                }
+                $parsedRelatedModel = self::getParsedModel($relatedClassName, [], false);
+                $filterFields[] = [
+                    'name' => $relation,
+                    'type' => $parsedRelatedModel['FilterType']
+                ];
+                $objectFields[] = [
+                    'name' => $relation,
+                    'type' => $parsedRelatedModel['ObjectType']
+                ];
             }
         }
 
         $parsedModel = [];
-        if (!$hasModelFilterType) {
-            $parsedModel['FilterType'] = new InputObjectType([
-                'name'        => self::unifySnakeCaseClassName($model) . '_filter',
-                'fields'      => $filterFields,
-                'description' => get_class($model)
-            ]);
-            self::$modelFilterTypes[$className] = $parsedModel['FilterType'];
-        }
-        if (!$hasModelObjectType) {
-            $parsedModel['ObjectType'] = new ObjectType([
-                'name'        => self::unifySnakeCaseClassName($model) . '_object',
-                'fields'      => $objectFields,
-                'description' => get_class($model)
-            ]);
-            self::$modelObjectTypes[$className] = $parsedModel['ObjectType'];
-        }
+        $parsedModel['FilterType'] = new InputObjectType([
+            'name'        => self::unifySnakeCaseClassName($model) . '_filter',
+            'fields'      => $filterFields,
+            'description' => get_class($model)
+        ]);
+        $parsedModel['ObjectType'] = new ObjectType([
+            'name'        => self::unifySnakeCaseClassName($model) . '_object',
+            'fields'      => $objectFields,
+            'description' => get_class($model)
+        ]);
         return $parsedModel;
     }
 
