@@ -22,6 +22,7 @@
 - GraphQL 1.8
 - Simplified role/permission 1.9
 - D2Admin 2.0
+- Laradock 3.0
 
 开始使用
 =============
