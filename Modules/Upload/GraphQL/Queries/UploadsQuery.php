@@ -21,7 +21,7 @@ class UploadsQuery extends Query
     {
         return Type::listOf(GraphQL::getModelObjectType(Upload::class, [
             'user'
-        ]));
+        ], 'UploadsQuery'));
     }
 
     public function args()
@@ -30,7 +30,7 @@ class UploadsQuery extends Query
             'filter' => ['name' => 'filter',
                          'type' => GraphQL::getFilterType(Upload::class, [
                              'user'
-                         ])
+                         ], 'UploadsQuery')
             ],
         ];
     }

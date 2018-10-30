@@ -55,25 +55,27 @@ class GraphQL
         self::$schemas = [];
     }
 
-    public static function getFilterType($modelClass, $relations = [])
+    public static function getFilterType($modelClass, $relations = [], $prefix = '')
     {
-        $parsedModel = self::getParsedModel($modelClass, $relations);
+        $parsedModel = self::getParsedModel($modelClass, $relations, $prefix);
         return $parsedModel['FilterType'];
     }
 
-    public static function getModelObjectType($className, $relations = [])
+    public static function getModelObjectType($className, $relations = [], $prefix = '')
     {
-        $parsedModel = self::getParsedModel($className, $relations);
+        $parsedModel = self::getParsedModel($className, $relations, $prefix);
         return $parsedModel['ObjectType'];
     }
 
-    private static function getParsedModel($className, $relations = [])
+    private static function getParsedModel($className, $relations = [], $prefix = '')
     {
-        return self::parseModel($className, $relations);
+        return self::parseModel($className, $relations, $prefix);
     }
 
-    private static function parseModel($className, $relations = [])
+    private static function parseModel($className, $relations = [], $prefix = '')
     {
+        $prefix = ends_with($prefix, '_') ? $prefix : $prefix . '_';
+
         /** @var Model $model */
         $model = new $className;
         $visible = $model->getVisible();
@@ -113,7 +115,7 @@ class GraphQL
             } else if (method_exists($model, $relation)) {
                 $relationship = $model->$relation();
                 $relatedClassName = get_class($relationship->getRelated());
-                $parsedRelatedModel = self::getParsedModel($relatedClassName, [], false);
+                $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
                 $filterFields[] = [
                     'name' => $relation,
                     'type' => $parsedRelatedModel['FilterType']
@@ -127,12 +129,12 @@ class GraphQL
 
         $parsedModel = [];
         $parsedModel['FilterType'] = new InputObjectType([
-            'name'        => self::unifySnakeCaseClassName($model) . '_filter',
+            'name'        => $prefix . self::unifySnakeCaseClassName($model, '_filter'),
             'fields'      => $filterFields,
             'description' => get_class($model)
         ]);
         $parsedModel['ObjectType'] = new ObjectType([
-            'name'        => self::unifySnakeCaseClassName($model) . '_object',
+            'name'        => $prefix . self::unifySnakeCaseClassName($model, '_object'),
             'fields'      => $objectFields,
             'description' => get_class($model)
         ]);
@@ -148,9 +150,9 @@ class GraphQL
         return $result;
     }
 
-    private static function unifySnakeCaseClassName($className)
+    private static function unifySnakeCaseClassName($className, $tail = '')
     {
-        return snake_case(str_replace('\\', '_', get_class($className)));
+        return class_basename($className) . $tail . '_' . substr(crc32($className), 0, 4);
     }
 
     /**

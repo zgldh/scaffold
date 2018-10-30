@@ -21,7 +21,7 @@ class UsersQuery extends Query
     {
         return Type::listOf(GraphQL::getModelObjectType(User::class, [
             'avatar'
-        ]));
+        ], 'UsersQuery_'));
     }
 
     public function args()
@@ -30,7 +30,7 @@ class UsersQuery extends Query
             'filter' => ['name' => 'filter',
                          'type' => GraphQL::getFilterType(User::class, [
                              'avatar'
-                         ])
+                         ], 'UsersQuery_')
             ],
         ];
     }
