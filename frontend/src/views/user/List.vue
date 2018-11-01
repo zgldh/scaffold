@@ -17,7 +17,7 @@
                         show-overflow-tooltip
                         width="180">
                     <template slot-scope="scope">
-                        <img class="avatar" :src="scope.row.avatar_url" v-if="scope.row.avatar_url"/>
+                        <img class="avatar" :src="scope.row.avatar.url" v-if="scope.row.avatar"/>
                         <span class="name">{{scope.row.name}}</span>
                     </template>
                 </el-table-column>

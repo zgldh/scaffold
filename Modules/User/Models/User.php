@@ -86,7 +86,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $appends = [
-        'avatar_url'
+        //  'avatar_url'
     ];
 
     /**

@@ -13,6 +13,7 @@ use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class GraphQL
 {
@@ -90,7 +91,7 @@ class GraphQL
             'name' => 'id',
             'type' => Type::int()
         ]];
-        foreach ($model->getFillable() as $attribute) {
+        foreach (array_keys($casts) as $attribute) {
             if ($visible && !in_array($attribute, $visible)) {
                 continue;
             } else if (in_array($attribute, $hidden)) {
@@ -114,16 +115,26 @@ class GraphQL
                 continue;
             } else if (method_exists($model, $relation)) {
                 $relationship = $model->$relation();
-                $relatedClassName = get_class($relationship->getRelated());
-                $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
-                $filterFields[] = [
-                    'name' => $relation,
-                    'type' => $parsedRelatedModel['FilterType']
-                ];
-                $objectFields[] = [
-                    'name' => $relation,
-                    'type' => $parsedRelatedModel['ObjectType']
-                ];
+                if (method_exists($relationship, 'getMorphType')) {
+                    // Morph relationship
+//                    $objectFields[] = [
+//                        'name' => $relation,
+//                        'type' => $parsedRelatedModel['ObjectType']
+//                    ];
+//                    $relatedClassName = get_class($relationship->getRelated());
+//                    $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
+                } else {
+                    $relatedClassName = get_class($relationship->getRelated());
+                    $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
+                    $filterFields[] = [
+                        'name' => $relation,
+                        'type' => $parsedRelatedModel['FilterType']
+                    ];
+                    $objectFields[] = [
+                        'name' => $relation,
+                        'type' => $parsedRelatedModel['ObjectType']
+                    ];
+                }
             }
         }
 

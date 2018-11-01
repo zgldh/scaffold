@@ -114,6 +114,7 @@
       },
       setFormData(rawFormData) {
         this.form = rawFormData
+        this.form.avatar_url = this.form.avatar ? this.form.avatar.url : null;
         this.form.roles = this.form.roles.map(item => item.id)
       },
       onCreate() {
