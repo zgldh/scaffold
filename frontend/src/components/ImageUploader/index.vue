@@ -1,25 +1,25 @@
 <template>
-    <div class="image-uploader">
-        <slot><h4>{{$t('components.image_uploader.title')}}</h4></slot>
-        <el-upload
-                class="image-uploader-core"
-                :headers="avatarHeader"
-                :action="avatarUploadURL"
-                :on-preview="handlePreview"
-                :on-progress="handleProgress"
-                :on-remove="handleRemove"
-                :on-success="handleSuccess"
-                :on-exceed="handleExceed"
-                :before-upload="beforeUpload"
-                :file-list="fileList"
-                :multiple="multiple"
-                :limit="max"
-                accept="image/*"
-                list-type="picture">
-            <el-button size="small" type="primary">{{$t('components.image_uploader.button_text')}}</el-button>
-            <div slot="tip" class="el-upload__tip">{{$t('components.image_uploader.note')}}</div>
-        </el-upload>
-    </div>
+  <div class="image-uploader">
+    <slot><h4>{{$t('components.image_uploader.title')}}</h4></slot>
+    <el-upload
+      class="image-uploader-core"
+      :headers="avatarHeader"
+      :action="avatarUploadURL"
+      :on-preview="handlePreview"
+      :on-progress="handleProgress"
+      :on-remove="handleRemove"
+      :on-success="handleSuccess"
+      :on-exceed="handleExceed"
+      :before-upload="beforeUpload"
+      :file-list="fileList"
+      :multiple="multiple"
+      :limit="max"
+      accept="image/*"
+      list-type="picture">
+      <el-button size="small" type="primary">{{$t('components.image_uploader.button_text')}}</el-button>
+      <div slot="tip" class="el-upload__tip">{{$t('components.image_uploader.note')}}</div>
+    </el-upload>
+  </div>
 </template>
 
 <script type="javascript">
@@ -114,7 +114,7 @@
         if (this.multiple) {
           this.$emit('input', fileList.map(item => item.response ? item.response.data : item))
         } else {
-          this.$emit('input', fileList[0].response.data)
+          this.$emit('input', fileList[0].hasOwnProperty('response') ? fileList[0].response.data : fileList[0])
         }
       },
       log() {
@@ -129,8 +129,8 @@
 </script>
 
 <style lang="scss" scoped>
-    .image-uploader {
-        .image-uploader-core {
-        }
+  .image-uploader {
+    .image-uploader-core {
     }
+  }
 </style>
