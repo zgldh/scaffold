@@ -48,10 +48,10 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
                         <template slot-scope="scope">
                             @foreach($searchColumns as $index=>$searchColumn)
                                 @php
-                                    $rowRelation = 'scope.row.'.camel_case(basename($relationship[0]));
+                                    $rowRelation = 'scope.row.'.$prop;
                                 @endphp
-                                <span><?php echo "{{{$rowRelation}?{$rowRelation}.{$searchColumn}:''"; ?>
-                                    }}</span>{{$index!=count($searchColumns)-1?',':''}}
+                                <span><?php echo "{{{$rowRelation}?{$rowRelation}.{$searchColumn}:''"; ?>}}</span>
+                                {{$index!=count($searchColumns)-1?',':''}}
                             @endforeach
                         </template>
                     @elseif($field->isRenderFromComputed())
@@ -61,7 +61,6 @@ $frontendRoute = $MODEL->getFrontEndRoutePrefix();
                         </template>
                     @endif
                 </el-table-column>
-
                 @php
                     endforeach;
                 @endphp
