@@ -68,7 +68,7 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
       return {
         rules: {},
         form: {!! json_encode($MODEL->getDefaultValues(), JSON_PRETTY_PRINT) !!},
-        _with: '{!! $withRelationNames !!}'
+        with: '{!! $withRelationNames !!}'
       };
     },
     computed: {
@@ -91,7 +91,7 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
       fetchData() {
         if (this.$route.params.id) {
           this.loading = true;
-          {{$modelPascaleCase}}Show(this.$route.params.id, {_with: this._with})
+          {{$modelPascaleCase}}Show(this.$route.params.id, {_with: this.with})
             .then(res => this.setFormData(res.data))
             .then(res => this.loading = false)
         }
@@ -102,7 +102,7 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
       onCreate () {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return {{$modelPascaleCase}}Store(this.form, {_with: this._with});
+          return {{$modelPascaleCase}}Store(this.form, {_with: this.with});
         })
           .then(res => {
             this.loading = false;
@@ -114,7 +114,7 @@ $apiQueryParameters = $withRelationNames?"{_with: '{$withRelationNames}'}":'{}';
       onUpdate () {
         this.$refs.form.validate().then(valid => {
           this.loading = true;
-          return {{$modelPascaleCase}}Update(this.form.id, this.form, {_with: this._with})
+          return {{$modelPascaleCase}}Update(this.form.id, this.form, {_with: this.with})
         })
           .then(res => this.setFormData(res.data))
           .then(SuccessMessage(this.$t('global.terms.save_completed')))
