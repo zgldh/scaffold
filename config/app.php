@@ -185,6 +185,7 @@ return [
         \Modules\Upload\UploadServiceProvider::class,
         \Modules\ActivityLog\ActivityLogServiceProvider::class,
         \Modules\Notification\NotificationServiceProvider::class,
+        \Modules\Post\PostServiceProvider::class,
     ],
 
     /*

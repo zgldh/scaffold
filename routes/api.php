@@ -35,4 +35,5 @@ $api->version('v1', function (Router $api) {
     require(base_path('Modules/ActivityLog/routes.php'));
     require(base_path('Modules/Notification/routes.php'));
     require(base_path('Modules/Setting/routes.php'));
+    require(base_path('Modules/Post/routes.php'));
 });

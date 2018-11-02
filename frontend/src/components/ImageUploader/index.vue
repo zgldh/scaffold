@@ -114,7 +114,7 @@
         if (this.multiple) {
           this.$emit('input', fileList.map(item => item.response ? item.response.data : item))
         } else {
-          this.$emit('input', fileList[0].response.data)
+          this.$emit('input', fileList[0].hasOwnProperty('response') ? fileList[0].response.data : fileList[0])
         }
       },
       log() {

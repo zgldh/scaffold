@@ -49,8 +49,8 @@ class PostStarter extends ModelStarter
             $this->newField('created_by', 'integer:unsigned')->label('创建者')
                 ->nullable()->inList()->factory($this->faker->randomDigitNotNull)
                 ->belongsTo(User::class, 'created_by', 'id'),
-            $this->newField('comments')->label('评论')
-                ->hasMany('Modules\Blog\Models\Comment', 'blog_id', 'id'),
+//            $this->newField('comments')->label('评论')
+//                ->hasMany('Modules\Blog\Models\Comment', 'blog_id', 'id'),
             $this->newField('cover')->label('封面')->uploadImage()
         ];
     }

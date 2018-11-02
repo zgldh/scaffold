@@ -16,6 +16,7 @@ export default [
   ...require('./user').default,
   ...require('./upload').default,
   ...require('./activityLog').default,
-  ...require('./setting').default
+  ...require('./setting').default,
+  ...require('./post').default
   // Append More Routes. Don't remove me
 ]
