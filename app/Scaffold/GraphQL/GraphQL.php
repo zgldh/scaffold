@@ -85,7 +85,7 @@ class GraphQL
 
         $filterFields = [[
             'name' => 'id',
-            'type' => \GraphQL::type('Filter')
+            'type' => self::getFieldFilterType()
         ]];
         $objectFields = [[
             'name' => 'id',
@@ -99,7 +99,7 @@ class GraphQL
             } else {
                 $filterFields[] = [
                     'name' => $attribute,
-                    'type' => \GraphQL::type('Filter')
+                    'type' => self::getFieldFilterType()
                 ];
                 $objectFields[] = [
                     'name' => $attribute,
@@ -285,5 +285,10 @@ class GraphQL
                 return Type::string();
                 break;
         }
+    }
+
+    private static function getFieldFilterType()
+    {
+        return \GraphQL::type('FieldFilter');
     }
 }

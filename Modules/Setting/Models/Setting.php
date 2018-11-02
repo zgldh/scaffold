@@ -48,6 +48,9 @@ class Setting extends Model
         'settable_type' => '',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function settingTarget()
     {
         return $this->morphTo('settable');

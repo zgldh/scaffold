@@ -110,6 +110,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->avatar ? $this->avatar->url : null;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function avatar()
     {
         return $this->morphOne(Upload::class, 'uploadable')->where('z_uploads.type', Upload::TYPE_AVATAR);

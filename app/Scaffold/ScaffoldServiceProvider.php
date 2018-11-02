@@ -72,10 +72,11 @@ class ScaffoldServiceProvider extends ServiceProvider
 
     private function addGraphQL()
     {
-        \GraphQL::addType(FilterType::class, 'Filter');
+        \GraphQL::addType(FilterType::class, 'FieldFilter');
         foreach (GraphQL::getTypes() as $typeName => $typeClass) {
             \GraphQL::addType($typeClass, $typeName);
         }
+
         foreach (GraphQL::getSchemas() as $schemaName => $schema) {
             \GraphQL::addSchema($schemaName, $schema);
         }

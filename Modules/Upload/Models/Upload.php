@@ -76,6 +76,9 @@ class Upload extends Model
         return $this->belongsTo(\Modules\User\Models\User::class, 'user_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function uploadable()
     {
         return $this->morphTo();
