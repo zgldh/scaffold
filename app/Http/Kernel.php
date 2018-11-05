@@ -23,6 +23,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\MultipartFormDataParser::class,
         \Barryvdh\Cors\HandleCors::class,
         AcceptLanguageSetter::class,
+        \App\Http\Middleware\GraphiQL::class,
     ];
 
     /**

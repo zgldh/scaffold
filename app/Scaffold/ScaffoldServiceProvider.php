@@ -40,7 +40,10 @@ class ScaffoldServiceProvider extends ServiceProvider
     {
         //
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'templates', 'scaffold');
-        $this->addGraphQL();
+
+        if (config('scaffold.enable_graph_ql')) {
+            $this->addGraphQL();
+        }
     }
 
     private function registerCommands()

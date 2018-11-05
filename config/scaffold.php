@@ -7,6 +7,8 @@ return [
 
     'frontend_folder' => 'frontend',
 
+    'enable_graph_ql' => env('GRAPH_QL_ENABLE', true),
+
     /**
      * Templates to create a new module from a starter.
      */
@@ -15,7 +17,7 @@ return [
             'scaffold::raw.Model',    // The template file location
             'Models/$MODEL_NAME$.php'       // The generated file location. $MODEL_NAME$ is in PascalCase.
         ],
-        'observer'            => [
+        'observer'         => [
             'scaffold::raw.Observer',    // The template file location
             'Observers/$MODEL_NAME$Observer.php'       // The generated file location. $MODEL_NAME$ is in PascalCase.
         ],
