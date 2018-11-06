@@ -2,6 +2,7 @@
 
 use App\Scaffold\GraphQL\GraphMaker;
 use Folklore\GraphQL\Support\Query;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Modules\Upload\Models\Upload;
 
@@ -35,10 +36,10 @@ class UploadsQuery extends Query
         ];
     }
 
-    public function resolve($root, $args)
+    public function resolve($root, $args, $context, ResolveInfo $info)
     {
         $query = Upload::query();
-        $result = GraphMaker::queryResolver($query, $root, $args);
+        $result = GraphMaker::queryResolver($query, $root, $args, $context, $info);
         return $result;
     }
 }

@@ -11,7 +11,9 @@ namespace App\Scaffold\GraphQL;
 
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use GraphQL\Deferred;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -197,13 +199,42 @@ class GraphMaker
         }
     }
 
-    public static function queryResolver($query, $root, $args)
+    public static function queryResolver($query, $root, $args, $context, ResolveInfo $info)
     {
+        $relationships = self::getQueryRelationshipFields($info);
+        if ($relationships) {
+            $query->with($relationships);
+        }
         if (isset($args['filter'])) {
             self::applyFilter($query, $root, $args['filter']);
         }
         $result = $query->get();
         return $result;
+    }
+
+    private static function getQueryRelationshipFields(ResolveInfo $info)
+    {
+        $relationships = self::getArrayKeysForNotEmptyItem(
+            $info->getFieldSelection(config('graphql.security.query_max_depth', 5)));
+        return $relationships;
+    }
+
+    private static function getArrayKeysForNotEmptyItem($arr, $rootRelationName = '')
+    {
+        $keys = [];
+        foreach ($arr as $key => $value) {
+            if (!is_array($value)) {
+                // Skip none array
+                continue;
+            }
+            $innerKeys = self::getArrayKeysForNotEmptyItem($value, $key);
+            if ($innerKeys) {
+                $keys = array_merge($keys, $innerKeys);
+            } else {
+                $keys[] = $rootRelationName . '.' . $key;
+            }
+        }
+        return $keys;
     }
 
     private static function unifySnakeCaseClassName($className, $tail = '')

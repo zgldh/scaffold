@@ -204,7 +204,7 @@ return [
      */
     'security' => [
         'query_max_complexity' => null,
-        'query_max_depth' => null,
+        'query_max_depth' => 5,
         'disable_introspection' => false
     ]
 ];
