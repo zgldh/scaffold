@@ -13,15 +13,19 @@ use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class GraphQL
+class GraphMaker
 {
     private static $types = [];
     private static $schemas = [];
 
     public static function addSchema($config, $schema = 'default')
     {
+        if (!config('scaffold.enable_graph_ql', true)) {
+            return;
+        }
         if (isset(self::$schemas[$schema]) && self::$schemas[$schema]) {
             self::$schemas[$schema] = array_merge_recursive(self::$schemas[$schema], $config);
         } else {
@@ -31,6 +35,9 @@ class GraphQL
 
     public static function addType($typeClass, $typeName)
     {
+        if (!config('scaffold.enable_graph_ql', true)) {
+            return;
+        }
         self::$types[$typeName] = $typeClass;
     }
 
@@ -56,100 +63,138 @@ class GraphQL
         self::$schemas = [];
     }
 
-    public static function getFilterType($modelClass, $relations = [], $prefix = '')
+    private static $parsedModels = [];
+
+    public static function getFilterType($modelClass, $relations = [])
     {
-        $parsedModel = self::getParsedModel($modelClass, $relations, $prefix);
+        $parsedModel = self::getParsedModel($modelClass, $relations);
         return $parsedModel['FilterType'];
     }
 
-    public static function getModelObjectType($className, $relations = [], $prefix = '')
+    public static function getModelObjectType($className, $relations = [])
     {
-        $parsedModel = self::getParsedModel($className, $relations, $prefix);
+        $parsedModel = self::getParsedModel($className, $relations);
         return $parsedModel['ObjectType'];
     }
 
-    private static function getParsedModel($className, $relations = [], $prefix = '')
+    private static function getParsedModel($className, $relations = [])
     {
-        return self::parseModel($className, $relations, $prefix);
+        if (!isset(self::$parsedModels[$className])) {
+            self::$parsedModels[$className] = self::parseModel($className, $relations);
+        }
+        return self::$parsedModels[$className];
     }
 
-    private static function parseModel($className, $relations = [], $prefix = '')
+    private static function parseModel($className, $relations = [])
     {
-        $prefix = ends_with($prefix, '_') ? $prefix : $prefix . '_';
-
         /** @var Model $model */
         $model = new $className;
-        $visible = $model->getVisible();
-        $hidden = $model->getHidden();
-        $casts = $model->getCasts();
+        $parsedModel = [];
+        $parsedModel['FilterType'] = new InputObjectType([
+            'name'        => self::unifySnakeCaseClassName($model, '_filter'),
+            'fields'      => function () use ($model, $relations) {
+                $visible = $model->getVisible();
+                $hidden = $model->getHidden();
+                $casts = $model->getCasts();
 
-        $filterFields = [[
-            'name' => 'id',
-            'type' => self::getFieldFilterType()
-        ]];
-        $objectFields = [[
-            'name' => 'id',
-            'type' => Type::int()
-        ]];
+                $filterFields = [[
+                    'name' => 'id',
+                    'type' => self::getFieldFilterType()
+                ]];
+                foreach (self::getModelAvailableFields($casts, $visible, $hidden) as $attribute) {
+                    $filterFields[] = [
+                        'name' => $attribute,
+                        'type' => self::getFieldFilterType()
+                    ];;
+                }
+
+                foreach (self::getRelationshipFields('FilterType', $model, $relations, $visible, $hidden) as $field) {
+                    $filterFields[] = $field;
+                }
+
+                return $filterFields;
+            },
+            'description' => get_class($model)
+        ]);
+        $parsedModel['ObjectType'] = new ObjectType([
+            'name'        => self::unifySnakeCaseClassName($model, '_object'),
+            'fields'      => function () use ($model, $relations) {
+                $visible = $model->getVisible();
+                $hidden = $model->getHidden();
+                $casts = $model->getCasts();
+
+                $objectFields = [[
+                    'name' => 'id',
+                    'type' => Type::int()
+                ]];
+                foreach (self::getModelAvailableFields($casts, $visible, $hidden) as $attribute) {
+                    $objectFields[] = [
+                        'name' => $attribute,
+                        'type' => self::getModelFieldOutputType($attribute, $casts)
+                    ];;
+                }
+
+                foreach (self::getRelationshipFields('ObjectType', $model, $relations, $visible, $hidden) as $field) {
+                    $objectFields[] = $field;
+                }
+
+                return $objectFields;
+            },
+            'description' => get_class($model)
+        ]);
+
+        return $parsedModel;
+    }
+
+    private static function getModelAvailableFields($casts, $visible = [], $hidden = [])
+    {
         foreach (array_keys($casts) as $attribute) {
             if ($visible && !in_array($attribute, $visible)) {
                 continue;
             } else if (in_array($attribute, $hidden)) {
                 continue;
             } else {
-                $filterFields[] = [
-                    'name' => $attribute,
-                    'type' => self::getFieldFilterType()
-                ];
-                $objectFields[] = [
-                    'name' => $attribute,
-                    'type' => self::getModelFieldOutputType($attribute, $casts)
-                ];
+                yield $attribute;
             }
         }
+    }
 
+    private static function getRelationshipFields($type, $model, $relations, $visible = [], $hidden = [])
+    {
         foreach ($relations as $relation) {
             if ($visible && !in_array($relation, $visible)) {
                 continue;
             } else if (in_array($relation, $hidden)) {
                 continue;
             } else if (method_exists($model, $relation)) {
+                $relatedClassName = null;
                 $relationship = $model->$relation();
                 if (method_exists($relationship, 'getMorphType')) {
                     // Morph relationship
-//                    $objectFields[] = [
-//                        'name' => $relation,
-//                        'type' => $parsedRelatedModel['ObjectType']
-//                    ];
-//                    $relatedClassName = get_class($relationship->getRelated());
-//                    $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
+                    switch (get_class($relationship)) {
+                        case MorphOne::class:
+                            $relatedClassName = get_class($relationship->getRelated());
+                            break;
+                        default:
+                            // Not support relationship
+                            \Log::info(__FUNCTION__, ['not support yet', $relationship]);
+                            continue;
+                            break;
+                    }
                 } else {
                     $relatedClassName = get_class($relationship->getRelated());
-                    $parsedRelatedModel = self::getParsedModel($relatedClassName, [], $prefix);
-                    $filterFields[] = [
-                        'name' => $relation,
-                        'type' => $parsedRelatedModel['FilterType']
-                    ];
-                    $objectFields[] = [
-                        'name' => $relation,
-                        'type' => $parsedRelatedModel['ObjectType']
-                    ];
                 }
+                if (!$relatedClassName) {
+                    continue;
+                }
+                $parsedRelatedModel = self::getParsedModel($relatedClassName, []);
+                $field = [
+                    'name' => $relation,
+                    'type' => $parsedRelatedModel[$type]
+                ];
+                yield $field;
             }
         }
-
-        $parsedModel = [];
-        $parsedModel['FilterType'] = new InputObjectType([
-            'name'        => $prefix . self::unifySnakeCaseClassName($model, '_filter'),
-            'fields'      => $filterFields,
-            'description' => get_class($model)
-        ]);
-        $parsedModel['ObjectType'] = new ObjectType([
-            'name'        => $prefix . self::unifySnakeCaseClassName($model, '_object'),
-            'fields'      => $objectFields,
-            'description' => get_class($model)
-        ]);
-        return $parsedModel;
     }
 
     public static function queryResolver($query, $root, $args)
@@ -244,6 +289,7 @@ class GraphQL
     {
         $cast = isset($casts[$attribute]) ? $casts[$attribute] : 'string';
         switch ($cast) {
+            case 'int':
             case 'integer':
                 return Type::int();
                 break;
@@ -291,4 +337,5 @@ class GraphQL
     {
         return \GraphQL::type('FieldFilter');
     }
+
 }

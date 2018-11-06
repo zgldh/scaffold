@@ -1,6 +1,6 @@
 <?php namespace Modules\User;
 
-use App\Scaffold\GraphQL\GraphQL;
+use App\Scaffold\GraphQL\GraphMaker;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -11,6 +11,7 @@ use Modules\User\GraphQL\Queries\UsersQuery;
 use Modules\User\GraphQL\Types\UserType;
 use Modules\User\Models\Permission;
 use Modules\User\Models\Role;
+use Modules\User\Models\User;
 use Modules\User\Observers\PermissionObserver;
 use Modules\User\Observers\RoleObserver;
 
@@ -89,7 +90,7 @@ class UserServiceProvider extends ServiceProvider
 
     private function registerGraphQL()
     {
-        GraphQL::addSchema([
+        GraphMaker::addSchema([
             'query'    => [
                 'users' => UsersQuery::class
             ],

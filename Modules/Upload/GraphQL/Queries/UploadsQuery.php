@@ -1,6 +1,6 @@
 <?php namespace Modules\Upload\GraphQL\Queries;
 
-use App\Scaffold\GraphQL\GraphQL;
+use App\Scaffold\GraphQL\GraphMaker;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\Type;
 use Modules\Upload\Models\Upload;
@@ -19,18 +19,18 @@ class UploadsQuery extends Query
 
     public function type()
     {
-        return Type::listOf(GraphQL::getModelObjectType(Upload::class, [
+        return Type::listOf(GraphMaker::getModelObjectType(Upload::class, [
             'user'
-        ], 'UploadsQuery'));
+        ]));
     }
 
     public function args()
     {
         return [
             'filter' => ['name' => 'filter',
-                         'type' => GraphQL::getFilterType(Upload::class, [
+                         'type' => GraphMaker::getFilterType(Upload::class, [
                              'user'
-                         ], 'UploadsQuery')
+                         ])
             ],
         ];
     }
@@ -38,7 +38,7 @@ class UploadsQuery extends Query
     public function resolve($root, $args)
     {
         $query = Upload::query();
-        $result = GraphQL::queryResolver($query, $root, $args);
+        $result = GraphMaker::queryResolver($query, $root, $args);
         return $result;
     }
 }

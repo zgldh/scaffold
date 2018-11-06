@@ -1,6 +1,6 @@
 <?php namespace Modules\Upload;
 
-use App\Scaffold\GraphQL\GraphQL;
+use App\Scaffold\GraphQL\GraphMaker;
 use Illuminate\Support\ServiceProvider;
 use Modules\Upload\Commands\CleanUnUsedUploads;
 use Modules\Upload\GraphQL\Queries\UploadsQuery;
@@ -54,7 +54,7 @@ class UploadServiceProvider extends ServiceProvider
 
     private function registerGraphQL()
     {
-        GraphQL::addSchema([
+        GraphMaker::addSchema([
             'query'    => [
                 'uploads' => UploadsQuery::class
             ],

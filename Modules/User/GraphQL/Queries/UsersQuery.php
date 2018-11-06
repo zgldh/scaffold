@@ -1,6 +1,6 @@
 <?php namespace Modules\User\GraphQL\Queries;
 
-use App\Scaffold\GraphQL\GraphQL;
+use App\Scaffold\GraphQL\GraphMaker;
 use Folklore\GraphQL\Support\Query;
 use GraphQL\Type\Definition\Type;
 use Modules\User\Models\User;
@@ -19,18 +19,18 @@ class UsersQuery extends Query
 
     public function type()
     {
-        return Type::listOf(GraphQL::getModelObjectType(User::class, [
+        return Type::listOf(GraphMaker::getModelObjectType(User::class, [
             'avatar'
-        ], 'UsersQuery_'));
+        ]));
     }
 
     public function args()
     {
         return [
             'filter' => ['name' => 'filter',
-                         'type' => GraphQL::getFilterType(User::class, [
+                         'type' => GraphMaker::getFilterType(User::class, [
                              'avatar'
-                         ], 'UsersQuery_')
+                         ])
             ],
         ];
     }
@@ -38,7 +38,7 @@ class UsersQuery extends Query
     public function resolve($root, $args)
     {
         $query = User::query();
-        $result = GraphQL::queryResolver($query, $root, $args);
+        $result = GraphMaker::queryResolver($query, $root, $args);
         return $result;
     }
 }

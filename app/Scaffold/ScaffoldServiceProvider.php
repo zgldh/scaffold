@@ -8,7 +8,7 @@ use App\Scaffold\Commands\FromTable;
 use App\Scaffold\Commands\ScaffoldInit;
 use App\Scaffold\Commands\UpdatePermissions;
 use App\Scaffold\GraphQL\FilterType;
-use App\Scaffold\GraphQL\GraphQL;
+use App\Scaffold\GraphQL\GraphMaker;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -76,13 +76,13 @@ class ScaffoldServiceProvider extends ServiceProvider
     private function addGraphQL()
     {
         \GraphQL::addType(FilterType::class, 'FieldFilter');
-        foreach (GraphQL::getTypes() as $typeName => $typeClass) {
+        foreach (GraphMaker::getTypes() as $typeName => $typeClass) {
             \GraphQL::addType($typeClass, $typeName);
         }
 
-        foreach (GraphQL::getSchemas() as $schemaName => $schema) {
+        foreach (GraphMaker::getSchemas() as $schemaName => $schema) {
             \GraphQL::addSchema($schemaName, $schema);
         }
-        GraphQL::cleanAll();
+        GraphMaker::cleanAll();
     }
 }
