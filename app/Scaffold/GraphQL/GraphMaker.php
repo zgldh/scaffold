@@ -15,11 +15,24 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Deferred;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
+use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class GraphMaker
 {
+    const OBJECT_TYPE = 'ObjectType';
+    const FILTER_TYPE = 'FilterType';
+
     private static $types = [];
     private static $schemas = [];
 
@@ -70,13 +83,13 @@ class GraphMaker
     public static function getFilterType($modelClass, $relations = [])
     {
         $parsedModel = self::getParsedModel($modelClass, $relations);
-        return $parsedModel['FilterType'];
+        return $parsedModel[self::FILTER_TYPE];
     }
 
     public static function getModelObjectType($className, $relations = [])
     {
         $parsedModel = self::getParsedModel($className, $relations);
-        return $parsedModel['ObjectType'];
+        return $parsedModel[self::OBJECT_TYPE];
     }
 
     private static function getParsedModel($className, $relations = [])
@@ -92,7 +105,7 @@ class GraphMaker
         /** @var Model $model */
         $model = new $className;
         $parsedModel = [];
-        $parsedModel['FilterType'] = new InputObjectType([
+        $parsedModel[self::FILTER_TYPE] = new InputObjectType([
             'name'        => self::unifySnakeCaseClassName($model, '_filter'),
             'fields'      => function () use ($model, $relations) {
                 $visible = $model->getVisible();
@@ -101,16 +114,16 @@ class GraphMaker
 
                 $filterFields = [[
                     'name' => 'id',
-                    'type' => self::getFieldFilterType()
+                    'type' => self::getFieldFilterType('int')
                 ]];
                 foreach (self::getModelAvailableFields($casts, $visible, $hidden) as $attribute) {
                     $filterFields[] = [
                         'name' => $attribute,
-                        'type' => self::getFieldFilterType()
+                        'type' => self::getFieldFilterType($casts[$attribute])
                     ];;
                 }
 
-                foreach (self::getRelationshipFields('FilterType', $model, $relations, $visible, $hidden) as $field) {
+                foreach (self::getRelationshipFields(self::FILTER_TYPE, $model, $relations, $visible, $hidden) as $field) {
                     $filterFields[] = $field;
                 }
 
@@ -118,7 +131,7 @@ class GraphMaker
             },
             'description' => get_class($model)
         ]);
-        $parsedModel['ObjectType'] = new ObjectType([
+        $parsedModel[self::OBJECT_TYPE] = new ObjectType([
             'name'        => self::unifySnakeCaseClassName($model, '_object'),
             'fields'      => function () use ($model, $relations) {
                 $visible = $model->getVisible();
@@ -133,10 +146,10 @@ class GraphMaker
                     $objectFields[] = [
                         'name' => $attribute,
                         'type' => self::getModelFieldOutputType($attribute, $casts)
-                    ];;
+                    ];
                 }
 
-                foreach (self::getRelationshipFields('ObjectType', $model, $relations, $visible, $hidden) as $field) {
+                foreach (self::getRelationshipFields(self::OBJECT_TYPE, $model, $relations, $visible, $hidden) as $field) {
                     $objectFields[] = $field;
                 }
 
@@ -161,6 +174,27 @@ class GraphMaker
         }
     }
 
+    private static $relationshipIsMany = [
+        BelongsTo::class      => false,
+        BelongsToMany::class  => true,
+        HasMany::class        => true,
+        HasManyThrough::class => true,
+        HasOne::class         => false,
+        MorphMany::class      => true,
+        MorphOne::class       => false,
+        MorphPivot::class     => false,
+        MorphTo::class        => false,
+        MorphToMany::class    => true,
+    ];
+
+    /**
+     * @param $type self::FilterType | self::ObjectType
+     * @param $model
+     * @param $relations
+     * @param array $visible
+     * @param array $hidden
+     * @return \Generator
+     */
     private static function getRelationshipFields($type, $model, $relations, $visible = [], $hidden = [])
     {
         foreach ($relations as $relation) {
@@ -171,29 +205,20 @@ class GraphMaker
             } else if (method_exists($model, $relation)) {
                 $relatedClassName = null;
                 $relationship = $model->$relation();
-                if (method_exists($relationship, 'getMorphType')) {
-                    // Morph relationship. TODO add more Morph situations.
-                    switch (get_class($relationship)) {
-                        case MorphOne::class:
-                            $relatedClassName = get_class($relationship->getRelated());
-                            break;
-                        default:
-                            // Not support relationship
-                            \Log::info(__FUNCTION__, ['not support yet', $relationship]);
-                            continue;
-                            break;
-                    }
-                } else {
-                    $relatedClassName = get_class($relationship->getRelated());
-                }
+                $relatedClassName = get_class($relationship->getRelated());
                 if (!$relatedClassName) {
                     continue;
                 }
+                $isToMany = self::$relationshipIsMany[get_class($relationship)];
                 $parsedRelatedModel = self::getParsedModel($relatedClassName, []);
                 $field = [
-                    'name' => $relation,
-                    'type' => $parsedRelatedModel[$type]
+                    'name' => $relation
                 ];
+                if ($type === self::FILTER_TYPE) {
+                    $field['type'] = $parsedRelatedModel[$type];
+                } else {
+                    $field['type'] = $isToMany ? Type::listOf($parsedRelatedModel[$type]) : $parsedRelatedModel[$type];
+                }
                 yield $field;
             }
         }
@@ -231,7 +256,7 @@ class GraphMaker
             if ($innerKeys) {
                 $keys = array_merge($keys, $innerKeys);
             } else {
-                $keys[] = $rootRelationName?($rootRelationName . '.' . $key):$key;
+                $keys[] = $rootRelationName ? ($rootRelationName . '.' . $key) : $key;
             }
         }
         return $keys;
@@ -250,6 +275,8 @@ class GraphMaker
      */
     private static function applyFilter($query, $root, $fields)
     {
+        // FIXME 将 $fields 规整化。
+        \Log::info(__FUNCTION__, $fields);
         foreach ($fields as $field => $filters) {
             $columnNames = explode('.', $field);
             $query->where(function ($q) use ($columnNames, $filters) {
@@ -306,11 +333,11 @@ class GraphMaker
                     break;
 
                 default:
-                    \Log::error('Bad operator: ' . $operator . ' in field: ' . $columnName);
+                    \Log::error('Bad operator: `' . $operator . '` in field: `' . $columnName . '`');
             }
         } else {
-            $columnName = array_shift($columnNames);
-            $query->whereHas($columnName, function ($q) use ($columnNames, $operator, $arguments) {
+            $relationName = array_shift($columnNames);
+            $query->whereHas($relationName, function ($q) use ($columnNames, $operator, $arguments) {
                 self::advanceSearch($q, $columnNames, $operator, $arguments);
             });
         }
@@ -319,7 +346,12 @@ class GraphMaker
     private static function getModelFieldOutputType($attribute, $casts)
     {
         $cast = isset($casts[$attribute]) ? $casts[$attribute] : 'string';
-        switch ($cast) {
+        return self::resolveGraphQLTypeFromCastType($cast);
+    }
+
+    private static function resolveGraphQLTypeFromCastType($castType)
+    {
+        switch ($castType) {
             case 'int':
             case 'integer':
                 return Type::int();
@@ -358,15 +390,24 @@ class GraphMaker
                 return Type::string();
                 break;
             default:
-                \Log::error('Bad cast type: ' . $cast . ' on attribute: ' . $attribute);
+                \Log::error('Bad cast type: ' . $castType);
                 return Type::string();
                 break;
         }
     }
 
-    private static function getFieldFilterType()
+    private static $fieldFilterTypes = [];
+
+    private static function getFieldFilterType($castType = 'string')
     {
-        return \GraphQL::type('FieldFilter');
+        $fieldFilterTypeName = 'field_filter_' . $castType;
+        if (!isset(self::$fieldFilterTypes[$fieldFilterTypeName])) {
+            self::$fieldFilterTypes[$fieldFilterTypeName] = new InputObjectType([
+                'name'   => $fieldFilterTypeName,
+                'fields' => FilterType::buildFields(self::resolveGraphQLTypeFromCastType($castType))
+            ]);
+        }
+        return self::$fieldFilterTypes[$fieldFilterTypeName];
     }
 
 }

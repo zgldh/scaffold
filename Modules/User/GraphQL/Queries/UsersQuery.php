@@ -21,7 +21,8 @@ class UsersQuery extends Query
     public function type()
     {
         return Type::listOf(GraphMaker::getModelObjectType(User::class, [
-            'avatar'
+            'avatar',
+            'uploads'
         ]));
     }
 
@@ -30,7 +31,8 @@ class UsersQuery extends Query
         return [
             'filter' => ['name' => 'filter',
                          'type' => GraphMaker::getFilterType(User::class, [
-                             'avatar'
+                             'avatar',
+                             'uploads'
                          ])
             ],
         ];

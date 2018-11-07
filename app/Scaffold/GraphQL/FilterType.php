@@ -26,49 +26,58 @@ class FilterType extends GraphQLType
 
     public function fields()
     {
+        return self::buildFields(Type::string());
+    }
+
+    /**
+     * @param $type Type::string()|Type::int()|Type::float()|Type::boolean();
+     * @return array
+     */
+    public static function buildFields($type)
+    {
         return [
             'eq'         => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value equals the provided argument'
             ],
             'neq'        => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value does not equal the provided argument'
             ],
             'gt'         => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value is greater than the provided argument'
             ],
             'lt'         => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value is less than the provided argument'
             ],
             'egt'        => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value is equals and greater than the provided argument'
             ],
             'elt'        => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value is equals and less than the provided argument'
             ],
             'in'         => [
-                'type'        => Type::listOf(Type::string()),
+                'type'        => Type::listOf($type),
                 'description' => 'The field value can be found in the provided argument list'
             ],
             'notIn'      => [
-                'type'        => Type::listOf(Type::string()),
+                'type'        => Type::listOf($type),
                 'description' => 'The field value can NOT be found in the provided argument list'
             ],
             'between'    => [
-                'type'        => Type::listOf(Type::string()),
+                'type'        => Type::listOf($type),
                 'description' => 'The field value is between the provided two arguments. Borders excluded.'
             ],
             'notBetween' => [
-                'type'        => Type::listOf(Type::string()),
+                'type'        => Type::listOf($type),
                 'description' => 'The field value is NOT between the provided two arguments. Borders excluded.'
             ],
             'like'       => [
-                'type'        => Type::string(),
+                'type'        => $type,
                 'description' => 'The field value is like the provided argument.'
             ],
             'null'       => [

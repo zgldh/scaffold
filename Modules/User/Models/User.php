@@ -118,6 +118,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphOne(Upload::class, 'uploadable')->where('z_uploads.type', Upload::TYPE_AVATAR);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function uploads()
+    {
+        return $this->hasMany(Upload::class);
+    }
+
     public function isAdmin()
     {
         return $this->hasRole(RoleRepository::ROLE_SUPER_ADMIN);
