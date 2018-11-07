@@ -172,7 +172,7 @@ class GraphMaker
                 $relatedClassName = null;
                 $relationship = $model->$relation();
                 if (method_exists($relationship, 'getMorphType')) {
-                    // Morph relationship
+                    // Morph relationship. TODO add more Morph situations.
                     switch (get_class($relationship)) {
                         case MorphOne::class:
                             $relatedClassName = get_class($relationship->getRelated());
@@ -231,7 +231,7 @@ class GraphMaker
             if ($innerKeys) {
                 $keys = array_merge($keys, $innerKeys);
             } else {
-                $keys[] = $rootRelationName . '.' . $key;
+                $keys[] = $rootRelationName?($rootRelationName . '.' . $key):$key;
             }
         }
         return $keys;
