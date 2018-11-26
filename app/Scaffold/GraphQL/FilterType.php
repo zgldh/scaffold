@@ -9,7 +9,15 @@
 namespace App\Scaffold\GraphQL;
 
 use Folklore\GraphQL\Support\Type as GraphQLType;
+use GraphQL\Type\Definition\EnumType;
+use GraphQL\Type\Definition\InputObjectType;
+use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ListOfType;
+use GraphQL\Type\Definition\NonNull;
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Definition\UnionType;
 
 class FilterType extends GraphQLType
 {
@@ -30,7 +38,7 @@ class FilterType extends GraphQLType
     }
 
     /**
-     * @param $type Type::string()|Type::int()|Type::float()|Type::boolean();
+     * @param ObjectType|InterfaceType|UnionType|ScalarType|InputObjectType|EnumType|ListOfType|NonNull $type Type::string()|Type::int()|Type::float()|Type::boolean();
      * @return array
      */
     public static function buildFields($type)
@@ -89,5 +97,39 @@ class FilterType extends GraphQLType
                 'description' => 'The field value is NOT null.'
             ]
         ];
+    }
+
+    public static $filterOperators = [
+        'eq',
+        'neq',
+        'gt',
+        'lt',
+        'egt',
+        'elt',
+        'in',
+        'notIn',
+        'between',
+        'notBetween',
+        'like',
+        'null',
+        'notNull',
+    ];
+
+    public static function isFilterOperators($items)
+    {
+        if (is_string($items)) {
+            return in_array($items, self::$filterOperators);
+        }
+        if (is_array($items)) {
+            $allOperators = true;
+            foreach ($items as $item) {
+                if (!self::isFilterOperators($item)) {
+                    $allOperators = false;
+                    break;
+                }
+            }
+            return $allOperators;
+        }
+        return false;
     }
 }

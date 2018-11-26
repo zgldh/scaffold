@@ -275,9 +275,10 @@ class GraphMaker
      */
     private static function applyFilter($query, $root, $fields)
     {
-        // FIXME 将 $fields 规整化。
-        \Log::info(__FUNCTION__, $fields);
-        foreach ($fields as $field => $filters) {
+        // 将 $fields 规整化。
+        $normalizedFields = self::normalizeFilterFields($fields);
+        \Log::info(__FUNCTION__, [$fields, $normalizedFields]);
+        foreach ($normalizedFields as $field => $filters) {
             $columnNames = explode('.', $field);
             $query->where(function ($q) use ($columnNames, $filters) {
                 foreach ($filters as $operator => $arguments) {
@@ -285,6 +286,28 @@ class GraphMaker
                 }
             });
         }
+    }
+
+    private static function normalizeFilterFields($fields)
+    {
+        $output = [];
+        // Check if $fields are filter operators
+        if (FilterType::isFilterOperators(array_keys($fields))) {
+            return $output;
+        }
+
+        foreach ($fields as $field => $content) {
+            $innerFields = self::normalizeFilterFields($content);
+            $fieldName = $field;
+            if (sizeof($innerFields) > 0) {
+                foreach ($innerFields as $innerField => $innerContent) {
+                    $output[$fieldName . '.' . $innerField] = $innerContent;
+                }
+            } else {
+                $output[$fieldName] = $content;
+            }
+        }
+        return $output;
     }
 
     private static function advanceSearch($query, $columnNames, $operator, $arguments)
