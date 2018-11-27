@@ -78,6 +78,24 @@ class GraphMaker
         self::$schemas = [];
     }
 
+    /**
+     * For GraphQL query args() function.
+     * @param $modelClass
+     * @param array $with
+     * @return array
+     */
+    public static function getQueryArgumentsDefinitionArray($modelClass, $with = [])
+    {
+        return [
+            'filter'      => ['name' => 'filter',
+                              'type' => GraphMaker::getFilterType($modelClass, $with),
+            ],
+            'queryOption' => ['name' => 'queryOption',
+                              'type' => \GraphQL::type('QueryOptions')
+            ],
+        ];
+    }
+
     private static $parsedModels = [];
 
     public static function getFilterType($modelClass, $relations = [])
@@ -226,7 +244,8 @@ class GraphMaker
 
     public static function queryResolver($query, $root, $args, $context, ResolveInfo $info)
     {
-        $relationships = self::getQueryRelationshipFields($info);
+        $filterOnWith = @$args['filterOnWith'] === true;
+        $relationships = self::getQueryRelationshipFields($info, $filterOnWith ? $args['filter'] : []);
         if ($relationships) {
             $query->with($relationships);
         }
@@ -237,14 +256,16 @@ class GraphMaker
         return $result;
     }
 
-    private static function getQueryRelationshipFields(ResolveInfo $info)
+    private static function getQueryRelationshipFields(ResolveInfo $info, $filter = [])
     {
         $relationships = self::getArrayKeysForNotEmptyItem(
-            $info->getFieldSelection(config('graphql.security.query_max_depth', 5)));
+            $info->getFieldSelection(config('graphql.security.query_max_depth', 5)),
+            '',
+            $filter);
         return $relationships;
     }
 
-    private static function getArrayKeysForNotEmptyItem($arr, $rootRelationName = '')
+    private static function getArrayKeysForNotEmptyItem($arr, $rootRelationName = '', $filter = [])
     {
         $keys = [];
         foreach ($arr as $key => $value) {
@@ -252,11 +273,27 @@ class GraphMaker
                 // Skip none array
                 continue;
             }
-            $innerKeys = self::getArrayKeysForNotEmptyItem($value, $key);
+            $innerKeys = self::getArrayKeysForNotEmptyItem($value, $key, $filter);
             if ($innerKeys) {
                 $keys = array_merge($keys, $innerKeys);
             } else {
-                $keys[] = $rootRelationName ? ($rootRelationName . '.' . $key) : $key;
+                $relationKey = $rootRelationName ? ($rootRelationName . '.' . $key) : $key;
+                if ($filter) {
+                    $filterOperators = data_get($filter, $relationKey);
+                    $keys[$relationKey] = function ($query) use ($filterOperators) {
+                        foreach ($filterOperators as $field => $filters) {
+                            $columnNames = [$field];
+                            $query->where(function ($q) use ($columnNames, $filters) {
+                                foreach ($filters as $operator => $arguments) {
+                                    self::advanceSearch($q, $columnNames, $operator, $arguments);
+                                }
+                            });
+                        }
+                        $query->limit(100);
+                    };
+                } else {
+                    $keys[] = $relationKey;
+                }
             }
         }
         return $keys;
@@ -288,6 +325,11 @@ class GraphMaker
         }
     }
 
+    /**
+     * 将 GraphQL 的 filter 对象转换为用.分割的查询数组
+     * @param $fields
+     * @return array
+     */
     private static function normalizeFilterFields($fields)
     {
         $output = [];

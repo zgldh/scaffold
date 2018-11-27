@@ -99,7 +99,7 @@ class FilterType extends GraphQLType
         ];
     }
 
-    public static $filterOperators = [
+    private static $filterOperators = [
         'eq',
         'neq',
         'gt',

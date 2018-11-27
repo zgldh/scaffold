@@ -27,13 +27,8 @@ class UploadsQuery extends Query
 
     public function args()
     {
-        return [
-            'filter' => ['name' => 'filter',
-                         'type' => GraphMaker::getFilterType(Upload::class, [
-                             'user'
-                         ])
-            ],
-        ];
+        return GraphMaker::getQueryArgumentsDefinitionArray(Upload::class, [
+            'user']);
     }
 
     public function resolve($root, $args, $context, ResolveInfo $info)

@@ -28,14 +28,9 @@ class UsersQuery extends Query
 
     public function args()
     {
-        return [
-            'filter' => ['name' => 'filter',
-                         'type' => GraphMaker::getFilterType(User::class, [
-                             'avatar',
-                             'uploads'
-                         ])
-            ],
-        ];
+        return GraphMaker::getQueryArgumentsDefinitionArray(User::class, [
+            'avatar',
+            'uploads']);
     }
 
     public function resolve($root, $args, $context, ResolveInfo $info)
