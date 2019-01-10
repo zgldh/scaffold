@@ -864,7 +864,7 @@ class Field
         $this->htmlType('upload');
         $this->where('z_uploads.type', $this->getName());
         $this->addVueEditorComponent('UploadComponent',
-            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
+            config('scaffold.frontend_folder', 'frontend') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -877,7 +877,7 @@ class Field
         $this->htmlType('uploads');
         $this->where('z_uploads.type', $this->getName());
         $this->addVueEditorComponent('UploadComponent',
-            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
+            config('scaffold.frontend_folder', 'frontend') . '/Upload/resources/assets/Components/Upload.vue');
         return $this;
     }
 
@@ -891,7 +891,7 @@ class Field
         $this->htmlType('uploadImage');
         $this->where('z_uploads.type', $this->getName());
         $this->addVueEditorComponent('UploadComponent',
-            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
+            '@/components/ImageUploader/index');
         return $this;
     }
 
@@ -905,7 +905,7 @@ class Field
         $this->htmlType('uploadImages');
         $this->where('z_uploads.type', $this->getName());
         $this->addVueEditorComponent('UploadComponent',
-            config('zgldh-scaffold.modules', 'Modules') . '/Upload/resources/assets/Components/Upload.vue');
+           '@/components/ImageUploader/index');
         return $this;
     }
 
@@ -935,13 +935,13 @@ class Field
     }
 
     /**
-     * 增加一个 Vue Editor 页面要载入的 component
+     * FIXME 增加一个 Vue Editor 页面要载入的 component
      * @param $name
      * @param $path
      */
     public function addVueEditorComponent($name, $path)
     {
-        $this->getModel()->addVueEditorComponents($name, $path);
+//        $this->getModel()->addVueEditorComponents($name, $path);
     }
 
     /**
