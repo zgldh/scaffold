@@ -129,16 +129,18 @@ class GraphMaker
                 $visible = $model->getVisible();
                 $hidden = $model->getHidden();
                 $casts = $model->getCasts();
+                $casts['created_at'] = 'timestamp';
+                $casts['updated_at'] = 'timestamp';
 
                 $filterFields = [[
                     'name' => 'id',
                     'type' => self::getFieldFilterType('int')
                 ]];
-                foreach (self::getModelAvailableFields($casts, $visible, $hidden) as $attribute) {
+                foreach (self::getModelAvailableFields($model, $casts, $visible, $hidden) as $attribute) {
                     $filterFields[] = [
                         'name' => $attribute,
                         'type' => self::getFieldFilterType($casts[$attribute])
-                    ];;
+                    ];
                 }
 
                 foreach (self::getRelationshipFields(self::FILTER_TYPE, $model, $relations, $visible, $hidden) as $field) {
@@ -155,12 +157,14 @@ class GraphMaker
                 $visible = $model->getVisible();
                 $hidden = $model->getHidden();
                 $casts = $model->getCasts();
+                $casts['created_at'] = 'timestamp';
+                $casts['updated_at'] = 'timestamp';
 
                 $objectFields = [[
                     'name' => 'id',
                     'type' => Type::int()
                 ]];
-                foreach (self::getModelAvailableFields($casts, $visible, $hidden) as $attribute) {
+                foreach (self::getModelAvailableFields($model, $casts, $visible, $hidden) as $attribute) {
                     $objectFields[] = [
                         'name' => $attribute,
                         'type' => self::getModelFieldOutputType($attribute, $casts)
@@ -179,8 +183,12 @@ class GraphMaker
         return $parsedModel;
     }
 
-    private static function getModelAvailableFields($casts, $visible = [], $hidden = [])
+    private static function getModelAvailableFields($model, $casts, $visible = [], $hidden = [])
     {
+        if (method_exists($model, 'usesTimestamps') && $model->usesTimestamps()) {
+            $casts['created_at'] = 'timestamp';
+            $casts['updated_at'] = 'timestamp';
+        }
         foreach (array_keys($casts) as $attribute) {
             if ($visible && !in_array($attribute, $visible)) {
                 continue;
@@ -206,7 +214,7 @@ class GraphMaker
     ];
 
     /**
-     * @param $type self::FilterType | self::ObjectType
+     * @param string $type self::FilterType | self::ObjectType
      * @param $model
      * @param $relations
      * @param array $visible
@@ -244,7 +252,7 @@ class GraphMaker
 
     public static function queryResolver($query, $root, $args, $context, ResolveInfo $info)
     {
-        $filterOnWith = @$args['filterOnWith'] === true;
+        $filterOnWith = QueryOptions::isFilterRelations($args);
         $relationships = self::getQueryRelationshipFields($info, $filterOnWith ? $args['filter'] : []);
         if ($relationships) {
             $query->with($relationships);
@@ -252,6 +260,8 @@ class GraphMaker
         if (isset($args['filter'])) {
             self::applyFilter($query, $root, $args['filter']);
         }
+        QueryOptions::applySorting($args, $query);
+        QueryOptions::applyPagination($args, $query);
         $result = $query->get();
         return $result;
     }

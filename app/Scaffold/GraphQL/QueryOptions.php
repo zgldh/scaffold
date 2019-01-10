@@ -19,7 +19,6 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\UnionType;
 
-// TODO
 class QueryOptions extends GraphQLType
 {
     protected $attributes = [
@@ -32,6 +31,22 @@ class QueryOptions extends GraphQLType
       * http://graphql.org/learn/schema/#input-types
       */
     protected $inputObject = true;
+
+    public static function applySorting($args, $query)
+    {
+        $sortField = self::getSortField($args);
+        if ($sortField) {
+            $sortDirection = self::getSortDirection($args);
+            $query->orderBy($sortField, $sortDirection);
+        }
+    }
+
+    public static function applyPagination($args, $query)
+    {
+        $pageNum = self::getPageNum($args);
+        $pageSize = self::getPageSize($args);
+        $query->skip(($pageNum - 1) * $pageSize)->take($pageSize);
+    }
 
     public function fields()
     {
@@ -56,5 +71,30 @@ class QueryOptions extends GraphQLType
                 'description' => 'The sorting direction. "ASC" or "DESC".'
             ]
         ];
+    }
+
+    public static function getPageSize($args, $default = 100)
+    {
+        return @$args['queryOptions']['page_size'] || $default;
+    }
+
+    public static function getPageNum($args, $default = 1)
+    {
+        return @$args['queryOptions']['page_num'] || $default;
+    }
+
+    public static function getSortField($args, $default = null)
+    {
+        return @$args['queryOptions']['sort_field'] || $default;
+    }
+
+    public static function getSortDirection($args, $default = 'ASC')
+    {
+        return @$args['queryOptions']['sort_direction'] || $default;
+    }
+
+    public static function isFilterRelations($args, $default = false)
+    {
+        return @$args['queryOptions']['filter_relations'] || $default;
     }
 }
