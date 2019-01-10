@@ -95,7 +95,8 @@ class UserServiceProvider extends ServiceProvider
     {
         GraphMaker::addSchema([
             'query'    => [
-                'users' => UsersQuery::class
+                'users' => UsersQuery::class,
+                'user' => UserQuery::class
             ],
             'mutation' => [
                 //'updateUserEmail' => 'App\GraphQL\Query\UpdateUserEmailMutation'
