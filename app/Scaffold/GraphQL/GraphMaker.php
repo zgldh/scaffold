@@ -79,6 +79,24 @@ class GraphMaker
     }
 
     /**
+     * TODO For GraphQL individual query args() function.
+     * @param $modelClass
+     * @param array $with
+     * @return array
+     */
+    public static function getQueryArgumentsForIndividual($modelClass, $with = [])
+    {
+        return [
+            'filter'      => ['name' => 'filter',
+                              'type' => GraphMaker::getFilterType($modelClass, $with),
+            ],
+            'queryOption' => ['name' => 'queryOption',
+                              'type' => \GraphQL::type('QueryOptions')
+            ],
+        ];
+    }
+
+    /**
      * For GraphQL query args() function.
      * @param $modelClass
      * @param array $with
@@ -251,6 +269,31 @@ class GraphMaker
     }
 
     public static function queryResolver($query, $root, $args, $context, ResolveInfo $info)
+    {
+        $filterOnWith = QueryOptions::isFilterRelations($args);
+        $relationships = self::getQueryRelationshipFields($info, $filterOnWith ? $args['filter'] : []);
+        if ($relationships) {
+            $query->with($relationships);
+        }
+        if (isset($args['filter'])) {
+            self::applyFilter($query, $root, $args['filter']);
+        }
+        QueryOptions::applySorting($args, $query);
+        QueryOptions::applyPagination($args, $query);
+        $result = $query->get();
+        return $result;
+    }
+
+    /**
+     * TODO
+     * @param $query
+     * @param $root
+     * @param $args
+     * @param $context
+     * @param ResolveInfo $info
+     * @return mixed
+     */
+    public static function individualQueryResolver($query, $root, $args, $context, ResolveInfo $info)
     {
         $filterOnWith = QueryOptions::isFilterRelations($args);
         $relationships = self::getQueryRelationshipFields($info, $filterOnWith ? $args['filter'] : []);
