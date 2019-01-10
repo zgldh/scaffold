@@ -48,29 +48,32 @@ class UserServiceProvider extends ServiceProvider
     {
         \Event::listen(Login::class, function (Login $event) {
             $user = $event->user;
-            $user->last_login_at = Carbon::now();
-            $user->login_times++;
+            if ($user) {
+                $user->last_login_at = Carbon::now();
+                $user->login_times++;
 
-            activity('auth')
-                ->causedBy($user)
-                ->withProperties([
-                    'login_times' => $user->login_times,
-                    'ip'          => request()->getClientIp()
-                ])
-                ->log(ActivityLog::ACTION_LOGIN);
+                activity('auth')
+                    ->causedBy($user)
+                    ->withProperties([
+                        'login_times' => $user->login_times,
+                        'ip'          => request()->getClientIp()
+                    ])
+                    ->log(ActivityLog::ACTION_LOGIN);
 
-            activity()->disableLogging();
-            $user->save();
-            activity()->enableLogging();
+                activity()->disableLogging();
+                $user->save();
+                activity()->enableLogging();
+            }
         });
 
         \Event::listen(Logout::class, function (Logout $event) {
             $user = $event->user;
-
-            activity('auth')
-                ->causedBy($user)
-                ->withProperties([])
-                ->log(ActivityLog::ACTION_LOGOUT);
+            if ($user) {
+                activity('auth')
+                    ->causedBy($user)
+                    ->withProperties([])
+                    ->log(ActivityLog::ACTION_LOGOUT);
+            }
         });
 
         Permission::observe(PermissionObserver::class);
