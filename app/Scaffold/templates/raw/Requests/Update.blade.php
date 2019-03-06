@@ -6,7 +6,7 @@
 echo '<?php' ?> namespace {{$NAME_SPACE}}\Requests;
 
 use {{$NAME_SPACE}}\Models\{{$MODEL_NAME}};
-use Illuminate\Foundation\Http\FormRequest;
+use Dingo\Api\Http\FormRequest;
 use App\Scaffold\Traits\HasWithParameter;
 
 class Update{{$MODEL_NAME}}Request extends FormRequest
