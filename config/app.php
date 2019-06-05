@@ -170,6 +170,7 @@ return [
         Dingo\Api\Provider\LaravelServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         \zgldh\UploadManager\UploadManagerServiceProvider::class,
+        \Nuwave\Lighthouse\WhereConstraints\WhereConstraintsServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -185,6 +186,7 @@ return [
         \Modules\Upload\UploadServiceProvider::class,
         \Modules\ActivityLog\ActivityLogServiceProvider::class,
         \Modules\Notification\NotificationServiceProvider::class,
+        \Modules\Post\PostServiceProvider::class,
     ],
 
     /*

@@ -19,6 +19,8 @@
     "laravel/tinker": "~1.0",
     "league/csv": "^9.1",
     "maatwebsite/excel": "^3.0",
+    "mll-lab/graphql-php-scalars": "^2.1",
+    "mll-lab/laravel-graphql-playground": "^1.0",
     "nuwave/lighthouse": "^3.6",
     "prettus/l5-repository": "^2.6",
     "spatie/laravel-activitylog": "^2.8",
