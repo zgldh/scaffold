@@ -1,0 +1,11 @@
+#user model
+
+extend type Query {
+    users(where: WhereConstraints @whereConstraints , orderBy: [OrderByClause!] @orderBy): [User!]! @paginate(type: "paginator" model: "Modules\\User\\Models\\User")
+    user(id: ID @eq): User @find(model: "Modules\\User\\Models\\User")
+}
+
+type User @autoFields(model: "Modules\\User\\Models\\User") {
+    id: ID!
+    email: String
+}

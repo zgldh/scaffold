@@ -1,0 +1,10 @@
+#permission model
+
+extend type Query {
+    permissions(where: WhereConstraints @whereConstraints , orderBy: [OrderByClause!] @orderBy): [Permission!]! @paginate(type: "paginator" model: "Modules\\User\\Models\\Permission")
+    permission(id: ID @eq): Permission @find(model: "Modules\\User\\Models\\Permission")
+}
+
+type Permission {
+    id: ID!
+}

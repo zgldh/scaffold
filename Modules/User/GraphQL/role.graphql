@@ -1,0 +1,10 @@
+#role model
+
+extend type Query {
+    roles(where: WhereConstraints @whereConstraints , orderBy: [OrderByClause!] @orderBy): [Role!]! @paginate(type: "paginator" model: "Modules\\User\\Models\\Role")
+    role(id: ID @eq): Role @find(model: "Modules\\User\\Models\\Role")
+}
+
+type Role {
+    id: ID!
+}

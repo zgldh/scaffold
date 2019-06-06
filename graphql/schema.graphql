@@ -4,27 +4,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-type Query {
-    users(where: WhereConstraints @whereConstraints , orderBy: [OrderByClause!] @orderBy): [User!]!
-        @paginate(type: "paginator" model: "Modules\\User\\Models\\User")
-    user(id: ID @eq): User @find(model: "Modules\\User\\Models\\User")
-}
+type Query
 
-type User {
-    id: ID!
-    name: String!
-    email: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-}
-
-enum Operator {
-    EQ @enum(value: "=")
-    NEQ @enum(value: "!=")
-    GT @enum(value: ">")
-    GTE @enum(value: ">=")
-    LT @enum(value: "<")
-    LTE @enum(value: "<=")
-    LIKE @enum(value: "LIKE")
-    NOT_LIKE @enum(value: "NOT_LIKE")
-}
+#import enums.graphql
+#import ../Modules/*/GraphQL/*.graphql
