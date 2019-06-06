@@ -8,6 +8,7 @@ use App\Scaffold\Commands\FromTable;
 use App\Scaffold\Commands\ScaffoldInit;
 use App\Scaffold\Commands\UpdatePermissions;
 use Illuminate\Support\ServiceProvider;
+use Nuwave\Lighthouse\Events\RegisterDirectiveNamespaces;
 
 /**
  * Created by PhpStorm.
@@ -27,6 +28,7 @@ class ScaffoldServiceProvider extends ServiceProvider
     {
         //
         $this->registerCommands();
+        $this->registerLightHouse();
     }
 
     /**
@@ -65,5 +67,18 @@ class ScaffoldServiceProvider extends ServiceProvider
             'scaffold.model',
             'lang.dump',
         ]);
+    }
+
+    private function registerLightHouse()
+    {
+        if (env('GRAPH_QL_ENABLE') === false) {
+            return false;
+        }
+
+        \Event::listen(RegisterDirectiveNamespaces::class, function () {
+            return [
+                'App\\Scaffold\\GraphQL\\Directives'
+            ];
+        });
     }
 }
