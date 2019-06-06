@@ -7,5 +7,4 @@ extend type Query {
 
 type User @autoFields(model: "Modules\\User\\Models\\User") {
     id: ID!
-    email: String
 }

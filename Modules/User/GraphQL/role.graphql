@@ -5,6 +5,6 @@ extend type Query {
     role(id: ID @eq): Role @find(model: "Modules\\User\\Models\\Role")
 }
 
-type Role {
+type Role @autoFields(model: "Modules\\User\\Models\\Role") {
     id: ID!
 }

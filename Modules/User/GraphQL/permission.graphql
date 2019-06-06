@@ -5,6 +5,6 @@ extend type Query {
     permission(id: ID @eq): Permission @find(model: "Modules\\User\\Models\\Permission")
 }
 
-type Permission {
+type Permission @autoFields(model: "Modules\\User\\Models\\Permission") {
     id: ID!
 }
