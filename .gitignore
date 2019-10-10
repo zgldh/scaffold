@@ -25,3 +25,5 @@ package-lock.json
 *.sln
 frontend/config/dev.env.js
 frontend/dist/
+/laradock-scaffold/
+/.gitmodules
