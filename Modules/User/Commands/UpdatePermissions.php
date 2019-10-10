@@ -7,6 +7,9 @@ use ReflectionClass;
 
 class UpdatePermissions extends Command
 {
+
+    private $permissions = [];
+
     /**
      * The name and signature of the console command.
      *
@@ -50,7 +53,7 @@ class UpdatePermissions extends Command
 //        }
 
         $connection = 'mysql';
-        $this->info('Storing to ' . $connection);
+        $this->info('Storing to '.$connection);
         $this->processConnection($connection);
         $this->call('lang:dump');
         $this->line("\tComplete.");
@@ -64,7 +67,7 @@ class UpdatePermissions extends Command
 
     private function detectPermissions($guardName)
     {
-        $controllers = glob(config('scaffold.modules') . '/*/Controllers/*');
+        $controllers = glob(config('scaffold.modules').'/*/Controllers/*');
         $permissions = [];
         foreach ($controllers as $controller) {
             $controllerClass = str_replace('/', '\\', rtrim($controller, '.php'));
@@ -90,7 +93,7 @@ class UpdatePermissions extends Command
             }
         }
 
-        $repositories = glob(config('scaffold.modules') . '/*/Repositories/*');
+        $repositories = glob(config('scaffold.modules').'/*/Repositories/*');
         foreach ($repositories as $repository) {
             $repositoryClass = str_replace('/', '\\', rtrim($repository, '.php'));
             $repositoryName = basename($repository, 'Repository.php');
@@ -123,7 +126,12 @@ class UpdatePermissions extends Command
     {
         $permissionQuery = (new Permission())->setConnection($connection);
         foreach ($this->permissions as $permissionData) {
-            $permission = $permissionQuery->firstOrCreate($permissionData);
+            if (!$permissionQuery->where([
+                'name' => $permissionData['name'],
+                'guard_name' => $permissionData['guard_name']
+            ])->first()) {
+                $permission = $permissionQuery->firstOrCreate($permissionData);
+            }
         }
     }
 }
