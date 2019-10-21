@@ -174,7 +174,7 @@ class Field
 
     private function getDbComment()
     {
-        return $this->label;
+        return str_replace(':', ' ', $this->label);
     }
 
     /**
