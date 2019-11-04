@@ -41,7 +41,7 @@ class UserServiceProvider extends ServiceProvider
 
     private function registerListeners()
     {
-        \Event::listen(Login::class, function (Login $event) {
+        \Illuminate\Support\Facades\Event::listen(Login::class, function (Login $event) {
             $user = $event->user;
             if ($user) {
                 $user->last_login_at = Carbon::now();
@@ -61,7 +61,7 @@ class UserServiceProvider extends ServiceProvider
             }
         });
 
-        \Event::listen(Logout::class, function (Logout $event) {
+        \Illuminate\Support\Facades\Event::listen(Logout::class, function (Logout $event) {
             $user = $event->user;
             if ($user) {
                 activity('auth')
