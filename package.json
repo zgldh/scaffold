@@ -25,7 +25,7 @@
     "nprogress": "0.2.0",
     "querystring": "^0.2.0",
     "screenfull": "^3.3.2",
-    "vue": "2.5.10",
+    "vue": "3.0.0",
     "vue-clipboard2": "^0.2.0",
     "vue-diff-match-patch": "0.0.1",
     "vue-i18n": "^7.6.0",
